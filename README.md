@@ -200,7 +200,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 👥 Authors
 
-- **KobeVLM** - _Initial work_ - [KobeVLM](https://github.com/KobeVLM)
+- **KobeVLM** - _Developer_ - [KobeVLM](https://github.com/KobeVLM)
+- **Kaled244** - _Developer_ - [Kaled244](https://github.com/Kaled244)
+- **Mores20** - _Developer_ - [Mores20](https://github.com/Mores20)
 
 ## 🙏 Acknowledgments
 
