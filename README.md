@@ -204,12 +204,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Kaled244** - _Developer_ - [Kaled244](https://github.com/Kaled244)
 - **Mores20** - _Developer_ - [Mores20](https://github.com/Mores20)
 
-## 🙏 Acknowledgments
-
-- Thanks to all contributors who help make this project better
-- Inspired by wildlife conservation efforts worldwide
-- Built with love for wildcat enthusiasts and educators
-
 ## 📞 Support
 
 If you have any questions or need help getting started:
