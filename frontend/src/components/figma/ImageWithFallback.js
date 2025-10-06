@@ -2,6 +2,9 @@ import { useState } from "react";
 import Box from "@mui/material/Box";
 import { Package } from "lucide-react";
 
+// ! This is just a placeholder for now.
+
+
 export function ImageWithFallback({ src, alt, ...props }) {
     const [hasError, setHasError] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
