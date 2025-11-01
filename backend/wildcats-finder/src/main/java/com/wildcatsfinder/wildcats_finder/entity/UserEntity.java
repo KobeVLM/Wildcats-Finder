@@ -33,6 +33,9 @@ public class UserEntity {
     @Column(name = "contact_no")
     private String contactNo;
 
+    @Column(name = "role", nullable = false)
+    private String role;
+
     // Relationships
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ItemEntity> reportedItems;
@@ -45,7 +48,7 @@ public class UserEntity {
     }
 
     public UserEntity(String username, String password, String fName, String mName,
-            String lName, String email, String contactNo) {
+            String lName, String email, String contactNo, String role) {
         this.username = username;
         this.password = password;
         this.fName = fName;
@@ -53,6 +56,7 @@ public class UserEntity {
         this.lName = lName;
         this.email = email;
         this.contactNo = contactNo;
+        this.role = role;
     }
 
     // Getters and Setters
@@ -118,6 +122,14 @@ public class UserEntity {
 
     public void setContactNo(String contactNo) {
         this.contactNo = contactNo;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public List<ItemEntity> getReportedItems() {
