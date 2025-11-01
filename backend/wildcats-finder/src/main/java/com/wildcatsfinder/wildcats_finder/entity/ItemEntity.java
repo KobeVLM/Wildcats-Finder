@@ -25,6 +25,9 @@ public class ItemEntity {
     @Column(name = "location")
     private String location;
 
+    @Column(name = "image_url")
+    private String imageUrl;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private ItemStatus status;
@@ -56,12 +59,13 @@ public class ItemEntity {
     }
 
     public ItemEntity(String itemTitle, String itemDesc, LocalDateTime dateReport,
-            String location, ItemStatus status, UserEntity user,
+            String location, String imageUrl, ItemStatus status, UserEntity user,
             CategoryEntity category, DepartmentEntity department) {
         this.itemTitle = itemTitle;
         this.itemDesc = itemDesc;
         this.dateReport = dateReport;
         this.location = location;
+        this.imageUrl = imageUrl;
         this.status = status;
         this.user = user;
         this.category = category;
@@ -107,6 +111,14 @@ public class ItemEntity {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public ItemStatus getStatus() {
