@@ -1,0 +1,207 @@
+/* ====== Landing Navbar ====== */
+.landing-navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 80px;
+  background: linear-gradient(135deg, #3b0a0a, #6a0d0d, #b91c1c);
+  color: white;
+  height: 80px;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 10;
+}
+
+.landing-navbar-logo .landing-logo {
+  margin-top: 5px;
+  margin-left: 100px;
+  width: 230px;
+}
+
+.landing-navbar-links {
+  list-style: none;
+  display: flex;
+  gap: 25px;
+  margin: 0;
+  padding: 0;
+  margin-right: 100px;
+}
+
+.landing-navbar-links li {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+}
+
+.landing-link {
+  text-decoration: none;
+  color: white;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  padding: 6px 14px;
+  gap: 10px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.landing-link:hover {
+  background-color: #ffd700;
+  border-radius: 10px;
+  color: maroon;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+/* ====== Join Us ====== */
+.join-us {
+  border: 2px solid white;
+  border-radius: 20px;
+  font-weight: 600;
+  padding: 8px 18px;
+}
+
+.join-us:hover {
+  border-radius: 20px;
+  background-color: #ffd700;
+  color: maroon;
+}
+
+/* ====== Index Page ====== */
+.index-page {
+  position: relative;
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  overflow: hidden;
+  text-align: center;
+  font-family: "Poppins", sans-serif;
+  /* background: linear-gradient(to bottom, transparent 80%, white 20%),
+              url("../../assets/images/Material.jpg") no-repeat center center / cover; */
+  /* background: linear-gradient(to bottom, transparent 100%),
+              url("../../assets/images/Material.jpg") no-repeat center center / cover;  */
+  background: linear-gradient(to bottom, transparent 80%, #F5EFE7 20%),
+              url("../../assets/images/indexpage.png") no-repeat center center / cover;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 20% 30%, rgba(255,255,255,0.08), transparent 40%);
+  animation: float 10s ease-in-out infinite alternate;
+  z-index: 1;
+}
+
+@keyframes float {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-10px); }
+}
+
+.content {
+  position: relative;
+  z-index: 2;
+  max-width: 1400px;
+  width: 90%; 
+  padding: 0 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 70vh;
+  margin-top: 150px;
+}
+
+/* Upper Section */
+.upper-section {
+  flex: 0.4;
+}
+
+.title {
+  font-size: 5rem;
+  font-weight: 900;
+  margin-bottom: 0.2rem; /* reduced from 0.5rem */
+  letter-spacing: 1.5px;
+  text-shadow: 9px 8px rgba(0, 0, 0, 0.6);
+}
+
+.subtitle {
+  font-size: 2rem;
+  font-weight: 500;
+  opacity: 0.95;
+  margin-top: 0; /* remove any top gap */
+   text-shadow: 0px 2px 10px rgba(0, 0, 0, 0.9);
+}
+
+
+/* Lower Section */
+.lower-section {
+  flex: 0.8;
+}
+
+.btn-get-started {
+  display: inline-block;
+  padding: 0.9rem 2.2rem;
+  font-size: 1.1rem;
+  background: #f6fa15;
+  color: #1e1e2f;
+  font-weight: 600;
+  border-radius: 50px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.25);
+}
+
+.btn-get-started:hover {
+  transform: scale(1.1);
+  background: rgb(255, 251, 0);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.35);
+}
+
+.rectangle-section {
+  width: 64%;
+  height: 210px;
+  background-color: #630a0a;
+  border-radius: 15px;
+  position: absolute;
+  bottom: 110px; /* move up or down as needed */
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  z-index: 2;
+}
+
+.rectangle-section .rectangle-text {
+  margin-top: 20px;
+  color: white;
+  padding: 20px 30px;
+  text-align: left;
+  margin-left: 50px;
+}
+
+.square-section {
+  width: 20%;
+  height: 300px;
+  background: url("../../assets/images/Material.jpg") no-repeat center center / cover;
+  /* background: url("../../assets/images/indexpage.png") no-repeat center center / cover; */
+  /* background-color: rgb(255, 251, 0); */
+  border-radius: 20px;
+  position: absolute;
+  bottom: 80px;
+  left: 70%;
+  transform: translateX(-50%);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  z-index: 2;
+}
+
+
+.footer {
+  position: absolute;
+  bottom: 15px;
+  font-size: 1rem;
+  opacity: 0.7;
+  z-index: 2;
+  color: black;
+}

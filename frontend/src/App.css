@@ -9,12 +9,13 @@
   justify-content: space-between;
   align-items: center;
   padding: 5px 80px;
-  background-color: maroon;
+  background: linear-gradient(135deg, #3b0a0a, #6a0d0d, #b91c1c);
   color: white;
-  height: 70px;
+  height: 75px;
 }
 
 .navbar-logo .logo {
+  margin-top: 10px;
   max-height: 10%; 
   width: 230px;
 }
@@ -59,7 +60,6 @@
 .icon {
   margin-right: 8px;
 }
-
 /* ====== Home Container ====== */
 .home-container {
   display: flex;
@@ -70,7 +70,8 @@
   border-radius: 10px;
   height: 230px;
   padding: 20px 30px; 
-  background: linear-gradient(135deg,#f9ae2e, #FFD131, #FACC6B);      
+  background: linear-gradient(135deg,#f9ae2e, #FFD131, #FACC6B); 
+      
 }
 
 .home-container h1,
@@ -172,43 +173,37 @@
   align-items: center;
   gap: 18px; /* tighter for a balanced modern look */
   margin-left: 75px;
-  background: #f6f6f6;
+  background: linear-gradient(135deg,#760001, #990002,#AF2729);
   padding: 10px 15px;
   border-radius: 15px;
   width: fit-content;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08); /* subtle elevation */
 }
 
 /* Buttons */
 .filter-btn {
   background: white;
-  border: 1.5px solid #ddd;
   border-radius: 10px;
   padding: 8px 18px;
   font-size: 0.95rem;
   font-weight: 600;
-  color: #333;
-  cursor: pointer;
   transition: all 0.25s ease;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 /* Hover */
 .filter-btn:hover {
-  background: #ffc400;
-  color: #af2729;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  background: #ffd700;
+  color: #3b0a0a;
   transform: translateY(-1px);
 }
 
 /* ====== Reports Section ====== */
 .reports-container {
-  background: linear-gradient(135deg,#760001, #990002,#AF2729);
+  background: #3b0a0a;
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
   align-items: flex-start;
-  gap: 25px;
+  gap: 30px;
   padding: 20px;
   margin-left: 70px;
   margin-right: 70px;
@@ -217,11 +212,10 @@
   border-radius: 15px;
 }
 
-
 .report-box {
   position: relative;
-  width: 430px;
-  height: 250px;
+  width: 550px;
+  height: 600px;
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
@@ -233,15 +227,28 @@
   color: #555;
 }
 
+.report-box.lost .tag {
+  padding: 3px 10px;
+  width: 14%;
+  background-color: #c62828;
+}
+
+.report-box.found .tag {
+  padding: 3px 10px;
+  width: 14%;
+  background-color: #388e3c;
+}
+
 .report-box .tag {
   position: absolute;
   top: 10px;
-  left: 12px;
+  left: 10px;
   font-size: 0.9rem;
   font-weight: bold;
   padding: 3px 10px;
   border-radius: 8px;
-  color: white;
+  background-color: #002aff;
+  color: rgb(255, 255, 255);
 }
 
 .report-box .active {
@@ -255,20 +262,13 @@
   color: rgb(255, 255, 255);
 }
 
-.report-box.lost .tag {
-  background-color: #c62828;
-}
-
+.report-box.reunited .active,
 .report-box.lost .active, 
 .report-box.found .active {
+  margin-left: 10px;
   background-color: #ffea00;
 }
 
-.report-box.found .tag {
-  background-color: #388e3c;
-}
-
-/* test buttons style — optional */
 .sim-test-buttons button {
   padding: 8px 12px;
   margin-right: 8px;
@@ -276,4 +276,41 @@
   border: 1px solid #ccc;
   background: #fff;
   cursor: pointer;
+}
+/* Image container at top */
+.report-image-container {
+  width: 80%;
+  height: 60%;
+  margin-bottom: 100px;
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 2px solid #000000;
+}
+
+.report-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Details below image */
+.report-details {
+  position: absolute;
+  bottom: 10px;
+  left: 20px;
+  right: 20px;
+  text-align: left;
+  color: #333;
+  line-height: 1.6;
+}
+
+.report-details p {
+  margin: 4px 0;
+  font-size: 0.95rem;
+}
+
+.report-details strong {
+  color: maroon;
+  font-weight: 700;
 }

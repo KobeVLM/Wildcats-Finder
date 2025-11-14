@@ -2,11 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import homeIcon from '../assets/icons/home.png';
-import reportLostIcon from '../assets/icons/report-lost.png';
-import reportFoundIcon from '../assets/icons/report-found.png';
+import reportItemIcon from '../assets/icons/report-item.png';
 import searchIcon from '../assets/icons/search.png';
 import profileIcon from '../assets/icons/profile.png';
-import logo from '../assets/Logo1.png';
+import logo from '../assets/images/Logo1.png';
 
 function Navbar() {
   return (
@@ -19,10 +18,7 @@ function Navbar() {
           <Link to="/"><img src={homeIcon} alt="Home Icon" className="icon" /> Home</Link>
         </li>
         <li>
-          <Link to="/report-lost"><img src={reportLostIcon} alt="Report Lost Icon" className="icon" /> Report Lost</Link>
-        </li>
-        <li>
-          <Link to="/report-found"><img src={reportFoundIcon} alt="Report Found Icon" className="icon" /> Report Found</Link>
+          <Link to="/report-item"><img src={reportItemIcon} alt="Report Item Icon" className="icon" /> Report Item</Link>
         </li>
         <li>
           <Link to="/search"><img src={searchIcon} alt="Search Icon" className="icon" /> Search</Link>
