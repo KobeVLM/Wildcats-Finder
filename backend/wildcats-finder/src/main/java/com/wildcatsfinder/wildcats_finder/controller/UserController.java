@@ -135,7 +135,7 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody UserRegistrationRequest request) {
         try {
-            // Basic validation
+            // validation
             if (request.getUsername() == null || request.getUsername().trim().isEmpty()) {
                 return ResponseEntity.badRequest().body("Username is required");
             }
@@ -165,7 +165,7 @@ public class UserController {
             // Create new user entity
             UserEntity user = new UserEntity();
             user.setUsername(request.getUsername());
-            user.setPassword(request.getPassword()); // In production, hash this password
+            user.setPassword(request.getPassword()); // TODO: convert to hashed password
             user.setFName(request.getFName());
             user.setMName(request.getMName());
             user.setLName(request.getLName());
