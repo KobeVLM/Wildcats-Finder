@@ -175,7 +175,7 @@ public class UserController {
             // Register user with auto-assigned "USER" role
             UserEntity savedUser = userService.registerUser(user);
 
-            // Don't return password in response
+            // return data without password 
             savedUser.setPassword(null);
             return ResponseEntity.ok(savedUser);
 
@@ -282,7 +282,7 @@ public class UserController {
             if (request.getUsername() != null)
                 existingUser.setUsername(request.getUsername());
             if (request.getPassword() != null && !request.getPassword().trim().isEmpty()) {
-                existingUser.setPassword(request.getPassword()); // Hash in production
+                existingUser.setPassword(request.getPassword()); // TODO: convert to hashed password
             }
             if (request.getFName() != null)
                 existingUser.setFName(request.getFName());
