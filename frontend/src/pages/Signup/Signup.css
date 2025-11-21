@@ -1,0 +1,135 @@
+.signup-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(to top, transparent 30%, #F5EFE7 50%),
+              url("../../assets/images/Material.jpg") no-repeat center center / cover;
+  font-family: "Poppins", sans-serif;
+}
+
+.signup-container {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.7);
+  padding: 40px 50px;
+  width: 400px;
+  text-align: center;
+}
+
+.signup-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #3b0a0a;
+  margin-bottom: 30px;
+}
+
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.signup-form label {
+  text-align: left;
+  font-weight: 600;
+  color: #3b0a0a;
+  font-size: 0.95rem;
+}
+
+.input-with-icon {
+  display: flex;
+  align-items: center;
+  border: 1px solid hsl(0, 0%, 80%);
+  border-radius: 8px;
+  padding: 10px 14px;
+  background-color: #fff;
+}
+
+.input-with-icon .input-icon {
+  color: #6a0d0d;
+  font-size: 1rem;
+  margin-right: 5px;
+}
+
+.input-with-icon input {
+  border: none;
+  outline: none;
+  flex: 1;
+  font-size: 0.95rem;
+  color: #333;
+  background: transparent;
+}
+
+.sign-up-btn {
+  background-color: maroon;
+  color: white;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.sign-up-btn:hover {
+  cursor: pointer;
+}
+
+.login-btn {
+  background: transparent;
+  border: 2px solid #3b0a0a;
+  color: #3b0a0a;
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 12px;
+  cursor: pointer;
+}
+
+.login-btn:hover {
+  cursor: pointer;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: #6a0d0d;
+  font-weight: 600;
+  font-size: 0.9rem;
+  opacity: 0.9;
+  margin: 25px 0;
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px solid #6a0d0d;
+  margin: 0 10px;
+  opacity: 0.6;
+}
+
+/* Back Button */
+.back-btn {
+  position: absolute;
+  top: 25px;
+  left: 25px;
+  background: transparent;
+  border: none;
+  color: #3b0a0a;
+  font-weight: 600;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.back-btn:hover {
+  cursor: pointer;
+}
+
+.back-icon {
+  font-size: 1.1rem;
+}
