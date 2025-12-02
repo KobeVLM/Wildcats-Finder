@@ -1,9 +1,3 @@
-/**
- * Wildcats Finder - Material UI Version
- * This version uses ONLY Material UI components and React
- * No Radix UI or Shadcn dependencies
- */
-
 import { useState, useMemo } from "react";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -152,8 +146,7 @@ export default function App() {
     // Check if user is suspended
     if (user?.suspended) {
       toast.error(
-        `Account suspended: ${
-          user.suspensionReason || "Contact admin for details"
+        `Account suspended: ${user.suspensionReason || "Contact admin for details"
         }`
       );
       return;
@@ -311,11 +304,11 @@ export default function App() {
       claims.map((c) =>
         c.id === claimId
           ? {
-              ...c,
-              status: "rejected",
-              reviewedAt: new Date().toISOString(),
-              rejectionReason: reason,
-            }
+            ...c,
+            status: "rejected",
+            reviewedAt: new Date().toISOString(),
+            rejectionReason: reason,
+          }
           : c
       )
     );
