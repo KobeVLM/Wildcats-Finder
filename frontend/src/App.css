@@ -1,316 +1,60 @@
+/* C:\Wildcats-Finder\Wildcats-Finder\frontend\src\App.css */
+body {
+  background-color: #F5EFE7; /* soft cream */
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+  transition: margin-left 0.3s ease; /* Add transition for smooth collapse */
+}
+
 .App {
   text-align: center;
 }
 
-/* ====== Navbar ====== */
-
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 5px 80px;
-  background: linear-gradient(135deg, #3b0a0a, #6a0d0d, #b91c1c);
-  color: white;
-  height: 75px;
+/* ===== Main Content Area ===== */
+.main-content {
+  min-height: 100vh;
+  transition: all 0.3s ease;
 }
 
-.navbar-logo .logo {
-  margin-top: 10px;
-  max-height: 10%; 
-  width: 230px;
+/* When sidebar is present (authenticated) - Expanded */
+.main-content.with-sidebar {
+  margin-left: 250px;
+  padding: 20px;
+  background-color: #F5EFE7;
 }
 
-.navbar-links {
-  list-style: none;
-  display: flex;
-  gap: 20px;
-  margin: 0;
+/* When sidebar is collapsed */
+.main-content.with-sidebar.sidebar-collapsed,
+body.sidebar-collapsed .main-content.with-sidebar {
+  margin-left: 70px;
+}
+
+/* When no sidebar (not authenticated) */
+.main-content:not(.with-sidebar) {
+  margin-left: 0;
   padding: 0;
 }
 
-.navbar-links li {
-  display: flex;
-  align-items: center;
+/* ===== Responsive adjustments ===== */
+@media (max-width: 768px) {
+  .main-content.with-sidebar {
+    margin-left: 220px;
+  }
+  
+  .main-content.with-sidebar.sidebar-collapsed,
+  body.sidebar-collapsed .main-content.with-sidebar {
+    margin-left: 60px;
+  }
 }
 
-.navbar-links li a {
-  text-decoration: none;
-  color: white;
-  font-size: 1rem;
-  display: flex;
-  align-items: center;
-  padding: 5px 10px;
-  gap: 10px;
-}
-
-.navbar-links li a:hover {
-  background-color: #ffd700;
-  border-radius: 10px;
-  transform: scale(1);
-  transition: transform 0.2s ease, background-color 0.2s ease; 
-}
-
-.navbar-links .icon {
-  margin-right: 0px;
-  width: 20px;
-  height: 20px;
-  filter: invert(1);
-}
-
-.icon {
-  margin-right: 8px;
-}
-/* ====== Home Container ====== */
-.home-container {
-  display: flex;
-  flex-direction: column;  
-  justify-content: flex-start; /* keep top placement */
-  align-items: center; 
-  margin: 35px 80px;
-  border-radius: 10px;
-  height: 230px;
-  padding: 20px 30px; 
-  background: linear-gradient(135deg,#f9ae2e, #FFD131, #FACC6B); 
-      
-}
-
-.home-container h1,
-.home-container p {
-  text-align: center;
-  color: rgb(0, 0, 0);
-  margin: 5px 0;
-  font-weight: 650;
-}
-
-/* ====== Square Container ====== */
-.square-container {
-  margin-top: 30px;
-  display: flex;
-  gap: 20px; 
-}
-
-.square {
-  background: linear-gradient(135deg,#760001, #990002,#AF2729);
-  color: rgb(255, 255, 255);
-  font-weight: bold;
-  border-radius: 13px;
-  padding: 20px 20px;
-  min-width: 180px;
-  min-height: 80px;
-  text-align: center;
-  display: flex;              /* make vertical stack */
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 5px;                   /* space between number and label */
-}
-
-.square .count {
-  font-size: 2.0rem;          /* make number stand out */
-  color: rgb(238, 255, 0);
-}
-
-.square .label {
-  font-size: 1.1rem;          /* smaller text under number */
-}
-
-/* ====== Search Bar ====== */
-.search-container {
-  position: relative;
-  width: 90%;
-  margin: 30px auto;
-}
-
-.search-container input::placeholder {
-  color: #9b9b9b;
-  font-style: italic;
-  letter-spacing: 0.3px;
-}
-
-.search-container input {
-  width: 95%;
-  padding: 14px 50px 14px 20px;
-  border-radius: 30px;
-  border: none;
-  outline: none;
-  font-size: 1rem;
-  background: #f6f6f6;
-  box-shadow:
-    0px 4px 8px rgba(0, 0, 0, 0.15),
-    0px -1px 4px rgba(255, 255, 255, 0.8);
-  transition: all 0.25s ease-in-out;
-}
-
-.search-container input:focus {
-  background: #ffffff;
-  box-shadow:
-    inset 2px 2px 6px rgba(0, 0, 0, 0.2),
-    inset -2px -2px 6px rgba(255, 255, 255, 0.8);
-  transform: scale(1.01);
-}
-
-.search-icon {
-  position: absolute;
-  right: 18px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 18px;
-  height: 18px;
-  cursor: pointer;
-  opacity: 0.6;
-  transition: opacity 0.2s ease, transform 0.2s ease;
-}
-
-.search-icon:hover {
-  opacity: 1;
-  transform: translateY(-50%) scale(1.1); /* small pop effect */
-}
-
-/* ====== Filter Buttons ====== */
-.filter-container {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 18px; /* tighter for a balanced modern look */
-  margin-left: 75px;
-  background: linear-gradient(135deg,#760001, #990002,#AF2729);
-  padding: 10px 15px;
-  border-radius: 15px;
-  width: fit-content;
-}
-
-/* Buttons */
-.filter-btn {
-  background: white;
-  border-radius: 10px;
-  padding: 8px 18px;
-  font-size: 0.95rem;
-  font-weight: 600;
-  transition: all 0.25s ease;
-}
-
-/* Hover */
-.filter-btn:hover {
-  background: #ffd700;
-  color: #3b0a0a;
-  transform: translateY(-1px);
-}
-
-/* ====== Reports Section ====== */
-.reports-container {
-  background: #3b0a0a;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  align-items: flex-start;
-  gap: 30px;
-  padding: 20px;
-  margin-left: 70px;
-  margin-right: 70px;
-  margin-top: 30px;
-  min-height: 500px;
-  border-radius: 15px;
-}
-
-.report-box {
-  position: relative;
-  width: 550px;
-  height: 600px;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #555;
-}
-
-.report-box.lost .tag {
-  padding: 3px 10px;
-  width: 14%;
-  background-color: #c62828;
-}
-
-.report-box.found .tag {
-  padding: 3px 10px;
-  width: 14%;
-  background-color: #388e3c;
-}
-
-.report-box .tag {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  font-size: 0.9rem;
-  font-weight: bold;
-  padding: 3px 10px;
-  border-radius: 8px;
-  background-color: #002aff;
-  color: rgb(255, 255, 255);
-}
-
-.report-box .active {
-  position: absolute;
-  top: 10px;
-  left: 20%;
-  font-size: 0.9rem;
-  font-weight: bold;
-  padding: 3px 10px;
-  border-radius: 8px;
-  color: rgb(255, 255, 255);
-}
-
-.report-box.reunited .active,
-.report-box.lost .active, 
-.report-box.found .active {
-  margin-left: 10px;
-  background-color: #ffea00;
-}
-
-.sim-test-buttons button {
-  padding: 8px 12px;
-  margin-right: 8px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  background: #fff;
-  cursor: pointer;
-}
-/* Image container at top */
-.report-image-container {
-  width: 80%;
-  height: 60%;
-  margin-bottom: 100px;
-  position: relative;
-  border-radius: 12px;
-  overflow: hidden;
-  border: 2px solid #000000;
-}
-
-.report-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* Details below image */
-.report-details {
-  position: absolute;
-  bottom: 10px;
-  left: 20px;
-  right: 20px;
-  text-align: left;
-  color: #333;
-  line-height: 1.6;
-}
-
-.report-details p {
-  margin: 4px 0;
-  font-size: 0.95rem;
-}
-
-.report-details strong {
-  color: maroon;
-  font-weight: 700;
+@media (max-width: 480px) {
+  .main-content.with-sidebar {
+    margin-left: 200px;
+  }
+  
+  .main-content.with-sidebar.sidebar-collapsed,
+  body.sidebar-collapsed .main-content.with-sidebar {
+    margin-left: 50px;
+  }
 }

@@ -1,54 +1,64 @@
+/* Page Layout */
 .signup-page {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
   background: linear-gradient(to top, transparent 30%, #F5EFE7 50%),
-              url("../../assets/images/Material.jpg") no-repeat center center / cover;
+              url("../../assets/images/Material.jpg") no-repeat center/cover;
   font-family: "Poppins", sans-serif;
+  position: relative;
+  padding: 20px; /* prevent overflow on small screens */
+  box-sizing: border-box;
 }
 
+/* Container */
 .signup-container {
-  background: #ffffff;
+  background: #fff;
   border-radius: 16px;
   box-shadow: 0 6px 25px rgba(0, 0, 0, 0.7);
-  padding: 40px 50px;
-  width: 400px;
+  padding: 30px 35px; 
+  width: 400px;      
+  max-width: 100%;
   text-align: center;
+  overflow: hidden;
 }
 
+/* Title */
 .signup-title {
-  font-size: 2rem;
+  font-size: 1.7rem; /* smaller title */
   font-weight: 700;
   color: #3b0a0a;
-  margin-bottom: 30px;
+  margin-bottom: 20px; /* reduced margin */
 }
 
+/* Form */
 .signup-form {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 10px; /* tighter spacing between fields */
 }
 
 .signup-form label {
   text-align: left;
   font-weight: 600;
   color: #3b0a0a;
-  font-size: 0.95rem;
+  font-size: 0.85rem; /* slightly smaller labels */
 }
 
+/* Inputs */
 .input-with-icon {
   display: flex;
   align-items: center;
   border: 1px solid hsl(0, 0%, 80%);
-  border-radius: 8px;
-  padding: 10px 14px;
-  background-color: #fff;
+  border-radius: 6px; /* slightly smaller radius */
+  padding: 8px 10px;  /* reduced padding */
+  background: #fff;
 }
 
 .input-with-icon .input-icon {
   color: #6a0d0d;
-  font-size: 1rem;
+  font-size: 0.9rem;  /* smaller icons */
   margin-right: 5px;
 }
 
@@ -56,49 +66,53 @@
   border: none;
   outline: none;
   flex: 1;
-  font-size: 0.95rem;
+  font-size: 0.85rem; /* smaller text */
   color: #333;
   background: transparent;
+  padding: 4px 0; /* smaller padding inside input */
+}
+
+/* Buttons */
+.sign-up-btn,
+.login-btn {
+  font-weight: 600;
+  border-radius: 6px; /* smaller radius */
+  padding: 10px;       /* smaller buttons */
+  cursor: pointer;
+  transition: 0.2s;
+  font-size: 0.9rem;   /* smaller text */
 }
 
 .sign-up-btn {
-  background-color: maroon;
-  color: white;
-  font-weight: 600;
+  background: maroon;
+  color: #fff;
   border: none;
-  border-radius: 8px;
-  padding: 12px;
-  cursor: pointer;
-  margin-top: 10px;
-}
-
-.sign-up-btn:hover {
-  cursor: pointer;
+  margin-top: 8px;
 }
 
 .login-btn {
   background: transparent;
   border: 2px solid #3b0a0a;
   color: #3b0a0a;
-  font-weight: 600;
-  border-radius: 8px;
-  padding: 12px;
-  cursor: pointer;
 }
 
-.login-btn:hover {
-  cursor: pointer;
+/* Hover Effects */
+.sign-up-btn:hover,
+.login-btn:hover,
+.back-btn:hover {
+  opacity: 0.85;
 }
 
+/* Divider */
 .divider {
   display: flex;
   align-items: center;
-  text-align: center;
   color: #6a0d0d;
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   opacity: 0.9;
-  margin: 25px 0;
+  margin: 15px 0; /* smaller spacing */
+  text-align: center;
 }
 
 .divider::before,
@@ -106,30 +120,36 @@
   content: "";
   flex: 1;
   border-bottom: 1px solid #6a0d0d;
-  margin: 0 10px;
+  margin: 0 8px;
   opacity: 0.6;
 }
 
 /* Back Button */
 .back-btn {
   position: absolute;
-  top: 25px;
-  left: 25px;
+  top: 15px;  /* moved up slightly */
+  left: 15px;
   background: transparent;
   border: none;
   color: #3b0a0a;
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 0.9rem;
   display: flex;
   align-items: center;
-  gap: 6px;
-  cursor: pointer;
-}
-
-.back-btn:hover {
-  cursor: pointer;
+  gap: 4px;
 }
 
 .back-icon {
-  font-size: 1.1rem;
+  font-size: 1rem; /* smaller icon */
+}
+
+/* Responsive Adjustments */
+@media (max-height: 700px) {
+  .signup-page {
+    align-items: flex-start;
+    padding-top: 40px;
+  }
+  .signup-container {
+    padding: 25px 30px;
+  }
 }

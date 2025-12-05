@@ -1,0 +1,444 @@
+/* C:\Wildcats-Finder\Wildcats-Finder\frontend\src\pages\Home\Home.css */
+
+/* ===== Home Page Container ===== */
+.home-page-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  background: #F5EFE7;
+  padding: 20px;
+}
+
+/* ===== Home Container (Welcome Section) ===== */
+.home-container {
+  width: 1300px;
+  max-width: 95vw;
+  display: flex;
+  flex-direction: column;  
+  justify-content: center;
+  align-items: center; 
+  margin: 0 auto 30px auto;
+  border-radius: 12px;
+  height: 230px;
+  padding: 30px 40px; 
+  background: linear-gradient(135deg,#f9ae2e, #FFD131, #FACC6B);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.home-container h1 {
+  text-align: center;
+  color: rgb(0, 0, 0);
+  margin: 0 0 15px 0;
+  font-weight: 700;
+  font-size: 2.2rem;
+}
+
+.home-container p {
+  text-align: center;
+  color: rgb(0, 0, 0);
+  margin: 0 0 25px 0;
+  font-weight: 500;
+  font-size: 1.1rem;
+  max-width: 800px;
+  line-height: 1.6;
+}
+
+/* ===== Home Content Wrapper ===== */
+.home-content-wrapper {
+  width: 1300px;
+  max-width: 95vw;
+  margin: 0 auto;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 40px;
+  margin-bottom: 30px;
+}
+
+/* ===== Redesigned Search Bar ===== */
+.search-container {
+  width: 100%;
+  margin-bottom: 30px;
+}
+
+.search-input-wrapper {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  width: 100%;
+}
+
+.search-input {
+  flex: 1;
+  padding: 16px 24px;
+  border-radius: 12px;
+  border: 2px solid #e0e7ff;
+  font-size: 16px;
+  font-family: 'Inter', sans-serif;
+  background: white;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #4a6cf7;
+  box-shadow: 0 0 0 3px rgba(74, 108, 247, 0.1);
+  transform: translateY(-2px);
+}
+
+.search-input::placeholder {
+  color: #a0aec0;
+  font-style: italic;
+}
+
+.search-button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 30px;
+  background: linear-gradient(135deg, #4a6cf7 0%, #6a8cff 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(74, 108, 247, 0.3);
+  min-width: 140px;
+}
+
+.search-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(74, 108, 247, 0.4);
+}
+
+.search-button:active {
+  transform: translateY(0);
+}
+
+.search-icon {
+  width: 20px;
+  height: 20px;
+  filter: brightness(0) invert(1);
+}
+
+.search-text {
+  font-weight: 600;
+}
+
+/* ===== Filter Buttons ===== */
+.filter-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 30px;
+  background: linear-gradient(135deg, #760001, #990002, #AF2729);
+  padding: 15px 25px;
+  border-radius: 15px;
+  width: 40%;
+}
+
+.filter-btn {
+  background: white;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 24px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  color: #495057;
+  min-width: 120px;
+  text-align: center;
+}
+
+.filter-btn:hover {
+  background: #ffd700;
+  color: #3b0a0a;
+  transform: translateY(-2px);
+}
+
+.filter-btn.active-filter {
+  background: #ffd700;
+  color: #3b0a0a;
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+  transform: translateY(-2px);
+}
+
+/* ===== Reports Container ===== */
+.reports-container {
+  background: #3b0a0a;
+  border-radius: 15px;
+  padding: 30px;
+  min-height: 500px;
+}
+
+/* ===== Items Grid ===== */
+.items-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 30px;
+}
+
+/* ===== Report Box ===== */
+.report-box {
+  position: relative;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  height: 600px;
+}
+
+.report-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.report-box .tag {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 6px 15px;
+  border-radius: 20px;
+  color: white;
+  z-index: 2;
+}
+
+.report-box .active {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 6px 15px;
+  border-radius: 20px;
+  background-color: #ffea00;
+  color: #000;
+  z-index: 2;
+}
+
+/* Image container */
+.report-image-container {
+  width: 100%;
+  height: 280px;
+  overflow: hidden;
+  border-bottom: 3px solid #3b0a0a;
+}
+
+.report-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.report-box:hover .report-image {
+  transform: scale(1.05);
+}
+
+/* Details below image */
+.report-details {
+  padding: 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.item-title {
+  color: #3b0a0a;
+  margin: 0 0 15px 0;
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.report-details p {
+  margin: 6px 0;
+  color: #555;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.report-details strong {
+  color: #3b0a0a;
+  font-weight: 600;
+}
+
+.item-description {
+  flex: 1;
+  max-height: 60px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  margin-top: 10px;
+}
+
+.item-reporter {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #eee;
+  font-size: 13px;
+  color: #777;
+}
+
+/* Loading and empty states */
+.loading-message,
+.empty-message {
+  width: 100%;
+  text-align: center;
+  padding: 60px 20px;
+  color: white;
+  font-size: 1.2rem;
+}
+
+.empty-message {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
+
+.report-first-link {
+  background: linear-gradient(135deg, #f9ae2e, #FFD131, #FACC6B);
+  color: #000;
+  padding: 12px 25px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(249, 174, 46, 0.3);
+}
+
+.report-first-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(249, 174, 46, 0.4);
+}
+
+/* Square Container (Stats) */
+.square-container {
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+/* Responsive Design */
+@media (max-width: 1400px) {
+  .home-container,
+  .home-content-wrapper {
+    width: 95vw;
+    max-width: 1200px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .home-container,
+  .home-content-wrapper {
+    width: 95vw;
+  }
+  
+  .items-grid {
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  }
+}
+
+@media (max-width: 992px) {
+  .home-page-container {
+    padding: 15px;
+  }
+  
+  .home-container {
+    padding: 25px 30px;
+    height: auto;
+  }
+  
+  .home-content-wrapper {
+    padding: 30px;
+  }
+  
+  .search-input-wrapper {
+    flex-direction: column;
+  }
+  
+  .search-button {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .items-grid {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .home-container h1 {
+    font-size: 1.8rem;
+  }
+  
+  .home-container p {
+    font-size: 1rem;
+  }
+  
+  .home-content-wrapper {
+    padding: 20px;
+  }
+  
+  .items-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .report-box {
+    height: auto;
+    min-height: 550px;
+  }
+  
+  .report-image-container {
+    height: 250px;
+  }
+  
+  .filter-btn {
+    min-width: 100px;
+    padding: 10px 15px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .home-container {
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .home-content-wrapper {
+    padding: 15px;
+  }
+  
+  .search-input {
+    padding: 14px 20px;
+  }
+  
+  .search-button {
+    padding: 14px 20px;
+  }
+  
+  .filter-container {
+    padding: 12px 15px;
+  }
+  
+  .reports-container {
+    padding: 20px;
+  }
+}

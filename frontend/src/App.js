@@ -1,69 +1,100 @@
-import React from "react";
+// C:\Wildcats-Finder\Wildcats-Finder\frontend\src\App.js
+import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import "./App.css";
 
 // Components
 import ProtectedRoute from "./components/ProtectedRoute";
-import Navbar from "./components/Navbar";
+import Sidebar from "./components/sidebar/Sidebar"; // UPDATED PATH
 
 // Pages
 import Index from "./pages/Index/Index";
 import Home from "./pages/Home/Home";
 import ReportItem from "./pages/ReportItem/ReportItem";
 import Search from "./pages/Search/Search";
+import Claim from "./pages/Claim/Claim";
 import Profile from "./pages/Profile/Profile";
 import Login from "./pages/Login/Login";
 import Signup from "./pages/Signup/Signup";
 
 function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    localStorage.getItem("isAuthenticated") === "true"
+  );
+
+  // Listen for authentication changes
+  useEffect(() => {
+    const handleAuthChange = () => {
+      setIsAuthenticated(localStorage.getItem("isAuthenticated") === "true");
+    };
+
+    // Check auth status initially
+    handleAuthChange();
+
+    // Check periodically
+    const interval = setInterval(handleAuthChange, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <Router>
       <div className="App">
-        {/* Show Navbar only when logged in */}
-        <Routes>
-          {/* Public routes */}
-          <Route path="/" element={<Index />} />
-          <Route path="/login" element={<Login />} />
-           <Route path="/signup" element={<Signup />} />
+        {/* Show Sidebar only when logged in */}
+        {isAuthenticated && <Sidebar />}
 
-          {/* Protected routes */}
-          <Route
-            path="/home"
-            element={
-              <ProtectedRoute>
-                <Navbar />
-                <Home />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/report-item"
-            element={
-              <ProtectedRoute>
-                <Navbar />
-                <ReportItem />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/search"
-            element={
-              <ProtectedRoute>
-                <Navbar />
-                <Search />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              <ProtectedRoute>
-                <Navbar />
-                <Profile />
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
+        <div className={`main-content ${isAuthenticated ? 'with-sidebar' : ''}`}>
+          <Routes>
+            {/* Public routes */}
+            <Route path="/" element={<Index />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+
+            {/* Protected routes */}
+            <Route
+              path="/home"
+              element={
+                <ProtectedRoute>
+                  <Home />
+                </ProtectedRoute>
+              }
+            />
+            
+            <Route
+              path="/report-item/*"
+              element={
+                <ProtectedRoute>
+                  <ReportItem />
+                </ProtectedRoute>
+              }
+            />
+            
+            <Route
+              path="/search"
+              element={
+                <ProtectedRoute>
+                  <Search />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/claim"
+              element={
+                <ProtectedRoute>
+                  <Claim />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </div>
       </div>
     </Router>
   );
