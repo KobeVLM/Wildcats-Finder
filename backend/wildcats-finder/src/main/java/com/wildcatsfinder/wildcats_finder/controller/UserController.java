@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -342,6 +343,46 @@ public class UserController {
             return ResponseEntity.ok(exists);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
+        }
+    }
+
+    // ADMIN: Suspend user
+    // PUT /api/users/{id}/suspend
+    @PutMapping("/{id}/suspend")
+    public ResponseEntity<?> suspendUser(@PathVariable Long id, @RequestBody String reason) {
+        try {
+            UserEntity user = userService.getUserById(id);
+            user.setSuspended(true);
+            user.setSuspensionReason(reason);
+            user.setSuspensionDate(LocalDateTime.now());
+            
+            UserEntity updatedUser = userService.updateUser(id, user);
+            updatedUser.setPassword(null); // Don't return password
+            
+            return ResponseEntity.ok(updatedUser);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Error suspending user: " + e.getMessage());
+        }
+    }
+
+    // ADMIN: Unsuspend user
+    // PUT /api/users/{id}/unsuspend
+    @PutMapping("/{id}/unsuspend")
+    public ResponseEntity<?> unsuspendUser(@PathVariable Long id) {
+        try {
+            UserEntity user = userService.getUserById(id);
+            user.setSuspended(false);
+            user.setSuspensionReason(null);
+            user.setSuspensionDate(null);
+            
+            UserEntity updatedUser = userService.updateUser(id, user);
+            updatedUser.setPassword(null); // Don't return password
+            
+            return ResponseEntity.ok(updatedUser);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Error unsuspending user: " + e.getMessage());
         }
     }
 }

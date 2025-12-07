@@ -8,10 +8,13 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
-import { ItemCard } from '../../components/common/ItemCard';
-import { ClaimDialog } from '../../components/common/ClaimDialog';
+import { ItemCard, type Item } from './ItemCard';
 import { Filter, X } from 'lucide-react';
-import { toast } from 'sonner';
+
+interface SearchPageProps {
+  items: Item[];
+  onClaim: (item: Item) => void;
+}
 
 const categories = [
   'All',
@@ -23,7 +26,6 @@ const categories = [
   'Keys',
   'Other',
 ];
-
 const locations = [
   'All',
   'Main Campus - Building A',
@@ -37,29 +39,14 @@ const locations = [
   'NTC Campus',
 ];
 
-export default function Search() {
+export function SearchPage({ items, onClaim }: SearchPageProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedLocation, setSelectedLocation] = useState('All');
-  const [selectedType, setSelectedType] = useState('all');
+  const [selectedType, setSelectedType] = useState<'all' | 'lost' | 'found'>('all');
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
   const [showFilters, setShowFilters] = useState(false);
-  const [claimDialogOpen, setClaimDialogOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(null);
-
-  const handleClaimClick = (item) => {
-    setSelectedItem(item);
-    setClaimDialogOpen(true);
-  };
-
-  const handleClaimSubmit = (itemId, answer, contactInfo) => {
-    console.log('Claim submitted:', { itemId, answer, contactInfo });
-    toast.success('Claim submitted successfully! The owner will review it soon.');
-  };
-
-  // Mock data - replace with actual API call
-  const items = [];
 
   const filteredItems = items.filter((item) => {
     const matchesSearch =
@@ -146,7 +133,7 @@ export default function Search() {
                     fullWidth
                     select
                     value={selectedType}
-                    onChange={(e) => setSelectedType(e.target.value)}
+                    onChange={(e) => setSelectedType(e.target.value as typeof selectedType)}
                   >
                     <MenuItem value="all">All Items</MenuItem>
                     <MenuItem value="lost">Lost Only</MenuItem>
@@ -259,21 +246,13 @@ export default function Search() {
             <Grid container spacing={3}>
               {filteredItems.map((item) => (
                 <Grid item xs={12} sm={6} md={4} key={item.id}>
-                  <ItemCard item={item} onClaim={handleClaimClick} />
+                  <ItemCard item={item} onClaim={onClaim} />
                 </Grid>
               ))}
             </Grid>
           )}
         </Box>
       </Box>
-
-      {/* Claim Dialog */}
-      <ClaimDialog
-        item={selectedItem}
-        open={claimDialogOpen}
-        onClose={() => setClaimDialogOpen(false)}
-        onSubmit={handleClaimSubmit}
-      />
     </Container>
   );
 }

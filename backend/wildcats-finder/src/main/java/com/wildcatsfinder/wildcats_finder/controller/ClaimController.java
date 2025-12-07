@@ -6,11 +6,13 @@ import com.wildcatsfinder.wildcats_finder.entity.UserEntity;
 import com.wildcatsfinder.wildcats_finder.service.ClaimService;
 import com.wildcatsfinder.wildcats_finder.service.ItemService;
 import com.wildcatsfinder.wildcats_finder.service.UserService;
+import com.wildcatsfinder.wildcats_finder.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -27,11 +29,16 @@ public class ClaimController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private NotificationService notificationService;
+
     // DTO for claim submission
     public static class ClaimRequest {
         private Long itemId;
         private Long userId;
         private String status;
+        private String verificationAnswer;
+        private String contactInfo;
 
         // Constructors
         public ClaimRequest() {
@@ -61,6 +68,22 @@ public class ClaimController {
         public void setStatus(String status) {
             this.status = status;
         }
+
+        public String getVerificationAnswer() {
+            return verificationAnswer;
+        }
+
+        public void setVerificationAnswer(String verificationAnswer) {
+            this.verificationAnswer = verificationAnswer;
+        }
+
+        public String getContactInfo() {
+            return contactInfo;
+        }
+
+        public void setContactInfo(String contactInfo) {
+            this.contactInfo = contactInfo;
+        }
     }
 
     // CREATE: File a new claim
@@ -85,9 +108,19 @@ public class ClaimController {
             claim.setItem(item);
             claim.setUser(user);
             claim.setStatus(request.getStatus() != null ? request.getStatus() : "PENDING");
+            claim.setVerificationAnswer(request.getVerificationAnswer());
+            claim.setContactInfo(request.getContactInfo());
 
             // File the claim with auto-timestamp and pending status
             ClaimEntity savedClaim = claimService.fileNewClaim(claim);
+            
+            // Create notification for item owner
+            notificationService.createClaimNotification(
+                item.getUser(), 
+                savedClaim, 
+                user.getFName() + " " + user.getLName()
+            );
+            
             return ResponseEntity.ok(savedClaim);
 
         } catch (Exception e) {
@@ -198,7 +231,15 @@ public class ClaimController {
     @PutMapping("/{id}/approve")
     public ResponseEntity<?> approveClaim(@PathVariable Long id) {
         try {
+            ClaimEntity claim = claimService.getClaimById(id);
             ClaimEntity approvedClaim = claimService.approveClaim(id);
+            
+            // Create notification for claimant
+            notificationService.createClaimApprovedNotification(
+                claim.getUser(),
+                approvedClaim
+            );
+            
             return ResponseEntity.ok(approvedClaim);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -209,9 +250,21 @@ public class ClaimController {
     // UPDATE: Reject claim (admin functionality)
     // PUT /api/claims/{id}/reject
     @PutMapping("/{id}/reject")
-    public ResponseEntity<?> rejectClaim(@PathVariable Long id) {
+    public ResponseEntity<?> rejectClaim(@PathVariable Long id, @RequestBody(required = false) String reason) {
         try {
+            ClaimEntity claim = claimService.getClaimById(id);
+            if (reason != null) {
+                claim.setRejectionReason(reason);
+            }
+            claim.setReviewedAt(LocalDateTime.now());
             ClaimEntity rejectedClaim = claimService.rejectClaim(id);
+            
+            // Create notification for claimant
+            notificationService.createClaimRejectedNotification(
+                claim.getUser(),
+                rejectedClaim
+            );
+            
             return ResponseEntity.ok(rejectedClaim);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)

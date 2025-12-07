@@ -7,19 +7,16 @@ import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import { AlertCircle, CheckCircle, ArrowLeft } from 'lucide-react';
-import { ReportForm } from '../../components/forms/ReportForm';
-import { toast } from 'sonner';
+import { ReportForm } from './ReportForm';
+import type { Item } from './ItemCard';
 
-export default function ReportItem() {
-  const [selectedType, setSelectedType] = useState(null);
-  const userEmail = localStorage.getItem('userEmail') || 'user@cit.edu';
+interface ReportItemPageProps {
+  onSubmit: (item: Omit<Item, 'id' | 'status' | 'reportedBy'>) => void;
+  userEmail: string;
+}
 
-  const handleSubmit = (item) => {
-    // TODO: Send to backend API
-    console.log('Submitting item:', item);
-    toast.success(`${item.type === 'lost' ? 'Lost' : 'Found'} item reported successfully!`);
-    setSelectedType(null); // Reset to selection screen
-  };
+export function ReportItemPage({ onSubmit, userEmail }: ReportItemPageProps) {
+  const [selectedType, setSelectedType] = useState<'lost' | 'found' | null>(null);
 
   if (selectedType) {
     return (
@@ -34,7 +31,7 @@ export default function ReportItem() {
             Back to Type Selection
           </Button>
         </Box>
-        <ReportForm type={selectedType} onSubmit={handleSubmit} userEmail={userEmail} />
+        <ReportForm type={selectedType} onSubmit={onSubmit} userEmail={userEmail} />
       </Container>
     );
   }

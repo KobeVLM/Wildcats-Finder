@@ -21,6 +21,19 @@ public class ClaimEntity {
     @Column(name = "verified", nullable = false)
     private Boolean verified;
 
+    // NEW FIELDS - Priority 1
+    @Column(name = "verification_answer", columnDefinition = "TEXT")
+    private String verificationAnswer;
+
+    @Column(name = "contact_info")
+    private String contactInfo;
+
+    @Column(name = "rejection_reason", columnDefinition = "TEXT")
+    private String rejectionReason;
+
+    @Column(name = "reviewed_at")
+    private LocalDateTime reviewedAt;
+
     // Foreign Key Relationships
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id", nullable = false)
@@ -74,6 +87,38 @@ public class ClaimEntity {
 
     public void setVerified(Boolean verified) {
         this.verified = verified;
+    }
+
+    public String getVerificationAnswer() {
+        return verificationAnswer;
+    }
+
+    public void setVerificationAnswer(String verificationAnswer) {
+        this.verificationAnswer = verificationAnswer;
+    }
+
+    public String getContactInfo() {
+        return contactInfo;
+    }
+
+    public void setContactInfo(String contactInfo) {
+        this.contactInfo = contactInfo;
+    }
+
+    public String getRejectionReason() {
+        return rejectionReason;
+    }
+
+    public void setRejectionReason(String rejectionReason) {
+        this.rejectionReason = rejectionReason;
+    }
+
+    public LocalDateTime getReviewedAt() {
+        return reviewedAt;
+    }
+
+    public void setReviewedAt(LocalDateTime reviewedAt) {
+        this.reviewedAt = reviewedAt;
     }
 
     public ItemEntity getItem() {

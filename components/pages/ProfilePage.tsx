@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
@@ -11,57 +10,45 @@ import Tab from '@mui/material/Tab';
 import Alert from '@mui/material/Alert';
 import Grid from '@mui/material/Grid';
 import Badge from '@mui/material/Badge';
-import IconButton from '@mui/material/IconButton';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import TextField from '@mui/material/TextField';
+import IconButton from '@mui/material/IconButton';
 import Divider from '@mui/material/Divider';
-import { ItemCard } from '../../components/common/ItemCard';
-import { User, Mail, Shield, Bell, History, LogOut, Settings, Edit, Trash2, AlertTriangle } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { ItemCard, type Item } from './ItemCard';
+import { User, Mail, Shield, Bell, History, LogOut, Edit, Trash2, Settings, AlertTriangle } from 'lucide-react';
+import { useState } from 'react';
 import { toast } from 'sonner';
 
-export default function Profile() {
-  const navigate = useNavigate();
+interface ProfilePageProps {
+  userEmail: string;
+  userRole: 'student' | 'admin';
+  items: Item[];
+  notifications: Notification[];
+  onClaim: (item: Item) => void;
+  onLogout: () => void;
+  onPasswordChange?: (oldPassword: string, newPassword: string) => void;
+  onDeleteAccount?: () => void;
+}
+
+interface Notification {
+  id: string;
+  type: 'match' | 'claim' | 'admin';
+  message: string;
+  date: string;
+  read: boolean;
+}
+
+export function ProfilePage({ userEmail, userRole, items, notifications, onClaim, onLogout, onPasswordChange, onDeleteAccount }: ProfilePageProps) {
   const [activeTab, setActiveTab] = useState(0);
-  const [settingsDialogOpen, setSettingsDialogOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [deleteConfirmText, setDeleteConfirmText] = useState('');
-
-  // Mock data - replace with actual API calls
-  const userEmail = localStorage.getItem('userEmail') || 'student@cit.edu';
-  const userRole = 'student'; // or 'admin'
-  const items = [];
-  
-  // Mock notifications for demonstration
-  const notifications = [
-    {
-      id: '1',
-      type: 'match',
-      message: 'Your lost iPhone 13 Pro may have been found! Check the matches.',
-      date: new Date().toISOString(),
-      read: false,
-    },
-    {
-      id: '2',
-      type: 'claim',
-      message: 'Someone claimed your found Blue Backpack. Review the claim.',
-      date: new Date(Date.now() - 86400000).toISOString(),
-      read: false,
-    },
-    {
-      id: '3',
-      type: 'admin',
-      message: 'Your report has been approved by the admin.',
-      date: new Date(Date.now() - 172800000).toISOString(),
-      read: false,
-    },
-  ];
 
   const userItems = items.filter((item) => item.reportedBy === userEmail);
   const myReports = userItems.filter((item) => item.status === 'active');
@@ -69,12 +56,6 @@ export default function Profile() {
   const myPending = userItems.filter((item) => item.status === 'pending');
 
   const unreadNotifications = notifications.filter((n) => !n.read);
-
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('userEmail');
-    navigate('/login');
-  };
 
   const handlePasswordChange = () => {
     if (!oldPassword || !newPassword || !confirmPassword) {
@@ -90,13 +71,14 @@ export default function Profile() {
       return;
     }
     
-    // TODO: Send to backend API
-    console.log('Changing password');
-    toast.success('Password changed successfully!');
-    setSettingsDialogOpen(false);
-    setOldPassword('');
-    setNewPassword('');
-    setConfirmPassword('');
+    if (onPasswordChange) {
+      onPasswordChange(oldPassword, newPassword);
+      setEditDialogOpen(false);
+      setOldPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
+      toast.success('Password changed successfully');
+    }
   };
 
   const handleDeleteAccount = () => {
@@ -105,15 +87,10 @@ export default function Profile() {
       return;
     }
     
-    // TODO: Send to backend API
-    console.log('Deleting account');
-    toast.success('Account deleted successfully');
-    setDeleteDialogOpen(false);
-    handleLogout();
-  };
-
-  const handleClaim = (item) => {
-    console.log('Viewing item:', item);
+    if (onDeleteAccount) {
+      onDeleteAccount();
+      toast.success('Account deleted successfully');
+    }
   };
 
   return (
@@ -165,12 +142,12 @@ export default function Profile() {
               <Box sx={{ display: 'flex', gap: 1 }}>
                 <IconButton
                   color="primary"
-                  onClick={() => setSettingsDialogOpen(true)}
+                  onClick={() => setEditDialogOpen(true)}
                   sx={{ border: '1px solid #e5e5e5' }}
                 >
                   <Settings size={20} />
                 </IconButton>
-                <Button variant="outlined" startIcon={<LogOut size={16} />} onClick={handleLogout}>
+                <Button variant="outlined" startIcon={<LogOut size={16} />} onClick={onLogout}>
                   Logout
                 </Button>
               </Box>
@@ -310,7 +287,7 @@ export default function Profile() {
                     <Grid container spacing={3}>
                       {myReports.map((item) => (
                         <Grid item xs={12} sm={6} md={4} key={item.id}>
-                          <ItemCard item={item} onClaim={handleClaim} showClaimButton={false} />
+                          <ItemCard item={item} onClaim={onClaim} showClaimButton={false} />
                         </Grid>
                       ))}
                     </Grid>
@@ -330,7 +307,7 @@ export default function Profile() {
                     <Grid container spacing={3}>
                       {myPending.map((item) => (
                         <Grid item xs={12} sm={6} md={4} key={item.id}>
-                          <ItemCard item={item} onClaim={handleClaim} showClaimButton={false} />
+                          <ItemCard item={item} onClaim={onClaim} showClaimButton={false} />
                         </Grid>
                       ))}
                     </Grid>
@@ -350,7 +327,7 @@ export default function Profile() {
                     <Grid container spacing={3}>
                       {myClaimed.map((item) => (
                         <Grid item xs={12} sm={6} md={4} key={item.id}>
-                          <ItemCard item={item} onClaim={handleClaim} showClaimButton={false} />
+                          <ItemCard item={item} onClaim={onClaim} showClaimButton={false} />
                         </Grid>
                       ))}
                     </Grid>
@@ -362,8 +339,8 @@ export default function Profile() {
         </Card>
       </Box>
 
-      {/* Settings Dialog */}
-      <Dialog open={settingsDialogOpen} onClose={() => setSettingsDialogOpen(false)} maxWidth="sm" fullWidth>
+      {/* Edit Profile Dialog */}
+      <Dialog open={editDialogOpen} onClose={() => setEditDialogOpen(false)} maxWidth="sm" fullWidth>
         <DialogTitle>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <Settings size={24} color="#800020" />
@@ -452,7 +429,7 @@ export default function Profile() {
                 color="error"
                 startIcon={<Trash2 size={16} />}
                 onClick={() => {
-                  setSettingsDialogOpen(false);
+                  setEditDialogOpen(false);
                   setDeleteDialogOpen(true);
                 }}
               >
@@ -462,7 +439,7 @@ export default function Profile() {
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setSettingsDialogOpen(false)}>Close</Button>
+          <Button onClick={() => setEditDialogOpen(false)}>Close</Button>
         </DialogActions>
       </Dialog>
 

@@ -324,4 +324,42 @@ public class ItemController {
                     .body("Error deleting item: " + e.getMessage());
         }
     }
+
+    // ADMIN: Get pending items (items awaiting approval)
+    // GET /api/items/pending
+    @GetMapping("/pending")
+    public ResponseEntity<List<ItemEntity>> getPendingItems() {
+        try {
+            List<ItemEntity> items = itemService.getItemsByStatus(ItemStatus.PENDING);
+            return ResponseEntity.ok(items);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    // ADMIN: Approve item (change status from PENDING to ACTIVE)
+    // PUT /api/items/{id}/approve
+    @PutMapping("/{id}/approve")
+    public ResponseEntity<?> approveItem(@PathVariable Long id) {
+        try {
+            ItemEntity item = itemService.updateItemStatus(id, ItemStatus.ACTIVE);
+            return ResponseEntity.ok(item);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Error approving item: " + e.getMessage());
+        }
+    }
+
+    // ADMIN: Reject item (change status to REJECTED)
+    // PUT /api/items/{id}/reject
+    @PutMapping("/{id}/reject")
+    public ResponseEntity<?> rejectItem(@PathVariable Long id) {
+        try {
+            ItemEntity item = itemService.updateItemStatus(id, ItemStatus.REJECTED);
+            return ResponseEntity.ok(item);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Error rejecting item: " + e.getMessage());
+        }
+    }
 }

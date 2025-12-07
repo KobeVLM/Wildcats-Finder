@@ -10,29 +10,17 @@ import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import InputAdornment from '@mui/material/InputAdornment';
 import Alert from '@mui/material/Alert';
-import { ItemCard } from '../../components/common/ItemCard';
-import { ClaimDialog } from '../../components/common/ClaimDialog';
+import { ItemCard, type Item } from './ItemCard';
 import { Search, TrendingUp } from 'lucide-react';
-import { toast } from 'sonner';
 
-export function HomePage({ items, onClaim }) {
+interface HomePageProps {
+  items: Item[];
+  onClaim: (item: Item) => void;
+}
+
+export function HomePage({ items, onClaim }: HomePageProps) {
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeTab, setActiveTab] = useState(0);
-  const [claimDialogOpen, setClaimDialogOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(null);
-
-  const handleClaimClick = (item) => {
-    setSelectedItem(item);
-    setClaimDialogOpen(true);
-  };
-
-  const handleClaimSubmit = (itemId, answer, contactInfo) => {
-    console.log('Claim submitted:', { itemId, answer, contactInfo });
-    toast.success('Claim submitted successfully! The owner will review it soon.');
-    if (onClaim) {
-      onClaim({ itemId, answer, contactInfo });
-    }
-  };
+  const [activeTab, setActiveTab] = useState<number>(0);
 
   const tabValue = activeTab === 0 ? 'all' : activeTab === 1 ? 'lost' : 'found';
 
@@ -235,7 +223,7 @@ export function HomePage({ items, onClaim }) {
               <Grid container spacing={3}>
                 {filteredItems.map((item) => (
                   <Grid item xs={12} sm={6} md={4} key={item.id}>
-                    <ItemCard item={item} onClaim={handleClaimClick} />
+                    <ItemCard item={item} onClaim={onClaim} />
                   </Grid>
                 ))}
               </Grid>
@@ -266,14 +254,6 @@ export function HomePage({ items, onClaim }) {
           </Box>
         </Alert>
       </Box>
-
-      {/* Claim Dialog */}
-      <ClaimDialog
-        item={selectedItem}
-        open={claimDialogOpen}
-        onClose={() => setClaimDialogOpen(false)}
-        onSubmit={handleClaimSubmit}
-      />
     </Container>
   );
 }

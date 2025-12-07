@@ -1,0 +1,1014 @@
+{
+	"info": {
+		"_postman_id": "43185e32-b99a-4dea-b45a-b2883bd0efdb",
+		"name": "Wildcats-Finder Test Case",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "48531842",
+		"_collection_link": "https://kobevlm-7976393.postman.co/workspace/Kobe-Vincent-Laborte-Marikit's-~d549a730-6f4e-4612-8269-44845721b766/collection/48531842-43185e32-b99a-4dea-b45a-b2883bd0efdb?action=share&source=collection_link&creator=48531842"
+	},
+	"item": [
+		{
+			"name": "Category Management",
+			"item": [
+				{
+					"name": "Get All Categories",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/categories",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Category By ID",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/categories/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"categories",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Category",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"categoryName\": \"Electronics\",\r\n  \"catDescription\": \"Phones, laptops, chargers, headphones\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/categories",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Category",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"categoryName\": \"Electronics & Gadgets\",\r\n  \"catDescription\": \"All electronic devices and accessories\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/categories/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"categories",
+								"1"
+							]
+						},
+						"description": "**Purpose:**\nThis request updates the details of an existing category in the system. It is typically used by administrators or authorized users to modify category information such as the name and description.\n\n**Endpoint:**\n```\nPUT {{baseUrl}}/api/categories/:categoryId\n```\n- `{{baseUrl}}` is a variable representing the base URL of the API server.\n- `:categoryId` should be replaced with the unique identifier of the category you wish to update (e.g., `1`).\n\n**Request Body:**\nThe request body must be in JSON format and include the following fields:\n- `categoryName` (string): The new or updated name of the category. Example: `\"Electronics & Gadgets\"`\n- `catDescription` (string): A description of the category. Example: `\"All electronic devices and accessories\"`\n\n**Example Request Body:**\n```\n{\n  \"categoryName\": \"Electronics & Gadgets\",\n  \"catDescription\": \"All electronic devices and accessories\"\n}\n```\n\n**Notes:**\n- Ensure that the category ID in the URL corresponds to an existing category.\n- Both fields in the request body are required.\n- The request may require authentication or specific permissions depending on your API's security settings.\n- A successful update typically returns a 200 OK status with the updated category details."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Category",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/categories/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"categories",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Department Management",
+			"item": [
+				{
+					"name": "Get All Departments",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/departments",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"departments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Department By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/departments/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"departments",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Department",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"depName\": \"IT Department\",\r\n  \"location\": \"Building A - 2nd Floor\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/departments",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"departments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Department",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"depName\": \"Information Technology\",\r\n  \"location\": \"Building A - 3rd Floor\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/departments/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"departments",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Department",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/departments/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"departments",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User Authentication",
+			"item": [
+				{
+					"name": "Get All Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/users/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"john_doe\",\r\n  \"password\": \"password123\",\r\n  \"fName\": \"John\",\r\n  \"mName\": \"Michael\", \r\n  \"lName\": \"Doe\",\r\n  \"email\": \"john.doe@email.com\",\r\n  \"contactNo\": \"123-456-7890\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"john_doe\",\r\n  \"password\": \"password123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User Profile",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"john_doe_updated\",\r\n  \"password\": \"newpassword123\",\r\n  \"fName\": \"Johnny\",\r\n  \"mName\": \"Michael\",\r\n  \"lName\": \"Doe\",\r\n  \"email\": \"johnny.doe@email.com\",\r\n  \"contactNo\": \"123-456-7891\",\r\n  \"role\": \"USER\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Item Management",
+			"item": [
+				{
+					"name": "Get All Items",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/items",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"items"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Item By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/items/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"items",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Report Lost Item",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"itemTitle\": \"iPhone 13 Pro\",\r\n  \"itemDesc\": \"Black iPhone 13 Pro with cracked screen protector\",\r\n  \"location\": \"Library - 2nd Floor\",\r\n  \"imageUrl\": \"https://example.com/image.jpg\",\r\n  \"status\": \"LOST\",\r\n  \"userId\": 1,\r\n  \"categoryId\": 1,\r\n  \"departmentId\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/items",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"items"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Report Found Item",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"itemTitle\": \"Samsung Galaxy Earbuds\",\r\n  \"itemDesc\": \"White Samsung Galaxy Earbuds Pro in charging case\",\r\n  \"location\": \"Cafeteria - Table 5\",\r\n  \"imageUrl\": \"https://example.com/earbuds.jpg\",\r\n  \"status\": \"FOUND\",\r\n  \"userId\": 1,\r\n  \"categoryId\": 1,\r\n  \"departmentId\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/items",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"items"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Item Details",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"itemTitle\": \"iPhone 13 Pro Max\",\r\n  \"itemDesc\": \"Black iPhone 13 Pro Max with blue case\",\r\n  \"location\": \"Library - 3rd Floor\",\r\n  \"imageUrl\": \"https://example.com/updated-image.jpg\",\r\n  \"status\": \"FOUND\",\r\n  \"userId\": 1,\r\n  \"categoryId\": 1,\r\n  \"departmentId\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/items/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"items",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Item",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/items/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"items",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Items By Status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/items/status/LOST",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"items",
+								"status",
+								"LOST"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Items By User",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/items/user/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"items",
+								"user",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Items By Category",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/items/category/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"items",
+								"category",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Items By Department",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/items/department/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"items",
+								"department",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Items",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Claim Management",
+			"item": [
+				{
+					"name": "Get All Claims",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/claims",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"claims"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Claim By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/claims/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"claims",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "File New Claim",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"itemId\": 1,\r\n  \"userId\": 1,\r\n  \"verificationAnswer\": \"Blue case\",\r\n  \"contactInfo\": \"09123456789\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/claims",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"claims"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Claim Status",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"status\": \"APPROVED\",\r\n  \"itemId\": 1,\r\n  \"userId\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/claims/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"claims",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Claims By User",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/claims/user/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"claims",
+								"user",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Claims By Item",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/claims/item/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"claims",
+								"item",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Pending Claims",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/claims/pending",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"claims",
+								"pending"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Verified Claims",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/claims/verified",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"claims",
+								"verified"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Approve Claim",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/claims/1/approve",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"claims",
+								"1",
+								"approve"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reject Claim",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/claims/1/reject",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"claims",
+								"1",
+								"reject"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Claim",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/claims/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"claims",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Notification Management",
+			"item": [
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/notifications/user/{userId}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"notifications",
+								"user",
+								"{userId}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Generic success status validation based on method",
+					"pm.test(\"Status code is successful for \" + pm.request.method, function () {",
+					"    const method = pm.request.method;",
+					"    const code = pm.response.code;",
+					"    const successCodesByMethod = {",
+					"        GET: [200, 206],",
+					"        POST: [200, 201, 202],",
+					"        PUT: [200, 204],",
+					"        PATCH: [200, 204],",
+					"        DELETE: [200, 202, 204],",
+					"        HEAD: [200, 204],",
+					"        OPTIONS: [200, 204]",
+					"    };",
+					"    const expected = successCodesByMethod[method] || [200];",
+					"    pm.expect(code, \"Expected one of: \" + expected.join(\", \")).to.be.oneOf(expected);",
+					"});",
+					"",
+					"// Try to parse JSON safely",
+					"function tryParseJson(body) {",
+					"    try { return JSON.parse(body); } catch (e) { return null; }",
+					"}",
+					"",
+					"// Heuristics to infer expected properties by endpoint pattern",
+					"function inferExpectedProps(req) {",
+					"    const urlPath = req.url.getPath();",
+					"    const method = req.method;",
+					"",
+					"    // Normalize path for checks",
+					"    const p = urlPath.toLowerCase();",
+					"",
+					"    // Common resource hints",
+					"    const isList = method === 'GET' && /\\/(list|all|search|query|categories|items|products|users|claims)(\\/|$)/.test(p) && !\\/[0-9a-f-]+$/.test(p);",
+					"    const isGetById = method === 'GET' && /\\/(categories|items|products|users|claims)\\/(\\d+|[0-9a-f-]+)(\\/|$)/.test(p);",
+					"    const isCreate = method === 'POST';",
+					"    const isUpdate = method === 'PUT' || method === 'PATCH';",
+					"    const isDelete = method === 'DELETE';",
+					"",
+					"    if (isList) {",
+					"        return { type: 'array', required: [] };",
+					"    }",
+					"    if (isGetById) {",
+					"        return { type: 'object', required: [\"id\"] };",
+					"    }",
+					"    if (isCreate) {",
+					"        return { type: 'object', oneOfRequired: [\"id\", \"_id\", \"uuid\"] };",
+					"    }",
+					"    if (isUpdate) {",
+					"        return { type: 'objectOrEmpty', optional: [\"updatedAt\", \"id\"] };",
+					"    }",
+					"    if (isDelete) {",
+					"        return { type: 'maybeEmpty' };",
+					"    }",
+					"    // Fallback generic expectation",
+					"    return { type: 'any' };",
+					"}",
+					"",
+					"// Validate response body shape and key presence",
+					"pm.test(\"Response body contains expected properties\", function () {",
+					"    const props = inferExpectedProps(pm.request);",
+					"    const body = pm.response.text();",
+					"    const json = tryParseJson(body);",
+					"    if (props.type === 'array') {",
+					"        pm.expect(Array.isArray(json), \"Expected an array response\").to.be.true;",
+					"    } else if (props.type === 'object') {",
+					"        pm.expect(json && typeof json === 'object' && !Array.isArray(json), \"Expected an object response\").to.be.true;",
+					"        if (props.required) {",
+					"            props.required.forEach(function (key) {",
+					"                pm.expect(json, \"Expected property '\" + key + \"'\").to.have.property(key);",
+					"            });",
+					"        }",
+					"        if (props.oneOfRequired) {",
+					"            pm.expect(",
+					"                props.oneOfRequired.some(function (key) { return json && json.hasOwnProperty(key); }),",
+					"                \"Expected at least one of: \" + props.oneOfRequired.join(\", \")",
+					"            ).to.be.true;",
+					"        }",
+					"    } else if (props.type === 'objectOrEmpty') {",
+					"        pm.expect(json === null || (typeof json === 'object' && !Array.isArray(json)), \"Expected object or empty response\").to.be.true;",
+					"    } else if (props.type === 'maybeEmpty') {",
+					"        pm.expect(json === null || typeof json === 'object', \"Expected empty or object response\").to.be.true;",
+					"    }",
+					"    // No assertion for 'any' type",
+					"});"
+				]
+			}
+		}
+	]
+}

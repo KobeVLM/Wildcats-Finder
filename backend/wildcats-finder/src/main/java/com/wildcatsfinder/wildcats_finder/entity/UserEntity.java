@@ -1,6 +1,7 @@
 package com.wildcatsfinder.wildcats_finder.entity;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -36,6 +37,22 @@ public class UserEntity {
     @Column(name = "role", nullable = false)
     private String role;
 
+    // NEW FIELDS - Priority 2
+    @Column(name = "student_id", unique = true)
+    private String studentId;
+
+    @Column(name = "suspended", nullable = false)
+    private Boolean suspended = false;
+
+    @Column(name = "suspension_reason", columnDefinition = "TEXT")
+    private String suspensionReason;
+
+    @Column(name = "suspension_date")
+    private LocalDateTime suspensionDate;
+
+    @Column(name = "joined_at", nullable = false)
+    private LocalDateTime joinedAt;
+
     // Relationships
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ItemEntity> reportedItems;
@@ -57,6 +74,8 @@ public class UserEntity {
         this.email = email;
         this.contactNo = contactNo;
         this.role = role;
+        this.joinedAt = LocalDateTime.now(); // Auto-set join date
+        this.suspended = false; // Default not suspended
     }
 
     // Getters and Setters
@@ -130,6 +149,46 @@ public class UserEntity {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getStudentId() {
+        return studentId;
+    }
+
+    public void setStudentId(String studentId) {
+        this.studentId = studentId;
+    }
+
+    public Boolean getSuspended() {
+        return suspended;
+    }
+
+    public void setSuspended(Boolean suspended) {
+        this.suspended = suspended;
+    }
+
+    public String getSuspensionReason() {
+        return suspensionReason;
+    }
+
+    public void setSuspensionReason(String suspensionReason) {
+        this.suspensionReason = suspensionReason;
+    }
+
+    public LocalDateTime getSuspensionDate() {
+        return suspensionDate;
+    }
+
+    public void setSuspensionDate(LocalDateTime suspensionDate) {
+        this.suspensionDate = suspensionDate;
+    }
+
+    public LocalDateTime getJoinedAt() {
+        return joinedAt;
+    }
+
+    public void setJoinedAt(LocalDateTime joinedAt) {
+        this.joinedAt = joinedAt;
     }
 
     public List<ItemEntity> getReportedItems() {

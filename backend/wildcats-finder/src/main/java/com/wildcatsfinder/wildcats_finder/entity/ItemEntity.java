@@ -49,9 +49,9 @@ public class ItemEntity {
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ClaimEntity> claims;
 
-    // Enum for status
+    // Enum for status - UPDATED with PENDING, ACTIVE, REJECTED
     public enum ItemStatus {
-        LOST, FOUND, CLAIMED, RETURNED
+        PENDING, ACTIVE, LOST, FOUND, CLAIMED, RETURNED, REJECTED
     }
 
     // Constructors
