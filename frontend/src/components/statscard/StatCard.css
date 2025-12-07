@@ -1,0 +1,79 @@
+/* EACH SMALL MAROON SQUARE */
+.square {
+  background: #800020; /* MAROON background */
+  border-radius: 10px; /* Square with slight rounding */
+  padding: 15px 20px;
+  width: 100px; /* SMALL width */
+  height: 100px; /* SMALL height - makes it square */
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(128, 0, 32, 0.4);
+  transition: all 0.3s ease;
+  border: 2px solid #D4AF37; /* Gold border */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* GOLD TOP STRIPE */
+.square:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 20px;
+  right: 0;
+  width: 100px;
+  height: 3px;
+  background: #ffffff; /* Gold stripe */
+}
+
+/* GOLD NUMBER WITH BLACK SHADOW */
+.square .count {
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: #FFD700; /* GOLD color */
+  margin-bottom: 5px;
+  line-height: 1;
+  text-shadow: 
+    1px 1px 0 #000,
+    2px 2px 4px rgba(0, 0, 0, 0.8); /* BLACK shadow */
+}
+
+/* WHITE LABEL */
+.square .label {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* HOVER EFFECT */
+.square:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(128, 0, 32, 0.5);
+  border-color: #ffffff;
+}
+
+/* "My Reports" card - SAME MAROON but different decoration */
+.square.user-stat {
+  background: #800020; /* Same maroon */
+  border: 2px solid #FFD700; /* Brighter gold border */
+}
+
+.square.user-stat::before {
+  background: #FFD700; /* Brighter gold stripe */
+}
+
+.square.user-stat .count {
+  color: #FFD700; /* Same gold */
+  text-shadow: 
+    1px 1px 0 #000,
+    2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.square.user-stat .label {
+  color: #FFD700; /* GOLD label text */
+  font-weight: 800;
+}

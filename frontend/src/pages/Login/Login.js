@@ -72,7 +72,7 @@ const cleanedData = {
 
   } catch (error) {
     console.error("Login error caught:", error);
-    setErrorMessage("Something went wrong. Please try again.");
+    setErrorMessage("Wrong credentials. Please try again.");
   } finally {
     setLoading(false);
   }

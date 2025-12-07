@@ -593,13 +593,6 @@
 }
 
 /* Edit Form */
-.edit-form {
-  background: #F9F5F0;
-  padding: 22px;
-  border-radius: 14px;
-  border: 2.5px solid #B76E79;
-}
-
 .edit-form h3 {
   color: #800020;
   text-align: center;

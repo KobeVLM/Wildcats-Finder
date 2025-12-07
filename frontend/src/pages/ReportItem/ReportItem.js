@@ -62,27 +62,31 @@ function ReportItem() {
   const [imagePreview, setImagePreview] = useState(null);
 
   // Fetch categories & departments
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const catRes = await fetch("http://localhost:8080/api/categories");
-        const cats = await catRes.json();
-        setCategories(cats);
+useEffect(() => {
+  async function fetchData() {
+    try {
+      console.log("Fetching categories...");
+      const catRes = await fetch("http://localhost:8080/api/categories");
+      const cats = await catRes.json();
+      console.log("Categories fetched:", cats);
+      setCategories(cats);
 
-        const depRes = await fetch("http://localhost:8080/api/departments");
-        const deps = await depRes.json();
-        setDepartments(deps);
-      } catch (err) {
-        console.error("Error fetching categories/departments:", err);
-        setMessage({
-          text: "Failed to load categories and departments",
-          type: "error",
-          title: "Load Error"
-        });
-      }
+      console.log("Fetching departments...");
+      const depRes = await fetch("http://localhost:8080/api/departments");
+      const deps = await depRes.json();
+      console.log("Departments fetched:", deps);
+      setDepartments(deps);
+    } catch (err) {
+      console.error("Error fetching categories/departments:", err);
+      setMessage({
+        text: "Failed to load categories and departments",
+        type: "error",
+        title: "Load Error"
+      });
     }
-    fetchData();
-  }, []);
+  }
+  fetchData();
+}, []);
 
   // Fetch reported items
   useEffect(() => {
@@ -164,43 +168,71 @@ function ReportItem() {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!user) {
-      setMessage({
-        text: "Please log in to report an item",
-        type: "error",
-        title: "Login Required"
-      });
-      return;
-    }
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  if (!user) {
+    setMessage({
+      text: "Please log in to report an item",
+      type: "error",
+      title: "Login Required"
+    });
+    return;
+  }
+  
+  // DEBUG LOGS
+  console.log("Form Data before validation:", formData);
+  console.log("categoryId value:", formData.categoryId, "type:", typeof formData.categoryId);
+  console.log("departmentId value:", formData.departmentId, "type:", typeof formData.departmentId);
+  console.log("Categories array:", categories);
+  console.log("Departments array:", departments);
 
-    const selectedCategory = categories.find((c) => String(c.categoryId) === String(formData.categoryId));
-    const selectedDepartment = departments.find((d) => String(d.depId) === String(formData.departmentId));
-    
-    if (!selectedCategory || !selectedDepartment) {
-      setMessage({
-        text: "Please select both a category and a campus",
-        type: "error",
-        title: "Missing Information"
-      });
-      return;
-    }
+  // First check if the IDs are actually selected
+  if (!formData.categoryId || !formData.departmentId) {  // <-- FIXED THIS LINE
+    console.log("SHOWING ERROR: categoryId =", formData.categoryId, "departmentId =", formData.departmentId);
+    console.log("Full formData:", formData);
+    setMessage({
+      text: "Please select both a category and a campus",
+      type: "error",
+      title: "Missing Information"
+    });
+    return;
+  }
+  
+  // Rest of the function remains the same...
+  // Then try to find the selected items
+  const selectedCategory = categories.find((c) => String(c.categoryId) === String(formData.categoryId));
+  const selectedDepartment = departments.find((d) => String(d.depId) === String(formData.departmentId));
 
-    // Create FormData for file upload
-    const formDataToSend = new FormData();
-    formDataToSend.append('itemTitle', formData.itemTitle);
-    formDataToSend.append('itemDesc', formData.itemDesc);
-    formDataToSend.append('location', selectedDepartment.depName);
-    formDataToSend.append('status', formData.status.toUpperCase());
-    formDataToSend.append('userId', user.userId);
-    formDataToSend.append('categoryId', selectedCategory.categoryId);
-    formDataToSend.append('departmentId', selectedDepartment.depId);
-    formDataToSend.append('dateReport', formData.dateReport);
-    
-    if (formData.image) {
-      formDataToSend.append('image', formData.image);
-    }
+  console.log("Found category:", selectedCategory);
+  console.log("Found department:", selectedDepartment);
+
+  // Double-check that they were found
+  if (!selectedCategory || !selectedDepartment) {
+    console.log("Validation failed: Could not find selected items in arrays");
+    setMessage({
+      text: "Invalid category or campus selection. Please try again.",
+      type: "error",
+      title: "Selection Error"
+    });
+    return;
+  }
+
+  console.log("Validation passed, proceeding with submission...");
+  
+  // Rest of your code remains the same...
+  const formDataToSend = new FormData();
+  formDataToSend.append('itemTitle', formData.itemTitle);
+  formDataToSend.append('itemDesc', formData.itemDesc);
+  formDataToSend.append('location', selectedDepartment.depName);
+  formDataToSend.append('status', formData.status.toUpperCase());
+  formDataToSend.append('userId', user.userId);
+  formDataToSend.append('categoryId', selectedCategory.categoryId);
+  formDataToSend.append('departmentId', selectedDepartment.depId);
+  formDataToSend.append('dateReport', formData.dateReport);
+  
+  if (formData.image) {
+    formDataToSend.append('image', formData.image);
+  }
 
     try {
       console.log("Submitting item with image:", formData.image ? formData.image.name : "No image");
@@ -325,18 +357,24 @@ const playNotificationSound = () => {
   };
 
   // Handle Edit Click
-  const handleEditClick = (item) => {
-    setEditingItem(item.itemId);
-    setEditFormData({
-      itemTitle: item.itemTitle || "",
-      itemDesc: item.itemDesc || "",
-      categoryId: item.categoryId || "",
-      departmentId: item.departmentId || "",
-      status: item.status || "",
-      dateReport: item.dateReport ? item.dateReport.slice(0, 10) : new Date().toISOString().slice(0, 10),
-      image: null // Reset image on edit
-    });
-  };
+const handleEditClick = (item) => {
+  console.log("Editing item:", item);
+  console.log("Item categoryId:", item.categoryId, "type:", typeof item.categoryId);
+  console.log("Item departmentId:", item.departmentId, "type:", typeof item.departmentId);
+  
+  setEditingItem(item.itemId);
+  setEditFormData({
+    itemTitle: item.itemTitle || "",
+    itemDesc: item.itemDesc || "",
+    categoryId: item.categoryId ? String(item.categoryId) : "", // Convert to string
+    departmentId: item.departmentId ? String(item.departmentId) : "", // Convert to string
+    status: item.status || "",
+    dateReport: item.dateReport ? item.dateReport.slice(0, 10) : new Date().toISOString().slice(0, 10),
+    image: null
+  });
+  
+  console.log("Set editFormData categoryId:", item.categoryId ? String(item.categoryId) : "", "type:", typeof (item.categoryId ? String(item.categoryId) : ""));
+};
 
   // Handle Edit Form Change
   const handleEditChange = (e) => {
@@ -359,17 +397,31 @@ const playNotificationSound = () => {
       return;
     }
 
-    const selectedCategory = categories.find(c => String(c.categoryId) === String(editFormData.categoryId));
-    const selectedDepartment = departments.find(d => String(d.depId) === String(editFormData.departmentId));
-    
-    if (!selectedCategory || !selectedDepartment) {
-      setMessage({
-        text: "Please select both category and campus",
-        type: "error",
-        title: "Missing Information"
-      });
-      return;
-    }
+// First check if IDs are actually selected
+if (!editFormData.categoryId || !editFormData.departmentId) {
+  console.log("EDIT FORM ERROR: categoryId =", editFormData.categoryId, "departmentId =", editFormData.departmentId);
+  console.log("Full editFormData:", editFormData);
+  setMessage({
+    text: "Please select both a category and a campus",
+    type: "error",
+    title: "Missing Information"
+  });
+  return;
+}
+
+// Then try to find them
+const selectedCategory = categories.find(c => String(c.categoryId) === String(editFormData.categoryId));
+const selectedDepartment = departments.find(d => String(d.depId) === String(editFormData.departmentId));
+
+if (!selectedCategory || !selectedDepartment) {
+  console.log("EDIT FORM ERROR: Could not find selected items");
+  setMessage({
+    text: "Invalid category or campus selection. Please try again.",
+    type: "error",
+    title: "Selection Error"
+  });
+  return;
+}
 
     // Create payload for update
     const payload = {
@@ -588,98 +640,115 @@ const playNotificationSound = () => {
                         
                         {/* EDIT MODE */}
                         {editingItem === item.itemId ? (
-                          <div className="edit-form">
-                            <h3>Edit Item</h3>
-                            
-                            <div className="form-group">
-                              <label>Item Name *</label>
-                              <input
-                                type="text"
-                                name="itemTitle"
-                                value={editFormData.itemTitle}
-                                onChange={handleEditChange}
-                                required
-                              />
-                            </div>
-                            
-                            <div className="form-group">
-                              <label>Description *</label>
-                              <textarea
-                                name="itemDesc"
-                                value={editFormData.itemDesc}
-                                onChange={handleEditChange}
-                                required
-                              />
-                            </div>
-                            
-                            <div className="form-row">
-                              <div className="form-group">
-                                <label>Category *</label>
-                                <select
-                                  name="categoryId"
-                                  value={editFormData.categoryId}
-                                  onChange={handleEditChange}
-                                  required
-                                >
-                                  <option value="">Select Category</option>
-                                  {categories.map((cat) => (
-                                    <option key={cat.categoryId} value={cat.categoryId}>
-                                      {cat.categoryName}
-                                    </option>
-                                  ))}
-                                </select>
-                              </div>
-                              
-                              <div className="form-group">
-                                <label>Status *</label>
-                                <select
-                                  name="status"
-                                  value={editFormData.status}
-                                  onChange={handleEditChange}
-                                  required
-                                >
-                                  <option value="LOST">Lost</option>
-                                  <option value="FOUND">Found</option>
-                                </select>
-                              </div>
-                            </div>
-                            
-                            <div className="form-group">
-                              <label>Date *</label>
-                              <input
-                                type="date"
-                                name="dateReport"
-                                value={editFormData.dateReport}
-                                onChange={handleEditChange}
-                                required
-                              />
-                            </div>
-                            
-                            <div className="form-group">
-                              <label>Photo</label>
-                              <input
-                                type="file"
-                                name="image"
-                                onChange={handleEditChange}
-                                accept="image/*"
-                              />
-                            </div>
-                            
-                            <div className="edit-actions">
-                              <button 
-                                className="save-btn"
-                                onClick={() => handleUpdateSubmit(item.itemId)}
-                              >
-                                Save Changes
-                              </button>
-                              <button 
-                                className="cancel-btn"
-                                onClick={handleCancelEdit}
-                              >
-                                Cancel
-                              </button>
-                            </div>
-                          </div>
+  <div className="edit-form">
+    <h3>Edit Item</h3>
+    
+    <div className="form-group">
+      <label>Item Name *</label>
+      <input
+        type="text"
+        name="itemTitle"
+        value={editFormData.itemTitle}
+        onChange={handleEditChange}
+        required
+      />
+    </div>
+    
+    <div className="form-group">
+      <label>Description *</label>
+      <textarea
+        name="itemDesc"
+        value={editFormData.itemDesc}
+        onChange={handleEditChange}
+        required
+      />
+    </div>
+    
+    <div className="form-row">
+      <div className="form-group">
+        <label>Category *</label>
+        <select
+          name="categoryId"
+          value={editFormData.categoryId}
+          onChange={handleEditChange}
+          required
+        >
+          <option value="">Select Category</option>
+          {categories.map((cat) => (
+            <option key={cat.categoryId} value={String(cat.categoryId)}>
+              {cat.categoryName}
+            </option>
+          ))}
+        </select>
+      </div>
+      
+      <div className="form-group"> {/* ADD THIS DIV WITH LABEL */}
+        <label>Campus *</label>
+        <select
+          name="departmentId"
+          value={editFormData.departmentId}
+          onChange={handleEditChange}
+          required
+        >
+          <option value="">Select Campus</option>
+          {departments.map((dept) => (
+            <option key={dept.depId} value={String(dept.depId)}>
+              {dept.depName}
+            </option>
+          ))}
+        </select>
+      </div>
+      
+      <div className="form-group">
+        <label>Status *</label>
+        <select
+          name="status"
+          value={editFormData.status}
+          onChange={handleEditChange}
+          required
+        >
+          <option value="LOST">Lost</option>
+          <option value="FOUND">Found</option>
+        </select>
+      </div>
+    </div>
+    
+    <div className="form-group">
+      <label>Date *</label>
+      <input
+        type="date"
+        name="dateReport"
+        value={editFormData.dateReport}
+        onChange={handleEditChange}
+        required
+      />
+    </div>
+    
+    <div className="form-group">
+      <label>Photo</label>
+      <input
+        type="file"
+        name="image"
+        onChange={handleEditChange}
+        accept="image/*"
+      />
+    </div>
+    
+    <div className="edit-actions">
+      <button 
+        className="save-btn"
+        onClick={() => handleUpdateSubmit(item.itemId)}
+      >
+        Save Changes
+      </button>
+      <button 
+        className="cancel-btn"
+        onClick={handleCancelEdit}
+      >
+        Cancel
+      </button>
+    </div>
+  </div>
                         ) : (
                           /* VIEW MODE */
                           <>
@@ -690,8 +759,10 @@ const playNotificationSound = () => {
                               </span>
                             </div>
                             
-                           
-                            <p className="item-description">  <h4>Description:</h4> {item.itemDesc || "No description"}</p>
+                            <div className="item-description">
+                              <h4>Description:</h4>
+                              <p>{item.itemDesc || "No description"}</p>
+                            </div>
                             
                             <div className="item-details">
                               <p><strong>Category:</strong> {item.categoryName || "Uncategorized"}</p>

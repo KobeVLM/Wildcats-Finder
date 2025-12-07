@@ -1,18 +1,19 @@
-// C:\Wildcats-Finder\Wildcats-Finder\frontend\src\components\sidebar\Sidebar.js
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { NavLink } from 'react-router-dom';
+import { UserContext } from '../../context/UserContext'; // Import UserContext
 import homeIcon from '../../assets/icons/home.png';
 import reportItemIcon from '../../assets/icons/report-item.png';
 import searchIcon from '../../assets/icons/search.png';
 import profileIcon from '../../assets/icons/profile.png';
 import claimIcon from '../../assets/icons/claim.png';
 import logo from '../../assets/images/Logo1.png';
-import { FaChevronDown, FaChevronRight, FaChevronLeft, FaChevronRight as FaRight } from 'react-icons/fa';
+import { FaChevronDown, FaChevronRight, FaChevronLeft } from 'react-icons/fa';
 import './Sidebar.css';
 
 function Sidebar() {
   const [reportSubmenuOpen, setReportSubmenuOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const { user } = useContext(UserContext); // Get user from context
 
   const toggleReportSubmenu = () => {
     if (!sidebarCollapsed) {
@@ -26,8 +27,45 @@ function Sidebar() {
       setReportSubmenuOpen(false);
     }
     
-    // Update CSS variable or class on body for main content adjustment
     document.body.classList.toggle('sidebar-collapsed', !sidebarCollapsed);
+  };
+
+  // Function to get user's full name
+  const getFullName = () => {
+    if (!user) return "Guest";
+    
+    const firstName = user.fname || "";
+    const middleName = user.mname || "";
+    const lastName = user.lname || "";
+    
+    let fullName = firstName;
+    
+    if (middleName && middleName.trim() !== "") {
+      fullName += ` ${middleName.charAt(0)}.`;
+    }
+    
+    if (lastName) {
+      fullName += ` ${lastName}`;
+    }
+    
+    return fullName.trim() || user.username || "User";
+  };
+
+  // Function to get user's initials for avatar
+  const getUserInitials = () => {
+    if (!user) return "G";
+    
+    let initials = "";
+    if (user.fname) initials += user.fname.charAt(0).toUpperCase();
+    if (user.lname) initials += user.lname.charAt(0).toUpperCase();
+    
+    return initials || user.username?.charAt(0).toUpperCase() || "U";
+  };
+
+  // Function to get display username (email)
+  const getDisplayUsername = () => {
+    if (!user) return "guest@example.com";
+    return user.username || user.email || "user@example.com";
   };
 
   return (
@@ -173,11 +211,11 @@ function Sidebar() {
 
           <div className="user-info-section">
             <div className="user-avatar">
-              <div className="avatar-placeholder">U</div>
+              <div className="avatar-placeholder">{getUserInitials()}</div>
             </div>
             <div className="user-details">
-              <span className="user-name">Username</span>
-              <span className="user-email">user@example.com</span>
+              <span className="user-name">{getFullName()}</span>
+              <span className="user-email">{getDisplayUsername()}</span>
             </div>
           </div>
         </>
@@ -200,11 +238,16 @@ function Sidebar() {
             </NavLink>
           </div>
 
-          <div className="user-info-section collapsed-user-info" title="User Profile">
+          <div 
+            className="user-info-section collapsed-user-info" 
+            title={`${getFullName()}\n${getDisplayUsername()}`}
+          >
             <div className="user-avatar">
-              <div className="avatar-placeholder">U</div>
+              <div className="avatar-placeholder">{getUserInitials()}</div>
             </div>
-            <span className="sidebar-tooltip">Username<br/>user@example.com</span>
+            <span className="sidebar-tooltip">
+              {getFullName()}<br/>{getDisplayUsername()}
+            </span>
           </div>
         </>
       )}

@@ -1,4 +1,5 @@
 import React from "react";
+import "./StatCard.css";
 
 export default function StatCard({ count, label }) {
   return (
