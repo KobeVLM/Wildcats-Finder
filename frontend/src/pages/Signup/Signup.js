@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./Signup.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import Message from "../../components/message/message"; 
 import { FaEnvelope, FaLock, FaUser, FaPhone, FaArrowLeft } from "react-icons/fa";
 
@@ -183,6 +183,10 @@ function Signup() {
           >
             Log In
           </button>
+
+          <p className="admin-signup-link" style={{ textAlign: 'center', marginTop: '15px', fontSize: '0.9em', color: '#666' }}>
+            Administrator? <Link to="/admin/signup" style={{ color: '#b91c1c', fontWeight: '600', textDecoration: 'none' }}>Create Admin Account</Link>
+          </p>
         </form>
       </div>
     </div>

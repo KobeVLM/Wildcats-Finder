@@ -7,7 +7,7 @@ import searchIcon from '../../assets/icons/search.png';
 import profileIcon from '../../assets/icons/profile.png';
 import claimIcon from '../../assets/icons/claim.png';
 import logo from '../../assets/images/Logo1.png';
-import { FaChevronDown, FaChevronRight, FaChevronLeft } from 'react-icons/fa';
+import { FaChevronDown, FaChevronRight, FaChevronLeft, FaShieldAlt } from 'react-icons/fa';
 import './Sidebar.css';
 
 function Sidebar() {
@@ -83,6 +83,9 @@ function Sidebar() {
 
       {/* Navigation Items */}
       <ul className="sidebar-links">
+        {/* Show regular user tabs only if user is NOT admin */}
+        {(!user || user.role !== 'admin') && (
+          <>
         <li>
           <NavLink 
             to="/home" 
@@ -173,9 +176,9 @@ function Sidebar() {
         </li>
 
         <li>
-          <NavLink 
+          <NavLink
             to="/claim" 
-            className={({ isActive }) => 
+            className={({ isActive }) =>
               `sidebar-link ${isActive ? 'active' : ''}`
             }
             title="Claim"
@@ -187,6 +190,27 @@ function Sidebar() {
             </div>
           </NavLink>
         </li>
+        </>
+        )}
+
+        {/* Admin Dashboard - Only show for admin users */}
+        {user && user.role === 'admin' && (
+          <li>
+            <NavLink
+              to="/admin"
+              className={({ isActive }) =>
+                `sidebar-link admin-link ${isActive ? 'active' : ''}`
+              }
+              title="Admin Dashboard"
+            >
+              <div className="sidebar-link-content">
+                <FaShieldAlt className="sidebar-icon admin-icon" />
+                {!sidebarCollapsed && <span className="sidebar-link-text">Admin</span>}
+                {sidebarCollapsed && <span className="sidebar-tooltip">Admin Dashboard</span>}
+              </div>
+            </NavLink>
+          </li>
+        )}
       </ul>
 
       {/* Separator and Profile/User info - Show differently based on collapsed state */}
@@ -194,20 +218,23 @@ function Sidebar() {
         <>
           <div className="sidebar-separator"></div>
 
-          <div className="profile-link-container">
-            <NavLink 
-              to="/profile" 
-              className={({ isActive }) => 
-                `sidebar-link profile-link ${isActive ? 'active' : ''}`
-              }
-              title="Profile"
-            >
-              <div className="sidebar-link-content">
-                <img src={profileIcon} alt="Profile Icon" className="sidebar-icon" />
-                <span className="sidebar-link-text">Profile</span>
-              </div>
-            </NavLink>
-          </div>
+          {/* Show Profile link only for non-admin users */}
+          {(!user || user.role !== 'admin') && (
+            <div className="profile-link-container">
+              <NavLink 
+                to="/profile" 
+                className={({ isActive }) => 
+                  `sidebar-link profile-link ${isActive ? 'active' : ''}`
+                }
+                title="Profile"
+              >
+                <div className="sidebar-link-content">
+                  <img src={profileIcon} alt="Profile Icon" className="sidebar-icon" />
+                  <span className="sidebar-link-text">Profile</span>
+                </div>
+              </NavLink>
+            </div>
+          )}
 
           <div className="user-info-section">
             <div className="user-avatar">
@@ -223,20 +250,23 @@ function Sidebar() {
         <>
           <div className="sidebar-separator collapsed-separator"></div>
           
-          <div className="profile-link-container">
-            <NavLink 
-              to="/profile" 
-              className={({ isActive }) => 
-                `sidebar-link profile-link ${isActive ? 'active' : ''}`
-              }
-              title="Profile"
-            >
-              <div className="sidebar-link-content">
-                <img src={profileIcon} alt="Profile Icon" className="sidebar-icon" />
-                <span className="sidebar-tooltip">Profile</span>
-              </div>
-            </NavLink>
-          </div>
+          {/* Show Profile link only for non-admin users */}
+          {(!user || user.role !== 'admin') && (
+            <div className="profile-link-container">
+              <NavLink 
+                to="/profile" 
+                className={({ isActive }) => 
+                  `sidebar-link profile-link ${isActive ? 'active' : ''}`
+                }
+                title="Profile"
+              >
+                <div className="sidebar-link-content">
+                  <img src={profileIcon} alt="Profile Icon" className="sidebar-icon" />
+                  <span className="sidebar-tooltip">Profile</span>
+                </div>
+              </NavLink>
+            </div>
+          )}
 
           <div 
             className="user-info-section collapsed-user-info" 

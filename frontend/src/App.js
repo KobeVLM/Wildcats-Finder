@@ -16,6 +16,8 @@ import Claim from "./pages/Claim/Claim";
 import Profile from "./pages/Profile/Profile";
 import Login from "./pages/Login/Login";
 import Signup from "./pages/Signup/Signup";
+import AdminDashboard from "./pages/AdminDashboard/AdminDashboard";
+import AdminSignup from "./pages/AdminSignup/AdminSignup";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(
@@ -49,6 +51,7 @@ function App() {
             <Route path="/" element={<Index />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
+            <Route path="/admin/signup" element={<AdminSignup />} />
 
             {/* Protected routes */}
             <Route
@@ -90,6 +93,15 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Profile />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute>
+                  <AdminDashboard />
                 </ProtectedRoute>
               }
             />
