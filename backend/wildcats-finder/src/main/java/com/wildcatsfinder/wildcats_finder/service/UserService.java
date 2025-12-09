@@ -101,8 +101,10 @@ public class UserService {
 
     // REGISTER: Register a new user with auto-assigned USER role
     public UserEntity registerUser(UserEntity user) {
-        // Auto-assign USER role for new registrations
-        user.setRole("USER");
+        // Only set USER role if no role has been specified
+        if (user.getRole() == null || user.getRole().isEmpty()) {
+            user.setRole("USER");
+        }
         return userRepository.save(user);
     }
 
