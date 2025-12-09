@@ -1,11 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
-<<<<<<< HEAD
-import { useNavigate } from "react-router-dom";
 import { FaEnvelope, FaLock, FaArrowLeft, FaEye, FaEyeSlash } from "react-icons/fa";
-=======
 import { useNavigate, Link } from "react-router-dom";
-import { FaEnvelope, FaLock, FaArrowLeft } from "react-icons/fa";
->>>>>>> 5a689ce2f9a702cbe066b39a952e23dd6be2e897
 import Message from "../../components/message/message"; // optional
 import { UserContext } from "../../context/UserContext";
 import "./Login.css";
@@ -36,59 +31,81 @@ function Login() {
     setShowPassword(!showPassword);
   };
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setErrorMessage("");
+const handleLogin = async (e) => {
+  e.preventDefault();
+  setLoading(true);
+  setErrorMessage("");
 
-    console.log("Sending login:", formData);
+  console.log("Sending login:", formData);
 
+  try {
+    const response = await fetch("http://localhost:8080/api/users/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    });
+
+    const text = await response.text();
+    console.log("Response status:", response.status);
+    console.log("Raw response:", text);
+
+    let data;
     try {
-      const response = await fetch("http://localhost:8080/api/users/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-
-      const text = await response.text();
-      console.log("Response status:", response.status);
-      console.log("Response text:", text);
-
-      let data;
-      try {
-        data = JSON.parse(text); // parse JSON safely
-      } catch {
-        setErrorMessage(text || "Invalid server response");
-        return;
-      }
-
-      if (!response.ok) {
-        setErrorMessage(data.error || "Something went wrong");
-        return;
-      }
-
-      // Strip out nested 'user' from reportedItems to prevent recursion
-      const cleanedData = {
-        ...data,
-        reportedItems: data.reportedItems?.map(item => {
-          const { user, ...rest } = item; // remove nested user
-          return rest;
-        }) || []
-      };
-      
-      // Save cleaned data
-      setUser(cleanedData);
-      localStorage.setItem("user", JSON.stringify(cleanedData));
-      localStorage.setItem("isAuthenticated", "true");
-      navigate("/home");
-
-    } catch (error) {
-      console.error("Login error caught:", error);
-      setErrorMessage("Wrong credentials. Please try again.");
-    } finally {
-      setLoading(false);
+      data = JSON.parse(text);
+      console.log("Parsed response data:", data);
+      console.log("User role from backend:", data.role);
+    } catch {
+      setErrorMessage(text || "Invalid server response");
+      return;
     }
-  };
+
+    if (!response.ok) {
+      setErrorMessage(data.error || "Something went wrong");
+      return;
+    }
+
+    // Strip out nested 'user' from reportedItems to prevent recursion
+    const cleanedData = {
+      ...data,
+      reportedItems: data.reportedItems?.map(item => {
+        const { user, ...rest } = item; // remove nested user
+        return rest;
+      }) || []
+    };
+    
+    // Save cleaned data
+    setUser(cleanedData);
+    localStorage.setItem("user", JSON.stringify(cleanedData));
+    localStorage.setItem("isAuthenticated", "true");
+
+    // CHECK USER ROLE FOR REDIRECTION
+    console.log("Checking role for redirection:");
+    console.log("Role:", cleanedData.role);
+    console.log("Email:", cleanedData.email);
+    console.log("Username:", cleanedData.username);
+    
+    const isAdmin = 
+      cleanedData.role?.toUpperCase() === 'ADMIN' || 
+      cleanedData.email?.includes('@wildcatsf.com') || 
+      cleanedData.username?.includes('@wildcatsf.com');
+    
+    console.log("Is admin?", isAdmin);
+    
+    if (isAdmin) {
+      console.log("Redirecting to admin dashboard");
+      navigate("/admin");
+    } else {
+      console.log("Redirecting to home");
+      navigate("/home");
+    }
+
+  } catch (error) {
+    console.error("Login error caught:", error);
+    setErrorMessage("Wrong credentials. Please try again.");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="login-page">

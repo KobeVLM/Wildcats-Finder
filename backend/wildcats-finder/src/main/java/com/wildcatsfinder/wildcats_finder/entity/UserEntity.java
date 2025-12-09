@@ -51,8 +51,9 @@ public class UserEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ClaimEntity> claims;
 
-    // Constructors
+    // Constructors - Make sure default constructor doesn't set role
     public UserEntity() {
+        // Don't set role here - let it be set by Controller
     }
 
     public UserEntity(String username, String password, String fName, String mName,
@@ -67,7 +68,7 @@ public class UserEntity {
         this.role = role;
     }
 
-    // Getters and Setters
+    // Getters and Setters (keep as is)
     public Long getUserId() {
         return userId;
     }

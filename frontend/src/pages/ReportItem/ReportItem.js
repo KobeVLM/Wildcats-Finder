@@ -8,8 +8,6 @@ import notifSound from '../../assets/music/notif.mp3';
 function ReportItem() {
   const { user } = useContext(UserContext);
   const location = useLocation();
-  
-  const audioRef = useRef(null);
 
   // Determine active panel from URL
   const [activePanel, setActivePanel] = useState("report");

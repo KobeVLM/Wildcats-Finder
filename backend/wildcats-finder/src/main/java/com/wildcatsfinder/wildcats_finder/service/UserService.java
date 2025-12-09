@@ -99,53 +99,60 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    // REGISTER: Register a new user with auto-assigned USER role
+    // REGISTER: Register a new user - DO NOT override role
     public UserEntity registerUser(UserEntity user) {
-        // Only set USER role if no role has been specified
-        if (user.getRole() == null || user.getRole().isEmpty()) {
-            user.setRole("USER");
-        }
-        return userRepository.save(user);
+        System.out.println("=== SERVICE DEBUG: registerUser ===");
+        System.out.println("Username: " + user.getUsername());
+        System.out.println("Role from controller: '" + user.getRole() + "'");
+        
+        // Just save the user as-is, don't override the role
+        UserEntity savedUser = userRepository.save(user);
+        
+        System.out.println("Saved user role: " + savedUser.getRole());
+        System.out.println("=== END SERVICE DEBUG ===");
+        
+        return savedUser;
     }
 
     // LOGIN: Validate user login credentials
     public UserEntity loginUser(String username, String password) {
-    System.out.println("=== USER SERVICE DEBUG - loginUser ===");
-    System.out.println("Looking for user with username: " + username);
-    
-    System.out.println("Using custom query...");
-    
-    Optional<UserEntity> user = userRepository.findByUsernameWithItems(username);
+        System.out.println("=== USER SERVICE DEBUG - loginUser ===");
+        System.out.println("Looking for user with username: " + username);
+        
+        System.out.println("Using custom query...");
+        
+        Optional<UserEntity> user = userRepository.findByUsernameWithItems(username);
 
-    if (user.isPresent()) {
-        UserEntity foundUser = user.get();
-        
-        System.out.println("User found with ID: " + foundUser.getUserId());
-        System.out.println("User fName: '" + foundUser.getFName() + "'");
-        System.out.println("User mName: '" + foundUser.getMName() + "'");
-        System.out.println("User lName: '" + foundUser.getLName() + "'");
-        System.out.println("User email: " + foundUser.getEmail());
-        
-        // Check if name fields are actually populated
-        if (foundUser.getFName() == null) {
-            System.out.println("WARNING: fName is NULL!");
+        if (user.isPresent()) {
+            UserEntity foundUser = user.get();
+            
+            System.out.println("User found with ID: " + foundUser.getUserId());
+            System.out.println("User fName: '" + foundUser.getFName() + "'");
+            System.out.println("User mName: '" + foundUser.getMName() + "'");
+            System.out.println("User lName: '" + foundUser.getLName() + "'");
+            System.out.println("User email: " + foundUser.getEmail());
+            System.out.println("User role: " + foundUser.getRole()); // ADDED THIS LINE
+            
+            // Check if name fields are actually populated
+            if (foundUser.getFName() == null) {
+                System.out.println("WARNING: fName is NULL!");
+            } else {
+                System.out.println("fName length: " + foundUser.getFName().length());
+            }
+            
+            // Simple password check (you might want to use BCrypt in production)
+            if (foundUser.getPassword().equals(password)) {
+                System.out.println("Password matches! Returning user...");
+                return foundUser;
+            } else {
+                System.out.println("Password does NOT match!");
+                throw new NoSuchElementException("Invalid password for user: " + username);
+            }
         } else {
-            System.out.println("fName length: " + foundUser.getFName().length());
+            System.out.println("User NOT found!");
+            throw new NoSuchElementException("User with username '" + username + "' not found");
         }
-        
-        // Simple password check (you might want to use BCrypt in production)
-        if (foundUser.getPassword().equals(password)) {
-            System.out.println("Password matches! Returning user...");
-            return foundUser;
-        } else {
-            System.out.println("Password does NOT match!");
-            throw new NoSuchElementException("Invalid password for user: " + username);
-        }
-    } else {
-        System.out.println("User NOT found!");
-        throw new NoSuchElementException("User with username '" + username + "' not found");
     }
-}
 
     // DELETE: Remove a user
     public String deleteUser(Long id) {

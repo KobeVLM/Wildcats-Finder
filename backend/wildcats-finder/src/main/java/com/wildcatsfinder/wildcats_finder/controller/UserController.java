@@ -151,6 +151,11 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody UserRegistrationRequest request) {        
         try {
+            System.out.println("=== DEBUG: Registration Request ===");
+            System.out.println("Username: " + request.getUsername());
+            System.out.println("Email: " + request.getEmail());
+            System.out.println("Role from request: '" + request.getRole() + "'");
+            
             // validation
             if (request.getUsername() == null || request.getUsername().trim().isEmpty()) {
                 return ResponseEntity.badRequest().body("Username is required");
@@ -188,14 +193,37 @@ public class UserController {
             user.setEmail(request.getEmail());
             user.setContactNo(request.getContactNo());
 
-            // Register user with auto-assigned "USER" role
+            // Determine role based on email domain
+            String role = request.getRole();
+            System.out.println("Role from frontend: '" + role + "'");
+            
+            if (role == null || role.trim().isEmpty()) {
+                // Auto-detect role based on email domain
+                if (request.getUsername().contains("@wildcatsf.com") || 
+                    request.getEmail().contains("@wildcatsf.com")) {
+                    role = "ADMIN";
+                    System.out.println("Auto-detected role: ADMIN (wildcatsf.com domain)");
+                } else {
+                    role = "USER";
+                    System.out.println("Auto-detected role: USER");
+                }
+            }
+            
+            user.setRole(role);
+            System.out.println("Final role being set: " + user.getRole());
+
+            // Register user
             UserEntity savedUser = userService.registerUser(user);
 
             // return data without password 
             savedUser.setPassword(null);
+            System.out.println("User registered successfully with role: " + savedUser.getRole());
+            System.out.println("================================");
             return ResponseEntity.ok(savedUser);
 
         } catch (Exception e) {
+            System.out.println("Registration error: " + e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error registering user: " + e.getMessage());
         }
@@ -241,7 +269,7 @@ public class UserController {
             user.setLName(request.getLName());
             user.setEmail(request.getEmail());
             user.setContactNo(request.getContactNo());
-            user.setRole("admin"); // Set admin role
+            user.setRole("ADMIN"); // Set admin role
 
             // Register admin user
             UserEntity savedUser = userService.registerUser(user);
@@ -254,68 +282,72 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error registering admin: " + e.getMessage());
         }
-    }    // LOGIN: Authenticate user
-    // POST /api/users/login
-@PostMapping("/login")
-public ResponseEntity<?> loginUser(@RequestBody UserLoginRequest request) {
-    try {
-        System.out.println("\n=== CONTROLLER DEBUG - loginUser ===");
-        System.out.println("Login attempt for username: " + request.getUsername());
-        
-        if (request.getUsername() == null || request.getUsername().trim().isEmpty()) {
-            return ResponseEntity.badRequest().body(Map.of("error", "Username is required"));
-        }
-        if (request.getPassword() == null || request.getPassword().trim().isEmpty()) {
-            return ResponseEntity.badRequest().body(Map.of("error", "Password is required"));
-        }
-
-        // Authenticate
-        UserEntity user = userService.loginUser(request.getUsername(), request.getPassword());
-        
-        System.out.println("User entity received from service:");
-        System.out.println("  fName: '" + user.getFName() + "'");
-        System.out.println("  mName: '" + user.getMName() + "'");
-        System.out.println("  lName: '" + user.getLName() + "'");
-
-        // Map reported items to DTO
-        List<ItemDTO> itemDTOs = user.getReportedItems()
-                                     .stream()
-                                     .map(ItemDTO::new)
-                                     .toList();
-
-        // Build UserDTO
-        UserDTO userDTO = new UserDTO(
-            user.getUserId(),
-            user.getUsername(),
-            user.getFName(),
-            user.getMName(),
-            user.getLName(),
-            user.getEmail(),
-            user.getContactNo(),
-            user.getRole(),
-            itemDTOs
-        );
-
-        System.out.println("UserDTO created:");
-        System.out.println("  DTO fName: '" + userDTO.getFName() + "'");
-        System.out.println("  DTO mName: '" + userDTO.getMName() + "'");
-        System.out.println("  DTO lName: '" + userDTO.getLName() + "'");
-        
-        // Also print the entire DTO as JSON
-        ObjectMapper mapper = new ObjectMapper();
-        String json = mapper.writeValueAsString(userDTO);
-        System.out.println("Full DTO JSON: " + json);
-        System.out.println("=== END DEBUG ===\n");
-
-        return ResponseEntity.ok(userDTO);
-
-    } catch (Exception e) {
-        System.out.println("Login error: " + e.getMessage());
-        e.printStackTrace();
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                             .body(Map.of("error", "Nope!, Please try again"));
     }
-}
+
+    // LOGIN: Authenticate user
+    // POST /api/users/login
+    @PostMapping("/login")
+    public ResponseEntity<?> loginUser(@RequestBody UserLoginRequest request) {
+        try {
+            System.out.println("\n=== CONTROLLER DEBUG - loginUser ===");
+            System.out.println("Login attempt for username: " + request.getUsername());
+            
+            if (request.getUsername() == null || request.getUsername().trim().isEmpty()) {
+                return ResponseEntity.badRequest().body(Map.of("error", "Username is required"));
+            }
+            if (request.getPassword() == null || request.getPassword().trim().isEmpty()) {
+                return ResponseEntity.badRequest().body(Map.of("error", "Password is required"));
+            }
+
+            // Authenticate
+            UserEntity user = userService.loginUser(request.getUsername(), request.getPassword());
+            
+            System.out.println("User entity received from service:");
+            System.out.println("  fName: '" + user.getFName() + "'");
+            System.out.println("  mName: '" + user.getMName() + "'");
+            System.out.println("  lName: '" + user.getLName() + "'");
+            System.out.println("  Role: '" + user.getRole() + "'");
+
+            // Map reported items to DTO
+            List<ItemDTO> itemDTOs = user.getReportedItems()
+                                         .stream()
+                                         .map(ItemDTO::new)
+                                         .toList();
+
+            // Build UserDTO
+            UserDTO userDTO = new UserDTO(
+                user.getUserId(),
+                user.getUsername(),
+                user.getFName(),
+                user.getMName(),
+                user.getLName(),
+                user.getEmail(),
+                user.getContactNo(),
+                user.getRole(), // This includes the role!
+                itemDTOs
+            );
+
+            System.out.println("UserDTO created:");
+            System.out.println("  DTO fName: '" + userDTO.getFName() + "'");
+            System.out.println("  DTO mName: '" + userDTO.getMName() + "'");
+            System.out.println("  DTO lName: '" + userDTO.getLName() + "'");
+            System.out.println("  DTO Role: '" + userDTO.getRole() + "'");
+            
+            // Also print the entire DTO as JSON
+            ObjectMapper mapper = new ObjectMapper();
+            String json = mapper.writeValueAsString(userDTO);
+            System.out.println("Full DTO JSON: " + json);
+            System.out.println("=== END DEBUG ===\n");
+
+            return ResponseEntity.ok(userDTO);
+
+        } catch (Exception e) {
+            System.out.println("Login error: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                 .body(Map.of("error", "Nope!, Please try again"));
+        }
+    }
 
     // READ: Get all users (admin functionality)
     // GET /api/users
