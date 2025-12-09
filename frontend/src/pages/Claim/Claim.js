@@ -1,10 +1,211 @@
-import React from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { UserContext } from "../../context/UserContext";
+import "./Claim.css";
 
 function Claim() {
+  const { user } = useContext(UserContext);
+  const [activeTab, setActiveTab] = useState("myItems");
+  const [claimsOnMyItems, setClaimsOnMyItems] = useState([]);
+  const [myClaims, setMyClaims] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (user && user.userId) {
+      fetchClaimsData();
+    }
+  }, [user]);
+
+  const fetchClaimsData = async () => {
+    try {
+      setLoading(true);
+
+      // Fetch user's reported items to get claims on them
+      const itemsResponse = await fetch(`http://localhost:8080/api/items/user/${user.userId}`);
+      const userItems = await itemsResponse.json();
+
+      // For each item, fetch the claims
+      const claimsPromises = userItems.map(item =>
+        fetch(`http://localhost:8080/api/claims/item/${item.itemId}`).then(res => res.json())
+      );
+      const claimsArrays = await Promise.all(claimsPromises);
+
+      // Flatten and combine with item data
+      const claimsWithItems = claimsArrays.flat().map((claim, index) => {
+        const itemIndex = claimsArrays.findIndex(arr => arr.includes(claim));
+        return {
+          ...claim,
+          itemDetails: userItems[itemIndex]
+        };
+      });
+
+      setClaimsOnMyItems(claimsWithItems);
+
+      // Fetch user's own claims
+      const myClaimsResponse = await fetch(`http://localhost:8080/api/claims/user/${user.userId}`);
+      const myClaimsData = await myClaimsResponse.json();
+      setMyClaims(myClaimsData);
+
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching claims:", error);
+      setLoading(false);
+    }
+  };
+
+  const handleApprove = async (claimId) => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/claims/${claimId}/approve`, {
+        method: "PUT",
+      });
+
+      if (response.ok) {
+        alert("Claim approved successfully!");
+        fetchClaimsData(); // Refresh the data
+      } else {
+        alert("Failed to approve claim");
+      }
+    } catch (error) {
+      console.error("Error approving claim:", error);
+      alert("Error approving claim");
+    }
+  };
+
+  const handleReject = async (claimId) => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/claims/${claimId}/reject`, {
+        method: "PUT",
+      });
+
+      if (response.ok) {
+        alert("Claim rejected successfully!");
+        fetchClaimsData(); // Refresh the data
+      } else {
+        alert("Failed to reject claim");
+      }
+    } catch (error) {
+      console.error("Error rejecting claim:", error);
+      alert("Error rejecting claim");
+    }
+  };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+  };
+
   return (
     <div className="claim-page">
-      <h1>Claim Page</h1>
-      <p>This is where users can file or view claims.</p>
+      <div className="claim-header">
+        <h1>Claim Management</h1>
+      </div>
+
+      <div className="claim-tabs">
+        <button
+          className={`claim-tab ${activeTab === "myItems" ? "active" : ""}`}
+          onClick={() => setActiveTab("myItems")}
+        >
+          Claims on My Items
+        </button>
+        <button
+          className={`claim-tab ${activeTab === "myClaims" ? "active" : ""}`}
+          onClick={() => setActiveTab("myClaims")}
+        >
+          My Claims
+        </button>
+      </div>
+
+      <div className="claim-content">
+        {loading ? (
+          <div className="loading">Loading claims...</div>
+        ) : activeTab === "myItems" ? (
+          claimsOnMyItems.length === 0 ? (
+            <div className="empty-state">
+              <p>No claims received yet</p>
+            </div>
+          ) : (
+            <div className="claims-list">
+              {claimsOnMyItems.map((claim) => (
+                <div key={claim.claimId} className="claim-card">
+                  <div className="claim-card-header">
+                    <h3>{claim.itemDetails?.itemName || "Unknown Item"}</h3>
+                    <span className={`status-badge ${claim.status.toLowerCase()}`}>
+                      {claim.status}
+                    </span>
+                  </div>
+                  <div className="claim-card-body">
+                    <div className="claim-info">
+                      <p><strong>Claimant:</strong> {claim.user?.firstName} {claim.user?.lastName}</p>
+                      <p><strong>Email:</strong> {claim.user?.email}</p>
+                      <p><strong>Claim Date:</strong> {formatDate(claim.claimDate)}</p>
+                      {claim.verificationAnswer && (
+                        <p><strong>Verification Answer:</strong> {claim.verificationAnswer}</p>
+                      )}
+                    </div>
+                    <div className="item-details">
+                      <p><strong>Item Description:</strong> {claim.itemDetails?.itemDescription}</p>
+                      <p><strong>Location Found:</strong> {claim.itemDetails?.locationFound}</p>
+                      <p><strong>Date Found:</strong> {formatDate(claim.itemDetails?.dateFound)}</p>
+                    </div>
+                  </div>
+                  {claim.status === "PENDING" && (
+                    <div className="claim-card-actions">
+                      <button
+                        className="btn-approve"
+                        onClick={() => handleApprove(claim.claimId)}
+                      >
+                        Approve
+                      </button>
+                      <button
+                        className="btn-reject"
+                        onClick={() => handleReject(claim.claimId)}
+                      >
+                        Reject
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )
+        ) : (
+          myClaims.length === 0 ? (
+            <div className="empty-state">
+              <p>No claims received yet</p>
+            </div>
+          ) : (
+            <div className="claims-list">
+              {myClaims.map((claim) => (
+                <div key={claim.claimId} className="claim-card">
+                  <div className="claim-card-header">
+                    <h3>{claim.item?.itemName || "Unknown Item"}</h3>
+                    <span className={`status-badge ${claim.status.toLowerCase()}`}>
+                      {claim.status}
+                    </span>
+                  </div>
+                  <div className="claim-card-body">
+                    <div className="claim-info">
+                      <p><strong>Claim Date:</strong> {formatDate(claim.claimDate)}</p>
+                      {claim.verificationAnswer && (
+                        <p><strong>Your Verification Answer:</strong> {claim.verificationAnswer}</p>
+                      )}
+                    </div>
+                    <div className="item-details">
+                      <p><strong>Item Description:</strong> {claim.item?.itemDescription}</p>
+                      <p><strong>Location Found:</strong> {claim.item?.locationFound}</p>
+                      <p><strong>Date Found:</strong> {formatDate(claim.item?.dateFound)}</p>
+                      <p><strong>Reported By:</strong> {claim.item?.user?.firstName} {claim.item?.user?.lastName}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )
+        )}
+      </div>
     </div>
   );
 }

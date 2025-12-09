@@ -1,0 +1,123 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: white;
+  border-radius: 20px;
+  box-shadow: 0px 11px 15px -7px rgba(0, 0, 0, 0.2), 0px 24px 38px 3px rgba(0, 0, 0, 0.14), 0px 9px 46px 8px rgba(0, 0, 0, 0.12);
+  width: 600px;
+  max-width: 90%;
+  border: 5px solid #800020;
+}
+
+.modal-header {
+  padding: 16px 24px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 500;
+  color: #800020;
+}
+
+.modal-body {
+  padding: 16px 24px;
+}
+
+.item-info {
+  background-color: #FFFBEB;
+  border: 1px solid #FFD700;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin: 16px 0;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  font-weight: 500;
+  display: block;
+  margin-bottom: 4px;
+  color: #800020;
+}
+
+.form-group .description {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.form-group textarea,
+.form-group input {
+  width: 100%;
+  padding: 16.5px 14px;
+  border-radius: 8px;
+  border: 2px solid #800020;
+  font-size: 16px;
+  box-sizing: border-box;
+  /* This will fix the overflow */
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group textarea:focus,
+.form-group input:focus {
+  border-color: #FFD700;
+  box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.3);
+  outline: none;
+}
+
+.alert {
+  background-color: #FFFBEB;
+  border: 1px solid #FFD700;
+  color: #b38600;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.modal-footer {
+  padding: 8px 24px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.cancel-btn,
+.submit-btn {
+  padding: 9px 17px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.cancel-btn {
+  background-color: transparent;
+  border: 1px solid #800020;
+  color: #800020;
+}
+
+.submit-btn {
+  background-color: #800020;
+  color: white;
+  border: none;
+  box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+}
+
+.submit-btn:hover {
+  background-color: #66001a;
+}
