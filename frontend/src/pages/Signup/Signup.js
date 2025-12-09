@@ -27,41 +27,55 @@ function Signup() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSignup = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+const handleSignup = async (e) => {
+  e.preventDefault();
+  setLoading(true);
 
-    try {
-      const response = await fetch("http://localhost:8080/api/users/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+  try {
+    // Determine role based on email domain
+    const isAdmin = formData.username.includes('@wildcatsf.com') || 
+                   formData.email.includes('@wildcatsf.com');
+    const userRole = isAdmin ? 'ADMIN' : 'USER';
+    
+    console.log("Signing up with role:", userRole);
 
-      const responseText = await response.text();
+    const userData = {
+      ...formData,
+      role: userRole // Send role to backend
+    };
 
-      if (response.ok) {
-        // SUCCESS MESSAGE
-        setMsgType("success");
-        setMessage("Account created successfully!");
+    const response = await fetch("http://localhost:8080/api/users/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(userData),
+    });
 
-        // Auto redirect after 2 seconds
-        setTimeout(() => {
-          navigate("/login");
-        }, 2000);
-      } else {
-        // ERROR MESSAGE
-        setMsgType("error");
-        setMessage(responseText || "Signup failed.");
-      }
-    } catch (error) {
-      console.error("Signup fetch error:", error);
+    const responseText = await response.text();
+    console.log("Signup response:", responseText);
+
+    if (response.ok) {
+      setMsgType("success");
+      setMessage(
+        isAdmin 
+          ? "Admin account created successfully!" 
+          : "Account created successfully!"
+      );
+
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
+    } else {
       setMsgType("error");
-      setMessage("Something went wrong. Please try again.");
-    } finally {
-      setLoading(false);
+      setMessage(responseText || "Signup failed.");
     }
-  };
+  } catch (error) {
+    console.error("Signup fetch error:", error);
+    setMsgType("error");
+    setMessage("Something went wrong. Please try again.");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="signup-page">

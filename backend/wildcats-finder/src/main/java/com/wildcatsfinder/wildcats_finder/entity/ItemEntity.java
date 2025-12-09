@@ -3,6 +3,8 @@ package com.wildcatsfinder.wildcats_finder.entity;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Table(name = "items")
@@ -32,24 +34,42 @@ public class ItemEntity {
     @Column(name = "status", nullable = false)
     private ItemStatus status;
 
-    // Foreign Key Relationships
+    // Relationships - FIXED FOR JSON SERIALIZATION
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore // Prevent circular reference
     private UserEntity user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
+    @JsonIgnore // Prevent circular reference
     private CategoryEntity category;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dep_id", nullable = false)
+    @JsonIgnore // Prevent circular reference
     private DepartmentEntity department;
 
-    // One-to-Many relationship
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore // Prevent circular reference
     private List<ClaimEntity> claims;
 
-    // Enum for status
+    // JSON getters for frontend
+    @JsonProperty("userId")
+    public Long getUserId() {
+        return user != null ? user.getUserId() : null;
+    }
+    
+    @JsonProperty("categoryName")
+    public String getCategoryName() {
+        return category != null ? category.getCategoryName() : null;
+    }
+    
+    @JsonProperty("departmentName")
+    public String getDepartmentName() {
+        return department != null ? department.getDepName() : null;
+    }
+
     public enum ItemStatus {
         LOST, FOUND, CLAIMED, RETURNED
     }

@@ -1,8 +1,13 @@
 package com.wildcatsfinder.wildcats_finder.controller;
+import java.util.Map;
 
+import com.wildcatsfinder.wildcats_finder.dto.ItemDTO;
+import com.wildcatsfinder.wildcats_finder.dto.UserDTO;
 import com.wildcatsfinder.wildcats_finder.entity.UserEntity;
 import com.wildcatsfinder.wildcats_finder.service.UserService;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -146,6 +151,11 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody UserRegistrationRequest request) {        
         try {
+            System.out.println("=== DEBUG: Registration Request ===");
+            System.out.println("Username: " + request.getUsername());
+            System.out.println("Email: " + request.getEmail());
+            System.out.println("Role from request: '" + request.getRole() + "'");
+            
             // validation
             if (request.getUsername() == null || request.getUsername().trim().isEmpty()) {
                 return ResponseEntity.badRequest().body("Username is required");
@@ -183,7 +193,85 @@ public class UserController {
             user.setEmail(request.getEmail());
             user.setContactNo(request.getContactNo());
 
-            // Register user with auto-assigned "USER" role
+            // Determine role based on email domain
+            String role = request.getRole();
+            System.out.println("Role from frontend: '" + role + "'");
+            
+            if (role == null || role.trim().isEmpty()) {
+                // Auto-detect role based on email domain
+                if (request.getUsername().contains("@wildcatsf.com") || 
+                    request.getEmail().contains("@wildcatsf.com")) {
+                    role = "ADMIN";
+                    System.out.println("Auto-detected role: ADMIN (wildcatsf.com domain)");
+                } else {
+                    role = "USER";
+                    System.out.println("Auto-detected role: USER");
+                }
+            }
+            
+            user.setRole(role);
+            System.out.println("Final role being set: " + user.getRole());
+
+            // Register user
+            UserEntity savedUser = userService.registerUser(user);
+
+            // return data without password 
+            savedUser.setPassword(null);
+            System.out.println("User registered successfully with role: " + savedUser.getRole());
+            System.out.println("================================");
+            return ResponseEntity.ok(savedUser);
+
+        } catch (Exception e) {
+            System.out.println("Registration error: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error registering user: " + e.getMessage());
+        }
+    }
+
+    // POST /api/users/register/admin
+    @PostMapping("/register/admin")
+    public ResponseEntity<?> registerAdmin(@RequestBody UserRegistrationRequest request) {        
+        try {
+            // validation
+            if (request.getUsername() == null || request.getUsername().trim().isEmpty()) {
+                return ResponseEntity.badRequest().body("Username is required");
+            }
+            if (request.getPassword() == null || request.getPassword().trim().isEmpty()) {
+                return ResponseEntity.badRequest().body("Password is required");
+            }
+            if (request.getEmail() == null || request.getEmail().trim().isEmpty()) {
+                return ResponseEntity.badRequest().body("Email is required");
+            }
+            if (request.getFName() == null || request.getFName().trim().isEmpty()) {
+                return ResponseEntity.badRequest().body("First name is required");
+            }
+            if (request.getLName() == null || request.getLName().trim().isEmpty()) {
+                return ResponseEntity.badRequest().body("Last name is required");
+            }
+
+            // Check if username already exists
+            if (userService.isUsernameExists(request.getUsername())) {
+                return ResponseEntity.badRequest().body("Username already exists");
+            }
+
+            // Check if email already exists
+            if (userService.isEmailExists(request.getEmail())) {
+                return ResponseEntity.badRequest().body("Email already exists");
+            }
+
+            // Create new admin user entity
+            UserEntity user = new UserEntity();
+            user.setUsername(request.getUsername());
+            user.setPassword(request.getPassword()); // TODO: convert to hashed password
+            user.setFName(request.getFName());
+            user.setMName(request.getMName());
+            user.setLName(request.getLName());
+            user.setEmail(request.getEmail());
+            user.setContactNo(request.getContactNo());
+            user.setRole("ADMIN"); // Set admin role
+
+            // Register admin user
             UserEntity savedUser = userService.registerUser(user);
 
             // return data without password 
@@ -192,7 +280,7 @@ public class UserController {
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error registering user: " + e.getMessage());
+                    .body("Error registering admin: " + e.getMessage());
         }
     }
 
@@ -254,24 +342,63 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody UserLoginRequest request) {
         try {
-            // Validate required fields
+            System.out.println("\n=== CONTROLLER DEBUG - loginUser ===");
+            System.out.println("Login attempt for username: " + request.getUsername());
+            
             if (request.getUsername() == null || request.getUsername().trim().isEmpty()) {
-                return ResponseEntity.badRequest().body("Username is required");
+                return ResponseEntity.badRequest().body(Map.of("error", "Username is required"));
             }
             if (request.getPassword() == null || request.getPassword().trim().isEmpty()) {
-                return ResponseEntity.badRequest().body("Password is required");
+                return ResponseEntity.badRequest().body(Map.of("error", "Password is required"));
             }
 
-            // Authenticate user
+            // Authenticate
             UserEntity user = userService.loginUser(request.getUsername(), request.getPassword());
+            
+            System.out.println("User entity received from service:");
+            System.out.println("  fName: '" + user.getFName() + "'");
+            System.out.println("  mName: '" + user.getMName() + "'");
+            System.out.println("  lName: '" + user.getLName() + "'");
+            System.out.println("  Role: '" + user.getRole() + "'");
 
-            // Don't return password in response
-            user.setPassword(null);
-            return ResponseEntity.ok(user);
+            // Map reported items to DTO
+            List<ItemDTO> itemDTOs = user.getReportedItems()
+                                         .stream()
+                                         .map(ItemDTO::new)
+                                         .toList();
+
+            // Build UserDTO
+            UserDTO userDTO = new UserDTO(
+                user.getUserId(),
+                user.getUsername(),
+                user.getFName(),
+                user.getMName(),
+                user.getLName(),
+                user.getEmail(),
+                user.getContactNo(),
+                user.getRole(), // This includes the role!
+                itemDTOs
+            );
+
+            System.out.println("UserDTO created:");
+            System.out.println("  DTO fName: '" + userDTO.getFName() + "'");
+            System.out.println("  DTO mName: '" + userDTO.getMName() + "'");
+            System.out.println("  DTO lName: '" + userDTO.getLName() + "'");
+            System.out.println("  DTO Role: '" + userDTO.getRole() + "'");
+            
+            // Also print the entire DTO as JSON
+            ObjectMapper mapper = new ObjectMapper();
+            String json = mapper.writeValueAsString(userDTO);
+            System.out.println("Full DTO JSON: " + json);
+            System.out.println("=== END DEBUG ===\n");
+
+            return ResponseEntity.ok(userDTO);
 
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body("Invalid credentials: " + e.getMessage());
+            System.out.println("Login error: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                 .body(Map.of("error", "Nope!, Please try again"));
         }
     }
 
@@ -304,6 +431,7 @@ public class UserController {
         }
     }
 
+    
     // READ: Get user by username
     // GET /api/users/username/{username}
     @GetMapping("/username/{username}")

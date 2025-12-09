@@ -1,16 +1,36 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { useNavigate } from "react-router-dom";
 import { UserContext } from '../../context/UserContext';
 import './AdminDashboard.css';
-import { FaCheckCircle, FaTimesCircle, FaClock, FaEye, FaCheck, FaTimes } from 'react-icons/fa';
+
+import { 
+  FaUserShield, 
+  FaClipboardList, 
+  FaUsers,
+  FaCheckCircle,
+  FaCheck,
+  FaClock,
+  FaEye,
+  FaTimes
+} from "react-icons/fa";
 
 function AdminDashboard() {
   const { user } = useContext(UserContext);
+  const navigate = useNavigate();
   const [items, setItems] = useState([]);
   const [claims, setClaims] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('items');
   const [selectedItem, setSelectedItem] = useState(null);
   const [filterStatus, setFilterStatus] = useState('all');
+
+  // Check if user is logged in and has admin role
+  useEffect(() => {
+    if (!user || user.role !== 'admin') {
+      // If not admin, redirect to home
+      navigate("/home");
+    }
+  }, [user, navigate]);
 
   // Fetch all items
   useEffect(() => {

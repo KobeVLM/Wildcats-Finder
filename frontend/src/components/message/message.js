@@ -18,7 +18,7 @@ function Message({
     setVisible(true);
     const timer = setTimeout(() => {
       setVisible(false);
-      setTimeout(() => onClose?.(), 500);
+      setTimeout(() => onClose?.(), 5000);
     }, duration);
 
     return () => clearTimeout(timer);
@@ -28,7 +28,7 @@ function Message({
 
   const handleClose = () => {
     setVisible(false);
-    setTimeout(() => onClose?.(), 500);
+    setTimeout(() => onClose?.(), 5000);
   };
 
   return (

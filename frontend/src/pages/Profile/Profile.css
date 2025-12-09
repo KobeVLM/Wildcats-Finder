@@ -106,15 +106,15 @@
   line-height: 19.5px;
 }
 
-/* Header actions (settings and logout buttons) */
-.profile-header-actions {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-/* Settings button */
-.btn-settings {
+/* Profile circle on left */
+.profile-circle {
+  width: 90px;
+  height: 90px;
+  background: linear-gradient(135deg, #f9ae2e, #FFD131);
+  color: #000000;
+  font-size: 32px;
+  font-weight: bold;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
