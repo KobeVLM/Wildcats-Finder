@@ -3,6 +3,8 @@ package com.wildcatsfinder.wildcats_finder.entity;
 import jakarta.persistence.*;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "categories")
 public class CategoryEntity {
@@ -19,7 +21,9 @@ public class CategoryEntity {
     private String catDescription;
 
     // Relationships
+    
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<ItemEntity> items;
 
     // Constructors

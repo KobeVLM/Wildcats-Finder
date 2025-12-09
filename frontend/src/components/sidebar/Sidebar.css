@@ -125,8 +125,8 @@
 }
 
 .sidebar-link.active {
-  background-color: #000;
-  color: #fff;
+  background: linear-gradient(135deg, #f9ae2e, #FFD131, #FACC6B);
+  color: #000000;
   width: 184px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
@@ -158,7 +158,7 @@
 }
 
 .sidebar-link.active .sidebar-icon {
-  filter: invert(1);
+  filter: invert(0);
 }
 
 .sidebar-link-text {
@@ -267,15 +267,15 @@
 
 .sidebar-submenu-link:hover {
   width: 180px;
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.144);
   color: white;
   transform: translateX(3px);
 }
 
 .sidebar-submenu-link.active {
   width: 180px;
-  background-color: rgba(0, 0, 0, 0.4);
-  color: white;
+  background: linear-gradient(135deg, #f9ae2e, #FFD131, #FACC6B);
+  color: rgb(0, 0, 0);
   font-weight: 500;
 }
 
@@ -287,15 +287,15 @@
 }
 
 .sidebar-submenu-text::before {
-  content: "•";
+  content: "▶ ";
   position: absolute;
   left: 10px;
-  color: #ffd700;
+  color: #ffffff;
 }
 
 .sidebar-submenu-link.active .sidebar-submenu-text::before {
-  content: "▶";
-  color: white;
+  content: "▶ ";
+  color: rgb(0, 0, 0);
 }
 
 /* ===== User Info Section ===== */

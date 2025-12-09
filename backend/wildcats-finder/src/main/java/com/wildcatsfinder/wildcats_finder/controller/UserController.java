@@ -1,8 +1,13 @@
 package com.wildcatsfinder.wildcats_finder.controller;
+import java.util.Map;
 
+import com.wildcatsfinder.wildcats_finder.dto.ItemDTO;
+import com.wildcatsfinder.wildcats_finder.dto.UserDTO;
 import com.wildcatsfinder.wildcats_finder.entity.UserEntity;
 import com.wildcatsfinder.wildcats_finder.service.UserService;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -187,29 +192,66 @@ public class UserController {
 
     // LOGIN: Authenticate user
     // POST /api/users/login
-    @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody UserLoginRequest request) {
-        try {
-            // Validate required fields
-            if (request.getUsername() == null || request.getUsername().trim().isEmpty()) {
-                return ResponseEntity.badRequest().body("Username is required");
-            }
-            if (request.getPassword() == null || request.getPassword().trim().isEmpty()) {
-                return ResponseEntity.badRequest().body("Password is required");
-            }
-
-            // Authenticate user
-            UserEntity user = userService.loginUser(request.getUsername(), request.getPassword());
-
-            // Don't return password in response
-            user.setPassword(null);
-            return ResponseEntity.ok(user);
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body("Invalid credentials: " + e.getMessage());
+@PostMapping("/login")
+public ResponseEntity<?> loginUser(@RequestBody UserLoginRequest request) {
+    try {
+        System.out.println("\n=== CONTROLLER DEBUG - loginUser ===");
+        System.out.println("Login attempt for username: " + request.getUsername());
+        
+        if (request.getUsername() == null || request.getUsername().trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Username is required"));
         }
+        if (request.getPassword() == null || request.getPassword().trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Password is required"));
+        }
+
+        // Authenticate
+        UserEntity user = userService.loginUser(request.getUsername(), request.getPassword());
+        
+        System.out.println("User entity received from service:");
+        System.out.println("  fName: '" + user.getFName() + "'");
+        System.out.println("  mName: '" + user.getMName() + "'");
+        System.out.println("  lName: '" + user.getLName() + "'");
+
+        // Map reported items to DTO
+        List<ItemDTO> itemDTOs = user.getReportedItems()
+                                     .stream()
+                                     .map(ItemDTO::new)
+                                     .toList();
+
+        // Build UserDTO
+        UserDTO userDTO = new UserDTO(
+            user.getUserId(),
+            user.getUsername(),
+            user.getFName(),
+            user.getMName(),
+            user.getLName(),
+            user.getEmail(),
+            user.getContactNo(),
+            user.getRole(),
+            itemDTOs
+        );
+
+        System.out.println("UserDTO created:");
+        System.out.println("  DTO fName: '" + userDTO.getFName() + "'");
+        System.out.println("  DTO mName: '" + userDTO.getMName() + "'");
+        System.out.println("  DTO lName: '" + userDTO.getLName() + "'");
+        
+        // Also print the entire DTO as JSON
+        ObjectMapper mapper = new ObjectMapper();
+        String json = mapper.writeValueAsString(userDTO);
+        System.out.println("Full DTO JSON: " + json);
+        System.out.println("=== END DEBUG ===\n");
+
+        return ResponseEntity.ok(userDTO);
+
+    } catch (Exception e) {
+        System.out.println("Login error: " + e.getMessage());
+        e.printStackTrace();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                             .body(Map.of("error", "Nope!, Please try again"));
     }
+}
 
     // READ: Get all users (admin functionality)
     // GET /api/users
@@ -240,6 +282,7 @@ public class UserController {
         }
     }
 
+    
     // READ: Get user by username
     // GET /api/users/username/{username}
     @GetMapping("/username/{username}")

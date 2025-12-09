@@ -108,19 +108,42 @@ public class UserService {
 
     // LOGIN: Validate user login credentials
     public UserEntity loginUser(String username, String password) {
-        Optional<UserEntity> user = userRepository.findByUsername(username);
-        if (user.isPresent()) {
-            UserEntity foundUser = user.get();
-            // Simple password check (you might want to use BCrypt in production)
-            if (foundUser.getPassword().equals(password)) {
-                return foundUser;
-            } else {
-                throw new NoSuchElementException("Invalid password for user: " + username);
-            }
+    System.out.println("=== USER SERVICE DEBUG - loginUser ===");
+    System.out.println("Looking for user with username: " + username);
+    
+    System.out.println("Using custom query...");
+    
+    Optional<UserEntity> user = userRepository.findByUsernameWithItems(username);
+
+    if (user.isPresent()) {
+        UserEntity foundUser = user.get();
+        
+        System.out.println("User found with ID: " + foundUser.getUserId());
+        System.out.println("User fName: '" + foundUser.getFName() + "'");
+        System.out.println("User mName: '" + foundUser.getMName() + "'");
+        System.out.println("User lName: '" + foundUser.getLName() + "'");
+        System.out.println("User email: " + foundUser.getEmail());
+        
+        // Check if name fields are actually populated
+        if (foundUser.getFName() == null) {
+            System.out.println("WARNING: fName is NULL!");
         } else {
-            throw new NoSuchElementException("User with username '" + username + "' not found");
+            System.out.println("fName length: " + foundUser.getFName().length());
         }
+        
+        // Simple password check (you might want to use BCrypt in production)
+        if (foundUser.getPassword().equals(password)) {
+            System.out.println("Password matches! Returning user...");
+            return foundUser;
+        } else {
+            System.out.println("Password does NOT match!");
+            throw new NoSuchElementException("Invalid password for user: " + username);
+        }
+    } else {
+        System.out.println("User NOT found!");
+        throw new NoSuchElementException("User with username '" + username + "' not found");
     }
+}
 
     // DELETE: Remove a user
     public String deleteUser(Long id) {

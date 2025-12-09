@@ -5,7 +5,7 @@ import "./App.css";
 
 // Components
 import ProtectedRoute from "./components/ProtectedRoute";
-import Sidebar from "./components/sidebar/Sidebar"; // UPDATED PATH
+import Sidebar from "./components/sidebar/Sidebar";
 
 // Pages
 import Index from "./pages/Index/Index";
@@ -16,6 +16,8 @@ import Claim from "./pages/Claim/Claim";
 import Profile from "./pages/Profile/Profile";
 import Login from "./pages/Login/Login";
 import Signup from "./pages/Signup/Signup";
+import Contact from "./pages/Contact/Contact";
+import About from "./pages/About/About";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(
@@ -47,6 +49,8 @@ function App() {
           <Routes>
             {/* Public routes */}
             <Route path="/" element={<Index />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
 
