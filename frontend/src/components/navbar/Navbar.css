@@ -1,0 +1,277 @@
+/* ====== Landing Navbar ====== */
+.landing-navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 80px;
+  background: linear-gradient(135deg, #3b0a0a, #6a0d0d, #b91c1c);
+  color: white;
+  height: 80px;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 10;
+  
+  /* Animation */
+  opacity: 0;
+  transform: translateY(-100%);
+  animation: slideDownNav 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  animation-delay: 0.2s;
+}
+
+@keyframes slideDownNav {
+  0% {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Logo */
+.landing-navbar-logo .landing-logo {
+  margin-top: 5px;
+  margin-left: 100px;
+  width: 230px;
+  animation: logoPop 0.6s ease-out forwards;
+  animation-delay: 0.4s;
+  opacity: 0;
+  transform: scale(0.8);
+}
+
+@keyframes logoPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  70% {
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Navigation Links Container */
+.landing-navbar-links {
+  list-style: none;
+  display: flex;
+  gap: 25px;
+  margin: 0;
+  padding: 0;
+  margin-right: 100px;
+}
+
+/* Individual Link Items */
+.landing-navbar-links li {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  opacity: 0;
+  transform: translateY(-20px);
+  animation: fadeInDown 0.5s ease-out forwards;
+}
+
+/* Staggered animation for navbar items - adjust based on your links count */
+.landing-navbar-links li:nth-child(1) { animation-delay: 0.5s; } /* Home */
+.landing-navbar-links li:nth-child(2) { animation-delay: 0.6s; } /* About */
+.landing-navbar-links li:nth-child(3) { animation-delay: 0.7s; } /* Contact */
+.landing-navbar-links li:nth-child(4) { animation-delay: 0.8s; } /* Separator */
+.landing-navbar-links li:nth-child(5) { animation-delay: 0.9s; } /* Login */
+.landing-navbar-links li:nth-child(6) { 
+  animation-delay: 1.0s; 
+  animation-name: buttonPop;
+} /* Join Us */
+
+.separator {
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 400;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes buttonPop {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.8);
+  }
+  50% {
+    transform: translateY(0) scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Link Styling */
+.landing-link {
+  text-decoration: none;
+  color: white;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  padding: 6px 14px;
+  gap: 10px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.landing-link:hover {
+  background-color: #ffd700;
+  border-radius: 10px;
+  color: maroon;
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Active Link Styling */
+.landing-link.active {
+  font-weight: 700;
+  color: maroon;
+  background-color: #ffd700;
+  border-radius: 10px;
+}
+
+.landing-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 6px;
+  background-color: #ffd700;
+  border-radius: 50%;
+  animation: pulse 1s infinite;
+}
+
+/* Home link specific styling */
+.landing-link.active[href="/"] {
+  font-weight: 700;
+  color: maroon;
+  background-color: #ffd700;
+  border-radius: 10px;
+}
+
+/* Optional: Add hover effect that doesn't override active state */
+.landing-link:not(.active):hover {
+  background-color: #ffd700;
+  border-radius: 10px;
+  color: maroon;
+}
+
+/* ====== Join Us Button ====== */
+.join-us {
+  border: 2px solid white;
+  border-radius: 20px;
+  font-weight: 600;
+  padding: 8px 18px;
+}
+
+.join-us:hover {
+  border-radius: 20px;
+  background-color: #ffd700;
+  color: maroon;
+  border-color: #ffd700;
+}
+
+/* Pulse Animation */
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 5px rgba(255, 215, 0, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 215, 0, 0);
+  }
+}
+
+/* Responsive adjustments for navbar */
+@media (max-width: 1024px) {
+  .landing-navbar {
+    padding: 5px 40px;
+  }
+  
+  .landing-navbar-logo .landing-logo {
+    margin-left: 50px;
+    width: 200px;
+  }
+  
+  .landing-navbar-links {
+    margin-right: 50px;
+    gap: 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  .landing-navbar {
+    padding: 5px 20px;
+    height: 70px;
+  }
+  
+  .landing-navbar-logo .landing-logo {
+    margin-left: 20px;
+    width: 180px;
+  }
+  
+  .landing-navbar-links {
+    margin-right: 20px;
+    gap: 10px;
+  }
+  
+  .landing-link {
+    padding: 4px 10px;
+    font-size: 0.9rem;
+  }
+  
+  .join-us {
+    padding: 6px 12px;
+  }
+  
+  .separator {
+    display: none; /* Hide separator on mobile */
+  }
+}
+
+@media (max-width: 480px) {
+  .landing-navbar {
+    padding: 5px 10px;
+    flex-direction: column;
+    height: auto;
+    padding: 10px;
+    position: relative;
+  }
+  
+  .landing-navbar-logo .landing-logo {
+    margin-left: 0;
+    width: 180px;
+    margin-bottom: 10px;
+  }
+  
+  .landing-navbar-links {
+    margin-right: 0;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+  
+  .landing-link {
+    padding: 3px 8px;
+    font-size: 0.85rem;
+  }
+}

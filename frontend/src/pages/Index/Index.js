@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
+import Navbar from "../../components/navbar/Navbar"; // Adjust path as needed
 import "./Index.css";
-import logo from "../../assets/images/Logo1.png";
 
 function Index() {
   useEffect(() => {
@@ -10,35 +10,8 @@ function Index() {
 
   return (
     <div className="index-page">
-      {/* Landing Navbar */}
-      <nav className="landing-navbar">
-        <div className="landing-navbar-logo">
-          <img src={logo} alt="Wildcats Finder Logo" className="landing-logo" />
-        </div>
-        <ul className="landing-navbar-links">
-          <li>
-            <Link to="/about" className="landing-link">
-              About
-            </Link>
-          </li>
-          <li>
-            <Link to="/contact" className="landing-link">
-              Contact
-            </Link>
-          </li>
-          <li>|</li>
-          <li>
-            <Link to="/login" className="landing-link">
-              Login
-            </Link>
-          </li>
-          <li>
-            <Link to="/signup" className="landing-link join-us">
-              Join Us
-            </Link>
-          </li>
-        </ul>
-      </nav>
+      {/* Use the Navbar component */}
+      <Navbar />
 
       {/* Content */}
       <div className="overlay"></div>

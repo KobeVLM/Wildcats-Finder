@@ -125,8 +125,8 @@
 }
 
 .sidebar-link.active {
-  background-color: #000;
-  color: #fff;
+  background: linear-gradient(135deg, #f9ae2e, #FFD131, #FACC6B);
+  color: #000000;
   width: 184px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
@@ -158,7 +158,7 @@
 }
 
 .sidebar-link.active .sidebar-icon {
-  filter: invert(1);
+  filter: invert(0);
 }
 
 .sidebar-link-text {
@@ -267,15 +267,15 @@
 
 .sidebar-submenu-link:hover {
   width: 180px;
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.144);
   color: white;
   transform: translateX(3px);
 }
 
 .sidebar-submenu-link.active {
   width: 180px;
-  background-color: rgba(0, 0, 0, 0.4);
-  color: white;
+  background: linear-gradient(135deg, #f9ae2e, #FFD131, #FACC6B);
+  color: rgb(0, 0, 0);
   font-weight: 500;
 }
 
@@ -287,15 +287,15 @@
 }
 
 .sidebar-submenu-text::before {
-  content: "•";
+  content: "▶ ";
   position: absolute;
   left: 10px;
-  color: #ffd700;
+  color: #ffffff;
 }
 
 .sidebar-submenu-link.active .sidebar-submenu-text::before {
-  content: "▶";
-  color: white;
+  content: "▶ ";
+  color: rgb(0, 0, 0);
 }
 
 /* ===== User Info Section ===== */
@@ -303,12 +303,28 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  width: 190px;
   padding: 15px 20px;
   margin: 10px 15px;
   background: rgba(0, 0, 0, 0.2);
   border-radius: 10px;
   cursor: pointer;
   transition: all 0.3s ease;
+  min-height: 60px; /* Add minimum height */
+}
+
+.user-avatar {
+  width: 40px; /* Changed from 100px */
+  height: 40px; /* Changed from 40px - make equal to width for circle */
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f9ae2e, #FFD131);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000;
+  font-weight: bold;
+  font-size: 16px;
+  flex-shrink: 0; /* Prevent shrinking */
 }
 
 .sidebar-nav.collapsed .user-info-section {
@@ -324,19 +340,6 @@
 
 .sidebar-nav.collapsed .user-info-section:hover {
   transform: scale(1.1);
-}
-
-.user-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #f9ae2e, #FFD131);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #000;
-  font-weight: bold;
-  font-size: 16px;
 }
 
 .user-details {
@@ -459,4 +462,36 @@
 .admin-icon {
   color: #b91c1c;
   font-size: 1.1em;
+}
+
+
+/* FOR ADMIN */
+
+/* Admin-specific sidebar styles */
+.sidebar-header h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-badge {
+  background: #b91c1c;
+  color: white;
+  font-size: 0.7rem;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-weight: bold;
+}
+
+/* Optional: Different color for admin sidebar */
+.sidebar:has(.sidebar-header h2:contains('Admin')) {
+  background: linear-gradient(180deg, #1a237e 0%, #0d1b2a 100%);
+}
+
+.sidebar:has(.sidebar-header h2:contains('Admin')) .sidebar-header {
+  background: #1a237e;
+}
+
+.sidebar:has(.sidebar-header h2:contains('Admin')) .sidebar-menu li a:hover {
+  background: rgba(255, 255, 255, 0.1);
 }

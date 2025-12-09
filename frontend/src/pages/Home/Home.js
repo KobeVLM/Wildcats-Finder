@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import { Link } from "react-router-dom";
 import searchIcon from "../../assets/icons/search.png";
 import MaterialImg from "../../assets/images/Material.jpg";
+import wildcatIcon from "../../assets/images/wildcat.png"; // Add this import
 import StatCard from "../../components/statscard/StatCard";
 import { UserContext } from "../../context/UserContext";
 import "./Home.css";
@@ -20,6 +21,33 @@ function Home() {
   const [filter, setFilter] = useState("all");
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+
+  // --- New AI Assistant States ---
+  const [showAIChat, setShowAIChat] = useState(false);
+  const [showChatBubble, setShowChatBubble] = useState(true);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiResults, setAiResults] = useState([]);
+  const [aiMessage, setAiMessage] = useState("");
+  const chatBubbleRef = useRef(null);
+  const aiAssistantRef = useRef(null);
+
+  // Close chat bubble when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (chatBubbleRef.current && !chatBubbleRef.current.contains(event.target) &&
+          aiAssistantRef.current && !aiAssistantRef.current.contains(event.target)) {
+        setShowChatBubble(false);
+      }
+    };
+
+    if (showChatBubble || showAIChat) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showChatBubble, showAIChat]);
 
   const getFirstName = () => {
     if (!user) return "";
@@ -144,6 +172,96 @@ function Home() {
     }
   }, [items]);
 
+  // --- New AI Assistant Functions ---
+  const handleAIAssistantClick = () => {
+    setShowAIChat(true);
+    setShowChatBubble(false);
+    startAISearch();
+  };
+
+  const startAISearch = async () => {
+    setAiLoading(true);
+    setAiMessage("Finding your items, based on your report details...");
+    setAiResults([]);
+
+    // Simulate AI processing time
+    await new Promise(resolve => setTimeout(resolve, 2000));
+
+    try {
+      // Get user's reported items
+      const userItems = items.filter(item => user && item.userId === user.userId);
+      
+      if (userItems.length === 0) {
+        setAiMessage("You haven't reported any items yet. Report some items first for AI to help you!");
+        setAiLoading(false);
+        return;
+      }
+
+      // For demo purposes, we'll simulate AI finding matches
+      // In a real app, you'd call an AI API here
+      const lostItems = userItems.filter(item => item.status === "LOST");
+      
+      if (lostItems.length === 0) {
+        setAiMessage("You don't have any lost items reported. Report a lost item for AI to help find it!");
+        setAiLoading(false);
+        return;
+      }
+
+      // Find potential matches for lost items
+      const potentialMatches = [];
+      lostItems.forEach(lostItem => {
+        // Look for found items with similar characteristics
+        const matches = items.filter(item => 
+          item.status === "FOUND" && 
+          item.userId !== user.userId &&
+          (
+            (item.categoryName && lostItem.categoryName && 
+             item.categoryName.toLowerCase() === lostItem.categoryName.toLowerCase()) ||
+            (item.location && lostItem.location && 
+             item.location.toLowerCase().includes(lostItem.location.toLowerCase())) ||
+            (item.itemTitle && lostItem.itemTitle && 
+             item.itemTitle.toLowerCase().includes(lostItem.itemTitle.toLowerCase()))
+          )
+        );
+
+        matches.forEach(match => {
+          potentialMatches.push({
+            lostItem: lostItem,
+            foundItem: match,
+            confidence: Math.floor(Math.random() * 30) + 70 // 70-100% confidence for demo
+          });
+        });
+      });
+
+      if (potentialMatches.length > 0) {
+        setAiMessage(`Found ${potentialMatches.length} potential match${potentialMatches.length > 1 ? 'es' : ''} for your lost items!`);
+        setAiResults(potentialMatches);
+      } else {
+        setAiMessage("No matches found yet. Don't worry, we'll keep looking!");
+      }
+    } catch (error) {
+      console.error("AI search error:", error);
+      setAiMessage("Error searching for matches. Please try again.");
+    } finally {
+      setAiLoading(false);
+    }
+  };
+
+  const closeAIChat = () => {
+    setShowAIChat(false);
+    setTimeout(() => {
+      setShowChatBubble(true);
+    }, 500);
+  };
+
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+  };
+
   // Filter items based on selected filter and search query
   const filteredItems = items.filter(item => {
     // Apply status filter
@@ -212,7 +330,7 @@ function Home() {
           <StatCard count={activeCount} label="Active" />
           <StatCard count={lostCount} label="Lost" />
           <StatCard count={foundCount} label="Found" />
-          <StatCard count={reunitedCount} label="Reunited" />
+          <StatCard count={reunitedCount} label="Claim" />
           {user && (<><StatCard count={items.filter(item => item.userId === user.userId).length} label="My Reports" /></>)}
         </div>
       </div>
@@ -259,7 +377,7 @@ function Home() {
             className={`filter-btn ${filter === "reunited" ? "active-filter" : ""}`}
             onClick={() => setFilter("reunited")}
           >
-            Reunited
+            Claim
           </button>
         </div>
 
@@ -371,6 +489,117 @@ function Home() {
           )}
         </div>
       </div>
+
+      {/* AI Assistant Chat Bubble */}
+      {showChatBubble && (
+        <div className="ai-chat-bubble" ref={chatBubbleRef}>
+          <div className="chat-bubble-content">
+            <p>Want some help to find your lost things?</p>
+            <div className="chat-bubble-arrow"></div>
+          </div>
+        </div>
+      )}
+
+      {/* AI Assistant Icon */}
+      <div 
+        className="ai-assistant-icon" 
+        ref={aiAssistantRef}
+        onClick={handleAIAssistantClick}
+      >
+        <img 
+          src={wildcatIcon} 
+          alt="Wildcat AI Assistant" 
+          className="wildcat-icon"
+        />
+      </div>
+
+      {/* AI Assistant Modal */}
+      {showAIChat && (
+        <div className="ai-assistant-modal-overlay">
+          <div className="ai-assistant-modal">
+            <div className="ai-modal-header">
+              <div className="ai-title">
+                <img src={wildcatIcon} alt="Wildcat" className="ai-title-icon" />
+                <h2>Mr. Mochii</h2>
+              </div>
+              <button className="ai-close-btn" onClick={closeAIChat}>
+                ✕
+              </button>
+            </div>
+            
+            <div className="ai-modal-content">
+              {aiLoading ? (
+                <div className="ai-loading">
+                  <div className="loading-spinner"></div>
+                  <p className="loading-text">{aiMessage}</p>
+                </div>
+              ) : (
+                <>
+                  <div className="ai-message">
+                    <p>{aiMessage}</p>
+                  </div>
+                  
+                  {aiResults.length > 0 && (
+                    <div className="ai-results">
+                      <h3>Potential Matches Found:</h3>
+                      {aiResults.map((match, index) => (
+                        <div key={index} className="ai-match-card">
+                          <div className="match-header">
+                            <h4>Match #{index + 1}</h4>
+                            <span className="confidence-badge">
+                              {match.confidence}% Match
+                            </span>
+                          </div>
+                          
+                          <div className="match-comparison">
+                            <div className="match-column">
+                              <h5>Your Lost Item:</h5>
+                              <p><strong>{match.lostItem.itemTitle}</strong></p>
+                              <p>Category: {match.lostItem.categoryName}</p>
+                              <p>Location: {match.lostItem.location}</p>
+                              <p>Reported: {formatDate(match.lostItem.dateReport)}</p>
+                            </div>
+                            
+                            <div className="match-column">
+                              <h5>Found Item:</h5>
+                              <p><strong>{match.foundItem.itemTitle}</strong></p>
+                              <p>Category: {match.foundItem.categoryName}</p>
+                              <p>Location: {match.foundItem.location}</p>
+                              <p>Reported: {formatDate(match.foundItem.dateReport)}</p>
+                            </div>
+                          </div>
+                          
+                          <button 
+                            className="claim-match-btn"
+                            onClick={() => handleMineButtonClick(match.foundItem)}
+                          >
+                            Claim This Match
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  
+                  <div className="ai-actions">
+                    <button 
+                      className="ai-retry-btn"
+                      onClick={startAISearch}
+                    >
+                      Search Again
+                    </button>
+                    <button 
+                      className="ai-close-action-btn"
+                      onClick={closeAIChat}
+                    >
+                      Close
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

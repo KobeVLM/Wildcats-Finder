@@ -1,11 +1,10 @@
-// C:\Wildcats-Finder\Wildcats-Finder\frontend\src\App.js
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import "./App.css";
 
 // Components
 import ProtectedRoute from "./components/ProtectedRoute";
-import Sidebar from "./components/sidebar/Sidebar"; // UPDATED PATH
+import Sidebar from "./components/sidebar/Sidebar";
 
 // Pages
 import Index from "./pages/Index/Index";
@@ -16,8 +15,9 @@ import Claim from "./pages/Claim/Claim";
 import Profile from "./pages/Profile/Profile";
 import Login from "./pages/Login/Login";
 import Signup from "./pages/Signup/Signup";
+import Contact from "./pages/Contact/Contact";
+import About from "./pages/About/About";
 import AdminDashboard from "./pages/AdminDashboard/AdminDashboard";
-import AdminSignup from "./pages/AdminSignup/AdminSignup";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(
@@ -49,62 +49,20 @@ function App() {
           <Routes>
             {/* Public routes */}
             <Route path="/" element={<Index />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
-            <Route path="/admin/signup" element={<AdminSignup />} />
-
+            
             {/* Protected routes */}
-            <Route
-              path="/home"
-              element={
-                <ProtectedRoute>
-                  <Home />
-                </ProtectedRoute>
-              }
-            />
-            
-            <Route
-              path="/report-item/*"
-              element={
-                <ProtectedRoute>
-                  <ReportItem />
-                </ProtectedRoute>
-              }
-            />
-            
-            <Route
-              path="/search"
-              element={
-                <ProtectedRoute>
-                  <Search />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/claim"
-              element={
-                <ProtectedRoute>
-                  <Claim />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/profile"
-              element={
-                <ProtectedRoute>
-                  <Profile />
-                </ProtectedRoute>
-              }
-            />
+            <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+            <Route path="/report-item/*" element={<ProtectedRoute><ReportItem /></ProtectedRoute>} />
+            <Route path="/search" element={<ProtectedRoute><Search /></ProtectedRoute>} />
+            <Route path="/claim" element={<ProtectedRoute><Claim /></ProtectedRoute>} />
+            <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
 
-            <Route
-              path="/admin"
-              element={
-                <ProtectedRoute>
-                  <AdminDashboard />
-                </ProtectedRoute>
-              }
-            />
+            {/* Admin route */}
+            <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
           </Routes>
         </div>
       </div>

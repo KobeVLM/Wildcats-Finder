@@ -3,6 +3,9 @@ package com.wildcatsfinder.wildcats_finder.entity;
 import jakarta.persistence.*;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Entity
 @Table(name = "users")
 public class UserEntity {
@@ -19,12 +22,15 @@ public class UserEntity {
     private String password;
 
     @Column(name = "f_name", nullable = false)
+    @JsonProperty("fName")
     private String fName;
 
     @Column(name = "m_name")
+    @JsonProperty("mName")
     private String mName;
 
     @Column(name = "l_name", nullable = false)
+    @JsonProperty("lName")
     private String lName;
 
     @Column(name = "email", nullable = false, unique = true)
@@ -38,13 +44,16 @@ public class UserEntity {
 
     // Relationships
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<ItemEntity> reportedItems;
+
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ClaimEntity> claims;
 
-    // Constructors
+    // Constructors - Make sure default constructor doesn't set role
     public UserEntity() {
+        // Don't set role here - let it be set by Controller
     }
 
     public UserEntity(String username, String password, String fName, String mName,
@@ -59,7 +68,7 @@ public class UserEntity {
         this.role = role;
     }
 
-    // Getters and Setters
+    // Getters and Setters (keep as is)
     public Long getUserId() {
         return userId;
     }
