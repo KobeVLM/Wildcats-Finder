@@ -47,6 +47,9 @@ public class UserController {
         @JsonProperty("contactNo")
         private String contactNo;
 
+        @JsonProperty("role")
+        private String role;
+
         // Constructors
         public UserRegistrationRequest() {
         }
@@ -107,6 +110,14 @@ public class UserController {
         public void setContactNo(String contactNo) {
             this.contactNo = contactNo;
         }
+
+        public String getRole() {
+            return role;
+        }
+
+        public void setRole(String role) {
+            this.role = role;
+        }
     }
 
     // DTO for user login
@@ -138,7 +149,7 @@ public class UserController {
 
     // POST /api/users/register
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody UserRegistrationRequest request) {
+    public ResponseEntity<?> registerUser(@RequestBody UserRegistrationRequest request) {        
         try {
             // validation
             if (request.getUsername() == null || request.getUsername().trim().isEmpty()) {
@@ -190,7 +201,60 @@ public class UserController {
         }
     }
 
-    // LOGIN: Authenticate user
+    // POST /api/users/register/admin
+    @PostMapping("/register/admin")
+    public ResponseEntity<?> registerAdmin(@RequestBody UserRegistrationRequest request) {        
+        try {
+            // validation
+            if (request.getUsername() == null || request.getUsername().trim().isEmpty()) {
+                return ResponseEntity.badRequest().body("Username is required");
+            }
+            if (request.getPassword() == null || request.getPassword().trim().isEmpty()) {
+                return ResponseEntity.badRequest().body("Password is required");
+            }
+            if (request.getEmail() == null || request.getEmail().trim().isEmpty()) {
+                return ResponseEntity.badRequest().body("Email is required");
+            }
+            if (request.getFName() == null || request.getFName().trim().isEmpty()) {
+                return ResponseEntity.badRequest().body("First name is required");
+            }
+            if (request.getLName() == null || request.getLName().trim().isEmpty()) {
+                return ResponseEntity.badRequest().body("Last name is required");
+            }
+
+            // Check if username already exists
+            if (userService.isUsernameExists(request.getUsername())) {
+                return ResponseEntity.badRequest().body("Username already exists");
+            }
+
+            // Check if email already exists
+            if (userService.isEmailExists(request.getEmail())) {
+                return ResponseEntity.badRequest().body("Email already exists");
+            }
+
+            // Create new admin user entity
+            UserEntity user = new UserEntity();
+            user.setUsername(request.getUsername());
+            user.setPassword(request.getPassword()); // TODO: convert to hashed password
+            user.setFName(request.getFName());
+            user.setMName(request.getMName());
+            user.setLName(request.getLName());
+            user.setEmail(request.getEmail());
+            user.setContactNo(request.getContactNo());
+            user.setRole("admin"); // Set admin role
+
+            // Register admin user
+            UserEntity savedUser = userService.registerUser(user);
+
+            // return data without password 
+            savedUser.setPassword(null);
+            return ResponseEntity.ok(savedUser);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error registering admin: " + e.getMessage());
+        }
+    }    // LOGIN: Authenticate user
     // POST /api/users/login
 @PostMapping("/login")
 public ResponseEntity<?> loginUser(@RequestBody UserLoginRequest request) {

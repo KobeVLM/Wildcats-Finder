@@ -438,3 +438,25 @@
 .collapsed-separator {
   margin: 10px 15px !important;
 }
+
+/* Admin Link Styles */
+.admin-link {
+  position: relative;
+  background: linear-gradient(135deg, rgba(185, 28, 28, 0.1), rgba(185, 28, 28, 0.05));
+  border-left: 3px solid #b91c1c;
+}
+
+.admin-link:hover {
+  background: linear-gradient(135deg, rgba(185, 28, 28, 0.2), rgba(185, 28, 28, 0.1));
+  border-left-color: #dc2626;
+}
+
+.admin-link.active {
+  background: linear-gradient(135deg, rgba(185, 28, 28, 0.3), rgba(185, 28, 28, 0.2));
+  border-left-color: #7f1d1d;
+}
+
+.admin-icon {
+  color: #b91c1c;
+  font-size: 1.1em;
+}
