@@ -1,0 +1,307 @@
+/* Page Centering */
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  /* background:#F5EFE7; */
+  background: linear-gradient(to top, transparent 30%, #F5EFE7 50%),
+            url("../../assets/images/Material.jpg") no-repeat center center / cover;
+  font-family: "Poppins", sans-serif;
+}
+
+/* Login Card */
+.login-container {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.7);
+  padding: 40px 50px;
+  width: 380px;
+  text-align: center;
+  
+  /* Animation Properties */
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.8s ease-out forwards;
+  animation-delay: 0.2s;
+}
+
+/* Pop-up Animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Title */
+.login-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #3b0a0a;
+  margin-bottom: 30px;
+  animation: fadeIn 0.6s ease-out forwards;
+  animation-delay: 0.6s;
+  opacity: 0;
+}
+
+/* Form Fields */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.login-form label {
+  text-align: left;
+  font-weight: 600;
+  color: #3b0a0a;
+  font-size: 0.95rem;
+  animation: fadeIn 0.6s ease-out forwards;
+  animation-delay: 0.7s;
+  opacity: 0;
+}
+
+.login-form input {
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  outline: none;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+/* Staggered animation for form elements */
+.login-form input:nth-child(2) { /* First input */
+  animation: fadeIn 0.6s ease-out forwards;
+  animation-delay: 0.8s;
+  opacity: 0;
+}
+
+.login-form input:nth-child(4) { /* Second input */
+  animation: fadeIn 0.6s ease-out forwards;
+  animation-delay: 0.9s;
+  opacity: 0;
+}
+
+/* Buttons */
+.sign-in-btn {
+  background-color: maroon;
+  color: white;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: all 0.3s ease;
+  animation: fadeIn 0.6s ease-out forwards;
+  animation-delay: 1s;
+  opacity: 0;
+}
+
+.sign-in-btn:hover {
+  cursor: pointer;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(128, 0, 0, 0.3);
+}
+
+.create-account-btn {
+  background: transparent;
+  border: 2px solid #3b0a0a;
+  color: #3b0a0a;
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  animation: fadeIn 0.6s ease-out forwards;
+  animation-delay: 1.1s;
+  opacity: 0;
+}
+
+.create-account-btn:hover {
+  cursor: pointer;
+  background-color: #3b0a0a;
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* Forgot Password */
+.forgot-password {
+  margin-top: 8px;
+  font-size: 0.9rem;
+  color: #6a0d0d;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  animation: fadeIn 0.6s ease-out forwards;
+  animation-delay: 1.2s;
+  opacity: 0;
+}
+
+.forgot-password:hover {
+  color: #3b0a0a;
+  text-decoration: underline;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: #6a0d0d;
+  font-weight: 600;
+  font-size: 0.9rem;
+  opacity: 0.9;
+  margin: 25px 0;
+  animation: fadeIn 0.6s ease-out forwards;
+  animation-delay: 1.3s;
+  opacity: 0;
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px solid #6a0d0d;
+  margin: 0 10px;
+  opacity: 0.6;
+}
+
+/* Input Icon Styling */
+.input-with-icon {
+  display: flex;
+  align-items: center;
+  border: 1px solid hsl(0, 0%, 80%);
+  border-radius: 8px;
+  padding: 2px 10px;
+  background-color: #fff;
+  animation: fadeIn 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+.input-with-icon:first-of-type {
+  animation-delay: 0.8s;
+}
+
+.input-with-icon:last-of-type {
+  animation-delay: 0.9s;
+}
+
+.input-with-icon .input-icon {
+  color: #6a0d0d;
+  font-size: 1rem;
+}
+
+.input-with-icon input {
+  border: none;
+  outline: none;
+  flex: 1;
+  font-size: 0.95rem;
+  color: #333;
+  background: transparent;
+}
+
+/* Input focus effects */
+.input-with-icon:focus-within {
+  border-color: #6a0d0d;
+  box-shadow: 0 0 0 2px rgba(106, 13, 13, 0.1);
+}
+
+/* Back Button */
+.back-btn {
+  position: absolute;
+  top: 25px;
+  left: 25px;
+  background: transparent;
+  border: none;
+  color: #3b0a0a;
+  font-weight: 800;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  animation: fadeIn 0.8s ease-out forwards;
+  animation-delay: 0.4s;
+  opacity: 0;
+}
+
+.back-btn:hover {
+  cursor: pointer;
+  transform: translateX(-3px);
+  color: #6a0d0d;
+}
+
+.back-icon {
+  font-size: 1.1rem;
+}
+
+/* Additional fadeIn animation for individual elements */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Optional: Add a subtle background animation */
+@keyframes backgroundFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.login-page {
+  animation: backgroundFade 1s ease-out;
+}
+
+/* Optional: Add hover effect to the entire login card */
+.login-container:hover {
+  transform: translateY(-5px);
+  transition: transform 0.3s ease;
+}
+
+/* Add to existing Login.css */
+
+.password-input-container {
+  position: relative;
+}
+
+.toggle-password-btn {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+}
+
+.toggle-password-btn:hover {
+  color: #333;
+}
+
+.toggle-password-btn:focus {
+  outline: none;
+}
+
+/* Adjust input padding to make room for the eye icon */
+.password-input-container input {
+  padding-right: 45px !important;
+}

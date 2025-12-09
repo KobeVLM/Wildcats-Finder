@@ -1,0 +1,162 @@
+/* message.css */
+.message {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  min-width: 300px;
+  max-width: 400px;
+  padding: 20px 25px;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transform: translateX(120%);
+  transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+}
+
+.message::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 5px;
+}
+
+/* Success message - Green */
+.message.success {
+  background: linear-gradient(135deg, #d4edda, #c3e6cb);
+  border: 2px solid #28a745;
+  color: #155724;
+}
+
+.message.success::before {
+  background: linear-gradient(to bottom, #28a745, #1e7e34);
+}
+
+/* Error message - Red */
+.message.error {
+  background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+  border: 2px solid #dc3545;
+  color: #721c24;
+}
+
+.message.error::before {
+  background: linear-gradient(to bottom, #dc3545, #c82333);
+}
+
+/* Info message - Blue */
+.message.info {
+  background: linear-gradient(135deg, #d1ecf1, #bee5eb);
+  border: 2px solid #17a2b8;
+  color: #0c5460;
+}
+
+.message.info::before {
+  background: linear-gradient(to bottom, #17a2b8, #138496);
+}
+
+/* Warning message - Gold */
+.message.warning {
+  background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+  border: 2px solid #ffc107;
+  color: #856404;
+}
+
+.message.warning::before {
+  background: linear-gradient(to bottom, #ffc107, #e0a800);
+}
+
+/* Custom theme for your app - Maroon & Gold */
+.message.maroon {
+  background: linear-gradient(135deg, #F9F5F0, #F5EFE7);
+  border: 2px solid #800020;
+  color: #5D001E;
+  box-shadow: 0 8px 25px rgba(128, 0, 32, 0.2);
+}
+
+.message.maroon::before {
+  background: linear-gradient(to bottom, #800020, #9A1750);
+}
+
+.message.gold {
+  background: linear-gradient(135deg, #FFF9E6, #FFF3CC);
+  border: 2px solid #D4AF37;
+  color: #8B6914;
+  box-shadow: 0 8px 25px rgba(212, 175, 55, 0.2);
+}
+
+.message.gold::before {
+  background: linear-gradient(to bottom, #D4AF37, #C19A6B);
+}
+
+/* Content styling */
+.message-content {
+  flex: 1;
+  padding-right: 15px;
+}
+
+.message-title {
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 5px;
+  letter-spacing: 0.3px;
+}
+
+.message-text {
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+/* Close button */
+.message-close {
+  background: none;
+  border: none;
+  color: inherit;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+  opacity: 0.7;
+}
+
+.message-close:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+  opacity: 1;
+}
+
+/* Animation states */
+.message.show {
+  transform: translateX(0);
+}
+
+.message.hide {
+  transform: translateX(120%);
+}
+
+/* Success icon for maroon theme */
+.message.maroon .message-title::before {
+  content: '✓ ';
+  color: #28a745;
+  font-weight: bold;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .message {
+    left: 20px;
+    right: 20px;
+    min-width: auto;
+    max-width: none;
+  }
+}

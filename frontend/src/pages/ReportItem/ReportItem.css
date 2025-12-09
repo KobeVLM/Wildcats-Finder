@@ -1,0 +1,1089 @@
+.page-container {
+  background: linear-gradient(135deg, #F5EFE7 0%, #F0E6D6 100%);
+  min-height: 100vh;
+  padding: 15px;
+}
+
+.page-wrapper {
+  max-width: 1300px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 18px;
+  box-shadow: 0 8px 25px rgba(128, 0, 32, 0.1);
+  overflow: hidden;
+}
+
+.content-panel {
+  padding: 25px;
+}
+
+/* Report Form Section */
+.report-item-page {
+  background: linear-gradient(to bottom right, #FFFFFF, #F9F5F0);
+  padding: 35px;
+  border-radius: 14px;
+  border-left: 6px solid #D4AF37;
+}
+
+.report-item-page h1 {
+  color: #800020;
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 12px;
+  font-weight: 700;
+  letter-spacing: -0.4px;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.report-item-page h4 {
+  color: #5D001E;
+  text-align: center;
+  font-size: 1.1rem;
+  margin-bottom: 35px;
+  font-weight: 400;
+  max-width: 750px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.5;
+}
+
+.report-item-form {
+  display: grid;
+  background: #FFF9F5;
+  padding: 80px;
+  border-radius: 20px;
+  grid-template-columns: 1fr;
+  gap: 22px;
+  max-width: 800px;
+  margin: 0 auto;
+   border: 2px solid #8B0000;
+    box-shadow: 0 10px 25px rgba(139, 0, 0, 0.08);
+}
+
+.report-item-form label {
+  font-weight: 600;
+  color: #5D001E;
+  font-size: 1.05rem;
+  margin-bottom: 7px;
+  display: block;
+}
+
+/* Report Item Form Inputs - Slightly Reduced */
+.report-item-form input[type="text"],
+.report-item-form input[type="date"],
+.report-item-form input[type="file"],
+.report-item-form select,
+.report-item-form textarea {
+  width: 100%;
+  padding: 18px 22px;
+  border: 2px solid #E0D6C9;
+  border-radius: 11px;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+  background: #F9F5F0;
+  color: #333;
+  box-sizing: border-box;
+  font-family: inherit;
+  min-height: 60px;
+}
+
+/* Specific styling for text input fields */
+.report-item-form input[type="text"] {
+  font-size: 1.2rem;
+  font-weight: 500;
+  letter-spacing: 0.25px;
+}
+
+/* Placeholder styling */
+.report-item-form input::placeholder,
+.report-item-form textarea::placeholder {
+  color: #9A1750;
+  opacity: 0.7;
+  font-size: 1.05rem;
+}
+
+/* Focus states */
+.report-item-form input[type="text"]:focus,
+.report-item-form input[type="date"]:focus,
+.report-item-form input[type="file"]:focus,
+.report-item-form select:focus,
+.report-item-form textarea:focus {
+  outline: none;
+  border-color: #B76E79;
+  box-shadow: 0 0 0 4px rgba(183, 110, 121, 0.25);
+  background: white;
+  transform: translateY(-2px);
+}
+
+/* Make textarea slightly smaller */
+.report-item-form textarea {
+  min-height: 160px;
+  resize: vertical;
+  line-height: 1.6;
+  padding: 18px 22px;
+  font-size: 1.1rem;
+}
+
+/* Select dropdown styling */
+.report-item-form select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23800020'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 18px center;
+  background-size: 18px;
+  padding-right: 45px;
+  cursor: pointer;
+}
+
+/* Hover states */
+.report-item-form input:hover,
+.report-item-form select:hover,
+.report-item-form textarea:hover {
+  border-color: #B76E79;
+  background: #F5EFE7;
+}
+
+/* File input specific styling */
+.report-item-form input[type="file"] {
+  padding: 16px 22px;
+  background: white;
+  border: 2.5px dashed #B76E79;
+  cursor: pointer;
+  font-size: 1.05rem;
+  min-height: 65px;
+}
+
+.report-item-form input[type="file"]:hover {
+  background: #F9F5F0;
+  border-color: #800020;
+  transform: translateY(-2px);
+}
+
+/* Custom file upload button */
+.report-item-form input[type="file"]::file-selector-button {
+  background: linear-gradient(135deg, #800020, #9A1750);
+  color: white;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 9px;
+  font-weight: 600;
+  font-size: 1.05rem;
+  cursor: pointer;
+  margin-right: 18px;
+  transition: all 0.3s ease;
+  letter-spacing: 0.4px;
+}
+
+.report-item-form input[type="file"]::file-selector-button:hover {
+  background: linear-gradient(135deg, #9A1750, #800020);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(128, 0, 32, 0.3);
+}
+
+/* Labels styling */
+.report-item-form label {
+  font-weight: 700;
+  color: #5D001E;
+  font-size: 1.15rem;
+  margin-bottom: 10px;
+  display: block;
+  letter-spacing: 0.25px;
+}
+
+/* Required field indicator */
+.report-item-form label::after {
+  content: ' *';
+  color: #D4AF37;
+}
+
+/* Form row spacing */
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+  margin: 22px 0;
+}
+
+.form-row > div {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+  .form-row {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px;
+  }
+}
+
+@media (max-width: 768px) {
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  
+  .report-item-form input[type="text"],
+  .report-item-form input[type="date"],
+  .report-item-form input[type="file"],
+  .report-item-form select,
+  .report-item-form textarea {
+    padding: 16px 20px;
+    font-size: 1.05rem;
+    min-height: 55px;
+  }
+  
+  .report-item-form textarea {
+    min-height: 150px;
+  }
+  
+  .report-item-form label {
+    font-size: 1.1rem;
+  }
+}
+
+/* Style the file input specifically */
+.report-item-form input[type="file"] {
+  padding: 14px 18px;
+  background: white;
+  border: 2px dashed #B76E79;
+  cursor: pointer;
+}
+
+.report-item-form input[type="file"]:hover {
+  background: #F9F5F0;
+  border-color: #800020;
+}
+
+.report-item-form input[type="file"]::file-selector-button {
+  background: linear-gradient(135deg, #800020, #9A1750);
+  color: white;
+  border: none;
+  padding: 9px 18px;
+  border-radius: 7px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-right: 15px;
+  transition: all 0.3s ease;
+}
+
+.report-item-form input[type="file"]::file-selector-button:hover {
+  background: linear-gradient(135deg, #9A1750, #800020);
+  transform: translateY(-2px);
+}
+
+/* Add file name display */
+.report-item-form .file-name {
+  display: inline-block;
+  margin-left: 10px;
+  color: #5D001E;
+  font-style: italic;
+}
+
+/* Custom file upload area */
+.file-upload-container {
+  position: relative;
+}
+
+.file-upload-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background: #F9F5F0;
+  border: 2px dashed #B76E79;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  color: #5D001E;
+  font-weight: 500;
+  min-height: 55px;
+}
+
+.file-upload-label:hover {
+  background: #F5EFE7;
+  border-color: #800020;
+  transform: translateY(-2px);
+}
+
+.file-upload-label i {
+  margin-right: 10px;
+  color: #D4AF37;
+  font-size: 1.1rem;
+}
+
+/* Hide default file input */
+.report-item-form input[type="file"].custom-file-input {
+  display: none;
+}
+
+.report-item-form button[type="submit"] {
+  background: linear-gradient(135deg, #800020, #9A1750);
+  color: white;
+  border: none;
+  padding: 16px 35px;
+  border-radius: 11px;
+  font-size: 1.15rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  max-width: 280px;
+  margin: 18px auto 0;
+  display: block;
+  letter-spacing: 0.4px;
+  box-shadow: 0 5px 14px rgba(128, 0, 32, 0.3);
+}
+
+.report-item-form button[type="submit"] {
+    background: linear-gradient(135deg, #8B0000, #B76E79);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 15px;
+    width: 100%;
+}
+
+.report-item-form button[type="submit"]:hover {
+    background: linear-gradient(135deg, #6B0000, #A55E69);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(139, 0, 0, 0.3);
+}
+
+/* Image Preview */
+.image-preview {
+  margin-top: 12px;
+  text-align: center;
+}
+
+.image-preview img {
+  border-radius: 9px;
+  border: 3px solid #B76E79;
+  box-shadow: 0 4px 12px rgba(183, 110, 121, 0.3);
+  transition: transform 0.3s ease;
+}
+
+.image-preview img:hover {
+  transform: scale(1.03);
+}
+
+/* Reported Items Container */
+.reported-items-container {
+  padding: 25px 18px;
+}
+
+.reported-items-container h2 {
+  color: #800020;
+  font-size: 2.3rem;
+  text-align: center;
+  margin-bottom: 18px;
+  font-weight: 700;
+  position: relative;
+  padding-bottom: 12px;
+}
+
+.reported-items-container h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 110px;
+  height: 3.5px;
+  background: linear-gradient(to right, #D4AF37, #800020);
+  border-radius: 2px;
+}
+
+.items-count {
+  text-align: center;
+  color: #5D001E;
+  font-size: 1.15rem;
+  margin-bottom: 30px;
+  font-weight: 500;
+  background: #F9F5F0;
+  padding: 12px 28px;
+  border-radius: 50px;
+  border: 2px solid #E0D6C9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 4px 12px rgba(128, 0, 32, 0.1);
+}
+
+/* Items Grid - 3 items per row */
+.items-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  margin-top: 25px;
+}
+
+/* Reported Item Card */
+.reported-item-card {
+  background: linear-gradient(145deg, #FFFFFF, #F9F5F0);
+  border-radius: 18px;
+  padding: 28px;
+  box-shadow: 0 8px 22px rgba(128, 0, 32, 0.1);
+  transition: all 0.4s ease;
+  border: 1px solid #E8DFD0;
+  position: relative;
+  overflow: hidden;
+  min-height: 360px;
+  display: flex;
+  flex-direction: column;
+}
+
+.reported-item-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(to right, #D4AF37, #800020, #B76E79);
+}
+
+.reported-item-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 30px rgba(128, 0, 32, 0.15);
+}
+
+/* Card Header */
+.card-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 22px;
+  text-align: center;
+}
+
+.card-header h3 {
+  color: #800020;
+  font-size: 1.7rem;
+  margin: 0 0 12px 0;
+  font-weight: 700;
+  line-height: 1.3;
+  width: 100%;
+  word-wrap: break-word;
+}
+
+.status-badge {
+  padding: 7px 18px;
+  border-radius: 22px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+}
+
+.status-badge.found {
+  background: linear-gradient(135deg, #4CAF50, #45a049);
+  color: white;
+}
+
+.status-badge.lost {
+  background: linear-gradient(135deg, #800020, #9A1750);
+  color: white;
+}
+
+.status-badge.unknown {
+  background: linear-gradient(135deg, #6c757d, #5a6268);
+  color: white;
+}
+
+/* Item Description */
+.item-description {
+  color: #5D001E;
+  line-height: 1.6;
+  margin-bottom: 22px;
+  font-size: 1.05rem;
+  flex-grow: 1;
+  padding: 0 5px;
+  text-align: left;
+  max-height: 110px;
+  overflow-y: auto;
+}
+
+/* Item Details - Left Aligned */
+.item-details {
+  background: #F5EFE7;
+  padding: 20px;
+  border-radius: 11px;
+  margin-bottom: 22px;
+  border-left: 4px solid #D4AF37;
+  text-align: left;
+}
+
+.item-details p {
+  margin: 8px 0;
+  font-size: 0.95rem;
+  color: #5D001E;
+  display: flex;
+  align-items: flex-start;
+}
+
+.item-details strong {
+  color: #800020;
+  min-width: 120px;
+  display: inline-block;
+  font-weight: 600;
+  margin-right: 8px;
+}
+
+.item-details span {
+  color: #333;
+  flex: 1;
+  word-break: break-word;
+}
+
+/* Card Actions - Centered */
+.card-actions {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  margin-top: auto;
+  padding-top: 18px;
+  border-top: 2px dashed #E0D6C9;
+}
+
+.edit-btn, .delete-btn {
+  padding: 12px 28px;
+  border: none;
+  border-radius: 9px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 110px;
+  text-align: center;
+  letter-spacing: 0.4px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.edit-btn {
+  background: linear-gradient(135deg, #D4AF37, #C19A6B);
+  color: #5D001E;
+}
+
+.edit-btn:hover {
+  background: linear-gradient(135deg, #C19A6B, #B89740);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(193, 154, 107, 0.3);
+}
+
+.delete-btn {
+  background: linear-gradient(135deg, #800020, #9A1750);
+  color: white;
+}
+
+.delete-btn:hover {
+  background: linear-gradient(135deg, #9A1750, #6B0018);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(128, 0, 32, 0.3);
+}
+
+/* Edit Form */
+.edit-form h3 {
+  color: #800020;
+  text-align: center;
+  margin-bottom: 22px;
+  font-size: 1.7rem;
+}
+
+.form-group {
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 7px;
+  color: #5D001E;
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+
+.edit-form .form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.edit-actions {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  margin-top: 25px;
+}
+
+.save-btn, .cancel-btn {
+  padding: 12px 28px;
+  border: none;
+  border-radius: 9px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 140px;
+  text-align: center;
+}
+
+.save-btn {
+  background: linear-gradient(135deg, #4CAF50, #45a049);
+  color: white;
+  box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3);
+}
+
+.save-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(76, 175, 80, 0.4);
+}
+
+.cancel-btn {
+  background: linear-gradient(135deg, #6c757d, #5a6268);
+  color: white;
+  box-shadow: 0 4px 10px rgba(108, 117, 125, 0.3);
+}
+
+.cancel-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(108, 117, 125, 0.4);
+}
+
+/* Loading, Empty States, and Tips */
+.loading-message {
+  text-align: center;
+  padding: 50px;
+  color: #5D001E;
+  font-size: 1.2rem;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 70px 18px;
+  background: #F9F5F0;
+  border-radius: 18px;
+  border: 2.5px dashed #B76E79;
+  margin-top: 35px;
+}
+
+.empty-state p {
+  color: #5D001E;
+  font-size: 1.3rem;
+  margin-bottom: 25px;
+}
+
+.report-first-btn {
+  background: linear-gradient(135deg, #800020, #9A1750);
+  color: white;
+  border: none;
+  padding: 16px 35px;
+  border-radius: 11px;
+  font-size: 1.15rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 14px rgba(128, 0, 32, 0.3);
+}
+
+.report-first-btn:hover {
+  background: linear-gradient(135deg, #9A1750, #6B0018);
+  transform: translateY(-3px);
+  box-shadow: 0 7px 18px rgba(128, 0, 32, 0.4);
+}
+
+.tips-panel {
+  background: linear-gradient(to bottom right, #F9F5F0, #F5EFE7);
+  padding: 35px;
+  border-radius: 18px;
+  border-left: 6px solid #D4AF37;
+}
+
+.tips-panel h2 {
+  color: #800020;
+  text-align: center;
+  font-size: 2.3rem;
+  margin-bottom: 35px;
+  font-weight: 700;
+}
+
+.tip-section {
+  margin-bottom: 30px;
+  background: white;
+  padding: 25px;
+  border-radius: 14px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  border-top: 4px solid #B76E79;
+}
+
+.tip-section h3 {
+  color: #5D001E;
+  font-size: 1.4rem;
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tip-section ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.tip-section li {
+  color: #333;
+  line-height: 1.7;
+  margin-bottom: 10px;
+  padding-left: 25px;
+  position: relative;
+}
+
+.tip-section li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: #D4AF37;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .items-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-container {
+    padding: 10px;
+  }
+  
+  .content-panel {
+    padding: 18px;
+  }
+  
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  
+  .items-grid {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+  
+  .card-actions {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .edit-btn, .delete-btn {
+    width: 100%;
+  }
+  
+  .edit-form .form-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .edit-actions {
+    flex-direction: column;
+  }
+  
+  .save-btn, .cancel-btn {
+    width: 100%;
+  }
+}
+
+/* Custom Scrollbar for Item Description */
+.item-description::-webkit-scrollbar {
+  width: 5px;
+}
+
+.item-description::-webkit-scrollbar-track {
+  background: #F0E6D6;
+  border-radius: 3px;
+}
+
+.item-description::-webkit-scrollbar-thumb {
+  background: #B76E79;
+  border-radius: 3px;
+}
+
+.item-description::-webkit-scrollbar-thumb:hover {
+  background: #9A1750;
+}
+
+/* Animation for cards */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.reported-item-card {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+/* Item name input special styling */
+.item-name-input {
+  font-size: 1.25rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.3px !important;
+  background: #F9F5F0 !important;
+  border: 2px solid #E0D6C9 !important;
+  border-radius: 11px !important;
+  padding: 18px 24px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  min-height: 60px !important;
+  transition: all 0.3s ease !important;
+  color: #5D001E !important;
+}
+
+.item-name-input::placeholder {
+  color: #9A1750 !important;
+  opacity: 0.8 !important;
+  font-size: 1.2rem !important;
+  font-weight: 500 !important;
+}
+
+.item-name-input:focus {
+  outline: none !important;
+  border-color: #800020 !important;
+  box-shadow: 0 0 0 4px rgba(128, 0, 32, 0.2) !important;
+  background: white !important;
+  transform: translateY(-2px) !important;
+}
+
+.item-name-input:hover {
+  border-color: #B76E79 !important;
+  background: #F5EFE7 !important;
+}
+
+
+
+/* EDIT ITEM */
+
+/* Enhanced Edit Form Styles */
+.edit-form {
+    background: #F9F5F0;
+    padding: 22px;
+    border-radius: 14px;
+    border: 2.5px solid #B76E79;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 20px rgba(183, 110, 121, 0.15);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Add a decorative element */
+.edit-form::before {
+    position: absolute;
+    top: -10px;
+    right: 15px;
+    font-size: 24px;
+    opacity: 0.3;
+}
+
+.edit-form h3 {
+    color: #8B0000;
+    margin-top: 0;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid rgba(139, 0, 0, 0.2);
+    font-size: 1.5rem;
+}
+
+/* Form groups inside edit form */
+.edit-form .form-group {
+    margin-bottom: 18px;
+}
+
+.edit-form .form-group label {
+    display: block;
+    margin-bottom: 6px;
+    color: #5D4037;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.edit-form .form-group input,
+.edit-form .form-group select,
+.edit-form .form-group textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #D7CCC8;
+    border-radius: 8px;
+    background: white;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.edit-form .form-group input:focus,
+.edit-form .form-group select:focus,
+.edit-form .form-group textarea:focus {
+    outline: none;
+    border-color: #B76E79;
+    box-shadow: 0 0 0 3px rgba(183, 110, 121, 0.2);
+}
+
+.edit-form .form-group textarea {
+    min-height: 100px;
+    resize: vertical;
+    font-family: inherit;
+}
+
+/* Form row for side-by-side elements */
+.edit-form .form-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 18px;
+}
+
+.edit-form .form-row .form-group {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+/* File input styling */
+.edit-form .form-group input[type="file"] {
+    padding: 8px;
+    border: 2px dashed #D7CCC8;
+    background: #FFF9F5;
+    cursor: pointer;
+}
+
+.edit-form .form-group input[type="file"]:hover {
+    border-color: #B76E79;
+    background: #FFF0F0;
+}
+
+/* Edit action buttons */
+.edit-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 2px solid rgba(183, 110, 121, 0.2);
+}
+
+.edit-actions button {
+    flex: 1;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.edit-actions .save-btn {
+    background: linear-gradient(135deg, #8B0000, #B76E79);
+    color: white;
+    box-shadow: 0 4px 12px rgba(139, 0, 0, 0.3);
+}
+
+.edit-actions .save-btn:hover {
+    background: linear-gradient(135deg, #6B0000, #A55E69);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(139, 0, 0, 0.4);
+}
+
+.edit-actions .cancel-btn {
+    background: #F5F5F5;
+    color: #5D4037;
+    border: 2px solid #D7CCC8;
+}
+
+.edit-actions .cancel-btn:hover {
+    background: #E0E0E0;
+    border-color: #B76E79;
+    color: #8B0000;
+    transform: translateY(-2px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .edit-form .form-row {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .edit-form {
+        padding: 18px;
+    }
+    
+    .edit-actions {
+        flex-direction: column;
+    }
+    
+    .edit-actions button {
+        padding: 12px;
+    }
+}
+
+/* Optional: Add animation for edit form appearance */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.edit-form {
+    animation: slideIn 0.3s ease-out;
+}
+
+/* Image preview in edit form */
+.edit-form .image-preview {
+    margin-top: 15px;
+    text-align: center;
+}
+
+.edit-form .image-preview img {
+    max-width: 200px;
+    max-height: 200px;
+    border-radius: 8px;
+    border: 3px solid #B76E79;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Status indicator in edit form */
+.edit-form .status-indicator {
+    display: inline-block;
+    margin-left: 10px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.edit-form .status-indicator.editing {
+    background: rgba(183, 110, 121, 0.1);
+    color: #B76E79;
+    border: 1px solid #B76E79;
+}
