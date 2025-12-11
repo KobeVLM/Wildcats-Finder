@@ -68,4 +68,14 @@ public class ClaimDTO {
     
     public String getItemStatus() { return itemStatus; }
     public void setItemStatus(String itemStatus) { this.itemStatus = itemStatus; }
+    
+    // Claimant details for "Claims on My Items" display
+    private String claimantName;
+    private String claimantEmail;
+    
+    public String getClaimantName() { return claimantName; }
+    public void setClaimantName(String claimantName) { this.claimantName = claimantName; }
+    
+    public String getClaimantEmail() { return claimantEmail; }
+    public void setClaimantEmail(String claimantEmail) { this.claimantEmail = claimantEmail; }
 }

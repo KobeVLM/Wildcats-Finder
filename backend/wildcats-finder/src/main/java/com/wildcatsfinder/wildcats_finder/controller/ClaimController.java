@@ -266,6 +266,16 @@ public class ClaimController {
             dto.setItemStatus(item.getStatus() != null ? item.getStatus().toString() : null);
         }
         
+        // Add claimant details for "Claims on My Items"
+        UserEntity claimant = claim.getUser();
+        if (claimant != null) {
+            String fullName = "";
+            if (claimant.getFName() != null) fullName += claimant.getFName();
+            if (claimant.getLName() != null) fullName += " " + claimant.getLName();
+            dto.setClaimantName(fullName.trim());
+            dto.setClaimantEmail(claimant.getUsername()); // username is email
+        }
+        
         return dto;
     }
 

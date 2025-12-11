@@ -4,6 +4,7 @@ import searchIcon from "../../assets/icons/search.png";
 import MaterialImg from "../../assets/images/Material.jpg";
 import wildcatIcon from "../../assets/images/wildcat.png";
 import StatCard from "../../components/statscard/StatCard";
+import ClaimModal from "../../components/ClaimModal";
 import { UserContext } from "../../context/UserContext";
 import "./Home.css";
 import "../ReportItem/ReportItem.css";
@@ -21,6 +22,10 @@ function Home() {
   const [filter, setFilter] = useState("all");
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+
+  // Claim Modal State
+  const [showClaimModal, setShowClaimModal] = useState(false);
+  const [selectedClaimItem, setSelectedClaimItem] = useState(null);
 
   // --- New AI Assistant States ---
   const [showAIChat, setShowAIChat] = useState(false);
@@ -301,92 +306,70 @@ function Home() {
     }
   };
 
-  // Handle "Mine" button click
-const handleMineButtonClick = async (item) => {
-  // Check if user is logged in
-  if (!user || !user.userId) {
-    alert("Please log in to claim an item");
-    return;
-  }
-
-  // Check if user is trying to claim their own item
-  if (item.userId === user.userId) {
-    alert("You cannot claim your own reported item");
-    return;
-  }
-
-  // Ask for verification details
-  const verificationAnswer = prompt(
-    `To claim "${item.itemTitle}", please provide details to verify ownership:\n` +
-    `Where did you lose it? Any identifying marks?`
-  );
-
-  if (!verificationAnswer || verificationAnswer.trim() === "") {
-    alert("Verification details are required to claim an item");
-    return;
-  }
-
-  try {
-    const claimData = {
-      itemId: item.itemId,
-      userId: user.userId,
-      verificationAnswer: verificationAnswer.trim(),
-      status: "PENDING",
-      verified: false
-    };
-
-    console.log("Creating claim with data:", claimData);
-
-    const response = await fetch("http://localhost:8080/api/claims", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(claimData),
-    });
-
-    console.log("Response status:", response.status);
-    
-    // Only read the response once!
-    const responseText = await response.text();
-    console.log("Response text:", responseText);
-
-    if (response.ok) {
-      try {
-        // Parse the JSON response
-        const result = JSON.parse(responseText);
-        console.log("Claim created successfully:", result);
-        
-        // Show success message
-        alert(`✅ Claim submitted successfully!\n\n` +
-              `Claim ID: ${result.claimId}\n` +
-              `Item: ${item.itemTitle}\n` +
-              `Status: ${result.status}\n\n` +
-              `The item finder will review your claim.`);
-        
-        // Optional: Refresh the page or update UI
-        // window.location.reload(); // Uncomment to refresh
-        
-      } catch (parseError) {
-        console.error("Error parsing JSON:", parseError);
-        alert("Claim submitted successfully! (Could not parse response)");
-      }
-    } else {
-      // Try to parse error response
-      let errorMsg = "Failed to submit claim";
-      try {
-        const errorJson = JSON.parse(responseText);
-        errorMsg = errorJson.message || errorJson;
-      } catch (e) {
-        errorMsg = responseText || `Server error: ${response.status}`;
-      }
-      alert(`❌ Error: ${errorMsg}`);
+  // Handle "Mine" button click - opens modal
+  const handleMineButtonClick = (item) => {
+    // Check if user is logged in
+    if (!user || !user.userId) {
+      alert("Please log in to claim an item");
+      return;
     }
-  } catch (error) {
-    console.error("Network error:", error);
-    alert("Network error. Please check your connection and try again.");
-  }
-};
+
+    // Check if user is trying to claim their own item
+    if (item.userId === user.userId) {
+      alert("You cannot claim your own reported item");
+      return;
+    }
+
+    // Open claim modal
+    setSelectedClaimItem(item);
+    setShowClaimModal(true);
+  };
+
+  // Handle claim submission from modal
+  const handleClaimSubmit = async (verificationAnswer) => {
+    if (!selectedClaimItem) return;
+
+    try {
+      const claimData = {
+        itemId: selectedClaimItem.itemId,
+        userId: user.userId,
+        verificationAnswer: verificationAnswer.trim(),
+        status: "PENDING",
+        verified: false
+      };
+
+      console.log("Creating claim with data:", claimData);
+
+      const response = await fetch("http://localhost:8080/api/claims", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(claimData),
+      });
+
+      const responseText = await response.text();
+
+      if (response.ok) {
+        const result = JSON.parse(responseText);
+        alert(`✅ Claim submitted successfully!\n\nClaim ID: ${result.claimId}\nItem: ${selectedClaimItem.itemTitle}\nStatus: ${result.status}\n\nThe item finder will review your claim.`);
+        setShowClaimModal(false);
+        setSelectedClaimItem(null);
+      } else {
+        let errorMsg = "Failed to submit claim";
+        try {
+          const errorJson = JSON.parse(responseText);
+          errorMsg = errorJson.message || errorJson;
+        } catch (e) {
+          errorMsg = responseText || `Server error: ${response.status}`;
+        }
+        alert(`❌ Error: ${errorMsg}`);
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+      alert("Network error. Please check your connection and try again.");
+    }
+  };
 
   return (
     <div className="home-page-container">
@@ -679,6 +662,17 @@ const handleMineButtonClick = async (item) => {
           </div>
         </div>
       )}
+
+      {/* Claim Modal */}
+      <ClaimModal
+        isOpen={showClaimModal}
+        onClose={() => {
+          setShowClaimModal(false);
+          setSelectedClaimItem(null);
+        }}
+        onSubmit={handleClaimSubmit}
+        item={selectedClaimItem}
+      />
     </div>
   );
 }

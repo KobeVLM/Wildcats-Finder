@@ -153,11 +153,11 @@ function Claim() {
                   </div>
                   <div className="claim-card-body">
                     <div className="claim-info">
-                      <p><strong>Claimant:</strong> {claim.user?.firstName} {claim.user?.lastName}</p>
-                      <p><strong>Email:</strong> {claim.user?.email}</p>
-                      <p><strong>Claim Date:</strong> {formatDate(claim.claimDate)}</p>
+                      <p><strong>👤 Claimant:</strong> {claim.claimantName || "Unknown"}</p>
+                      <p><strong>📧 Email:</strong> {claim.claimantEmail || "N/A"}</p>
+                      <p><strong>📅 Claim Date:</strong> {formatDate(claim.claimDate)}</p>
                       {claim.verificationAnswer && (
-                        <p><strong>Verification Answer:</strong> {claim.verificationAnswer}</p>
+                        <p><strong>✍️ Verification Answer:</strong> {claim.verificationAnswer}</p>
                       )}
                     </div>
                     <div className="item-details">
