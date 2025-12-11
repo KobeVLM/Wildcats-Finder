@@ -304,10 +304,91 @@ function Home() {
   };
 
   // Handle "Mine" button click
-  const handleMineButtonClick = (item) => {
-    console.log("Item claimed as mine:", item);
-    alert(`You've claimed "${item.itemTitle}".\nContact the owner at user@email.com`);
-  };
+const handleMineButtonClick = async (item) => {
+  // Check if user is logged in
+  if (!user || !user.userId) {
+    alert("Please log in to claim an item");
+    return;
+  }
+
+  // Check if user is trying to claim their own item
+  if (item.userId === user.userId) {
+    alert("You cannot claim your own reported item");
+    return;
+  }
+
+  // Ask for verification details
+  const verificationAnswer = prompt(
+    `To claim "${item.itemTitle}", please provide details to verify ownership:\n` +
+    `Where did you lose it? Any identifying marks?`
+  );
+
+  if (!verificationAnswer || verificationAnswer.trim() === "") {
+    alert("Verification details are required to claim an item");
+    return;
+  }
+
+  try {
+    const claimData = {
+      itemId: item.itemId,
+      userId: user.userId,
+      verificationAnswer: verificationAnswer.trim(),
+      status: "PENDING",
+      verified: false
+    };
+
+    console.log("Creating claim with data:", claimData);
+
+    const response = await fetch("http://localhost:8080/api/claims", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(claimData),
+    });
+
+    console.log("Response status:", response.status);
+    
+    // Only read the response once!
+    const responseText = await response.text();
+    console.log("Response text:", responseText);
+
+    if (response.ok) {
+      try {
+        // Parse the JSON response
+        const result = JSON.parse(responseText);
+        console.log("Claim created successfully:", result);
+        
+        // Show success message
+        alert(`✅ Claim submitted successfully!\n\n` +
+              `Claim ID: ${result.claimId}\n` +
+              `Item: ${item.itemTitle}\n` +
+              `Status: ${result.status}\n\n` +
+              `The item finder will review your claim.`);
+        
+        // Optional: Refresh the page or update UI
+        // window.location.reload(); // Uncomment to refresh
+        
+      } catch (parseError) {
+        console.error("Error parsing JSON:", parseError);
+        alert("Claim submitted successfully! (Could not parse response)");
+      }
+    } else {
+      // Try to parse error response
+      let errorMsg = "Failed to submit claim";
+      try {
+        const errorJson = JSON.parse(responseText);
+        errorMsg = errorJson.message || errorJson;
+      } catch (e) {
+        errorMsg = responseText || `Server error: ${response.status}`;
+      }
+      alert(`❌ Error: ${errorMsg}`);
+    }
+  } catch (error) {
+    console.error("Network error:", error);
+    alert("Network error. Please check your connection and try again.");
+  }
+};
 
   return (
     <div className="home-page-container">

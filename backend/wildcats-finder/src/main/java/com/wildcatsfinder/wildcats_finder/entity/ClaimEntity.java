@@ -21,6 +21,10 @@ public class ClaimEntity {
     @Column(name = "verified", nullable = false)
     private Boolean verified;
 
+    // ADD THIS FIELD - verification answer from user
+    @Column(name = "verification_answer", columnDefinition = "TEXT")
+    private String verificationAnswer;
+
     // Foreign Key Relationships
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id", nullable = false)
@@ -32,13 +36,15 @@ public class ClaimEntity {
 
     // Constructors
     public ClaimEntity() {
+        this.verified = false; // Default to false
     }
 
     public ClaimEntity(LocalDateTime claimDate, String status, Boolean verified,
-            ItemEntity item, UserEntity user) {
+            String verificationAnswer, ItemEntity item, UserEntity user) {
         this.claimDate = claimDate;
         this.status = status;
         this.verified = verified;
+        this.verificationAnswer = verificationAnswer;
         this.item = item;
         this.user = user;
     }
@@ -74,6 +80,15 @@ public class ClaimEntity {
 
     public void setVerified(Boolean verified) {
         this.verified = verified;
+    }
+
+    // ADD THIS GETTER AND SETTER
+    public String getVerificationAnswer() {
+        return verificationAnswer;
+    }
+
+    public void setVerificationAnswer(String verificationAnswer) {
+        this.verificationAnswer = verificationAnswer;
     }
 
     public ItemEntity getItem() {
