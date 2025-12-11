@@ -202,14 +202,40 @@ public class ClaimController {
 
     // UPDATE: Reject claim
     @PutMapping("/{id}/reject")
-    public ResponseEntity<?> rejectClaim(@PathVariable Long id) {
+    public ResponseEntity<?> rejectClaim(@PathVariable Long id, @RequestBody(required = false) java.util.Map<String, String> request) {
         try {
-            ClaimEntity rejectedClaim = claimService.rejectClaim(id);
+            String reason = null;
+            if (request != null && request.containsKey("reason")) {
+                reason = request.get("reason");
+            }
+            
+            ClaimEntity rejectedClaim;
+            if (reason != null && !reason.trim().isEmpty()) {
+                rejectedClaim = claimService.rejectClaimWithReason(id, reason);
+            } else {
+                rejectedClaim = claimService.rejectClaim(id);
+            }
+            
             ClaimDTO claimDTO = convertToDTO(rejectedClaim);
             return ResponseEntity.ok(claimDTO);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("Error rejecting claim: " + e.getMessage());
+        }
+    }
+
+    // UPDATE: Mark claim as returned
+    @PutMapping("/{id}/return")
+    public ResponseEntity<?> markAsReturned(@PathVariable Long id) {
+        try {
+            ClaimEntity returnedClaim = claimService.markAsReturned(id);
+            ClaimDTO claimDTO = convertToDTO(returnedClaim);
+            return ResponseEntity.ok(claimDTO);
+        } catch (IllegalStateException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Error marking as returned: " + e.getMessage());
         }
     }
 
@@ -228,6 +254,7 @@ public class ClaimController {
         
         dto.setStatus(claim.getStatus());
         dto.setVerified(claim.getVerified());
+        dto.setRejectionReason(claim.getRejectionReason());
         
         return dto;
     }

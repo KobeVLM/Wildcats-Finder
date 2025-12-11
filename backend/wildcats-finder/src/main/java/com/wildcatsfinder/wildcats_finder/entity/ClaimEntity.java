@@ -34,6 +34,10 @@ public class ClaimEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
 
+    // Rejection reason (when claim is rejected)
+    @Column(name = "rejection_reason")
+    private String rejectionReason;
+
     // Constructors
     public ClaimEntity() {
         this.verified = false; // Default to false
@@ -105,5 +109,13 @@ public class ClaimEntity {
 
     public void setUser(UserEntity user) {
         this.user = user;
+    }
+
+    public String getRejectionReason() {
+        return rejectionReason;
+    }
+
+    public void setRejectionReason(String rejectionReason) {
+        this.rejectionReason = rejectionReason;
     }
 }

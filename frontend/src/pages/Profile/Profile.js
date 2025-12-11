@@ -1,11 +1,19 @@
 import React, { useContext, useState, useEffect } from "react";
 import { UserContext } from "../../context/UserContext";
-import { FaSignOutAlt, FaEnvelope, FaUserCircle, FaCog, FaClipboardList } from "react-icons/fa";
+import { useNotifications } from "../../context/NotificationContext";
+import SettingsTab from "../../components/SettingsTab";
+import { FaSignOutAlt, FaEnvelope, FaUserCircle, FaCog, FaClipboardList, FaBell, FaTrash } from "react-icons/fa";
 import "./Profile.css";
 
 function Profile() {
-  const { user, logout, loading: contextLoading } = useContext(UserContext); // Use logout from context
-  const [activeTab, setActiveTab] = useState("active");
+  const { user, logout, loading: contextLoading } = useContext(UserContext);
+  const { notifications, markAsRead, markAllAsRead, deleteNotification, unreadCount } = useNotifications();
+  
+  // Main tab state (reports, notifications, settings)
+  const [mainTab, setMainTab] = useState("reports");
+  
+  // Reports sub-tab state
+  const [reportsTab, setReportsTab] = useState("active");
   const [activeReports, setActiveReports] = useState([]);
   const [claimedReports, setClaimedReports] = useState([]);
   const [loadingReports, setLoadingReports] = useState(true);
@@ -17,16 +25,21 @@ function Profile() {
     const fetchReports = async () => {
       try {
         setLoadingReports(true);
+        const token = localStorage.getItem('token');
+        const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+        
         // Fetch items reported by this user
-        const itemsResponse = await fetch(`http://localhost:8080/api/items/user/${user.userId}`);
+        const itemsResponse = await fetch(`http://localhost:8080/api/items/user/${user.userId}`, { headers });
         const items = await itemsResponse.json();
 
         // Fetch claims made by this user
-        const claimsResponse = await fetch(`http://localhost:8080/api/claims/user/${user.userId}`);
+        const claimsResponse = await fetch(`http://localhost:8080/api/claims/user/${user.userId}`, { headers });
         const claims = await claimsResponse.json();
 
-        // Active reports are items that are still LOST or FOUND
-        const active = items.filter(item => item.status === "LOST" || item.status === "FOUND");
+        // Active reports are items that are still LOST or FOUND or PENDING
+        const active = items.filter(item => 
+          item.status === "LOST" || item.status === "FOUND" || item.status === "PENDING"
+        );
         setActiveReports(active);
         setClaimedReports(claims);
       } catch (error) {
@@ -39,14 +52,14 @@ function Profile() {
     fetchReports();
   }, [user]);
 
-const handleLogout = () => {
-  const confirmLogout = window.confirm("End session?");
-  if (!confirmLogout) return;
+  const handleLogout = () => {
+    const confirmLogout = window.confirm("End session?");
+    if (!confirmLogout) return;
 
-  logout();
-  localStorage.removeItem("isAuthenticated"); // Add this
-  window.location.href = "/login";
-};
+    logout();
+    localStorage.removeItem("isAuthenticated");
+    window.location.href = "/login";
+  };
 
   // If context is still loading, show loading
   if (contextLoading) {
@@ -59,7 +72,6 @@ const handleLogout = () => {
     return null;
   }
 
-  // Rest of your component...
   const getFullName = () => {
     const firstName = user.fname || "";
     const middleName = user.mname || "";
@@ -106,18 +118,161 @@ const handleLogout = () => {
     return user.role.charAt(0).toUpperCase() + user.role.slice(1).toLowerCase();
   };
 
+  const formatNotificationTime = (dateString) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now - date;
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMins / 60);
+    const diffDays = Math.floor(diffHours / 24);
+
+    if (diffMins < 1) return 'Just now';
+    if (diffMins < 60) return `${diffMins}m ago`;
+    if (diffHours < 24) return `${diffHours}h ago`;
+    if (diffDays < 7) return `${diffDays}d ago`;
+    return date.toLocaleDateString();
+  };
+
+  // Render Reports Tab Content
+  const renderReportsContent = () => (
+    <div className="reports-container">
+      <div className="reports-header">
+        <FaClipboardList className="reports-icon" />
+        <h3>My Reports</h3>
+      </div>
+
+      {/* Reports Sub-Tabs */}
+      <div className="reports-tabs">
+        <button
+          className={`tab ${reportsTab === "active" ? "active" : ""}`}
+          onClick={() => setReportsTab("active")}
+        >
+          Active
+          <span className="tab-badge">{activeReports.length}</span>
+        </button>
+        <button
+          className={`tab ${reportsTab === "claimed" ? "active" : ""}`}
+          onClick={() => setReportsTab("claimed")}
+        >
+          Claimed
+          <span className="tab-badge">{claimedReports.length}</span>
+        </button>
+      </div>
+
+      {/* Tab Content */}
+      <div className="reports-content">
+        {loadingReports ? (
+          <div className="no-reports">Loading...</div>
+        ) : reportsTab === "active" ? (
+          activeReports.length > 0 ? (
+            <div className="reports-grid">
+              {activeReports.map((item) => (
+                <div key={item.itemId} className="report-card">
+                  <img
+                    src={item.imageUrl ? `http://localhost:8080${item.imageUrl}` : "https://via.placeholder.com/150"}
+                    alt={item.itemTitle}
+                    className="report-image"
+                  />
+                  <div className="report-details">
+                    <h4>{item.itemTitle}</h4>
+                    <p className="report-desc">{item.itemDesc}</p>
+                    <p className="report-location">📍 {item.location}</p>
+                    <span className={`status-badge ${item.status.toLowerCase()}`}>
+                      {item.status}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="no-reports">No active reports</div>
+          )
+        ) : claimedReports.length > 0 ? (
+          <div className="reports-grid">
+            {claimedReports.map((claim) => (
+              <div key={claim.claimId} className="report-card">
+                <div className="report-details">
+                  <h4>Claim #{claim.claimId}</h4>
+                  <p className="report-desc">{claim.verificationAnswer}</p>
+                  <p className="report-date">
+                    📅 {new Date(claim.claimDate).toLocaleDateString()}
+                  </p>
+                  <span className={`status-badge ${claim.status.toLowerCase()}`}>
+                    {claim.status}
+                  </span>
+                  {claim.rejectionReason && (
+                    <p className="rejection-reason">Reason: {claim.rejectionReason}</p>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="no-reports">No claimed reports</div>
+        )}
+      </div>
+    </div>
+  );
+
+  // Render Notifications Tab Content
+  const renderNotificationsContent = () => (
+    <div className="notifications-container">
+      <div className="notifications-header">
+        <FaBell className="notifications-icon" />
+        <h3>Notifications</h3>
+        {unreadCount > 0 && (
+          <button className="mark-all-btn" onClick={markAllAsRead}>
+            Mark all as read
+          </button>
+        )}
+      </div>
+
+      <div className="notifications-list">
+        {notifications.length === 0 ? (
+          <div className="no-notifications">
+            <span className="empty-icon">🔔</span>
+            <p>No notifications yet</p>
+          </div>
+        ) : (
+          notifications.map((notification) => (
+            <div
+              key={notification.notificationId}
+              className={`notification-item ${!notification.isRead ? 'unread' : ''}`}
+              onClick={() => !notification.isRead && markAsRead(notification.notificationId)}
+            >
+              <div className="notification-content">
+                <h4>{notification.title}</h4>
+                <p>{notification.message}</p>
+                <span className="notification-time">
+                  {formatNotificationTime(notification.createdAt)}
+                </span>
+              </div>
+              <button
+                className="notification-delete-btn"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  deleteNotification(notification.notificationId);
+                }}
+              >
+                <FaTrash />
+              </button>
+            </div>
+          ))
+        )}
+      </div>
+    </div>
+  );
+
   return (
     <div className="profile-page">
       <div className="profile-container">
         {/* Profile Header Card */}
         <div className="profile-header-card">
           <div className="profile-header-left">
-            {/* Profile Circle with initials */}
             <div className="profile-circle">
               {getUserInitials()}
             </div>
 
-            {/* User info */}
             <div className="profile-info">
               <h2 className="profile-name">{getFullName()}</h2>
               <div className="profile-email">
@@ -130,9 +285,11 @@ const handleLogout = () => {
             </div>
           </div>
 
-          {/* Top-right buttons */}
           <div className="profile-header-actions">
-            <button className="btn-settings">
+            <button 
+              className={`btn-settings ${mainTab === 'settings' ? 'active' : ''}`}
+              onClick={() => setMainTab('settings')}
+            >
               <FaCog />
             </button>
             <button className="btn-logout" onClick={handleLogout}>
@@ -151,83 +308,41 @@ const handleLogout = () => {
             <div className="stat-number gold">{claimedReports.length}</div>
             <div className="stat-label">Claimed</div>
           </div>
+          <div className="stat-card">
+            <div className="stat-number blue">{unreadCount}</div>
+            <div className="stat-label">Unread</div>
+          </div>
+        </div>
+
+        {/* Main Tabs */}
+        <div className="main-tabs">
+          <button
+            className={`main-tab ${mainTab === 'reports' ? 'active' : ''}`}
+            onClick={() => setMainTab('reports')}
+          >
+            <FaClipboardList /> My Reports
+          </button>
+          <button
+            className={`main-tab ${mainTab === 'notifications' ? 'active' : ''}`}
+            onClick={() => setMainTab('notifications')}
+          >
+            <FaBell /> Notifications
+            {unreadCount > 0 && <span className="tab-badge-small">{unreadCount}</span>}
+          </button>
+          <button
+            className={`main-tab ${mainTab === 'settings' ? 'active' : ''}`}
+            onClick={() => setMainTab('settings')}
+          >
+            <FaCog /> Settings
+          </button>
         </div>
       </div>
 
-      {/* My Reports Section */}
-      <div className="reports-container">
-        <div className="reports-header">
-          <FaClipboardList className="reports-icon" />
-          <h3>My Reports</h3>
-        </div>
-
-        {/* Tabs */}
-        <div className="reports-tabs">
-          <button
-            className={`tab ${activeTab === "active" ? "active" : ""}`}
-            onClick={() => setActiveTab("active")}
-          >
-            Active
-            <span className="tab-badge">{activeReports.length}</span>
-          </button>
-          <button
-            className={`tab ${activeTab === "claimed" ? "active" : ""}`}
-            onClick={() => setActiveTab("claimed")}
-          >
-            Claimed
-            <span className="tab-badge">{claimedReports.length}</span>
-          </button>
-        </div>
-
-        {/* Tab Content */}
-        <div className="reports-content">
-          {loadingReports ? (
-            <div className="no-reports">Loading...</div>
-          ) : activeTab === "active" ? (
-            activeReports.length > 0 ? (
-              <div className="reports-grid">
-                {activeReports.map((item) => (
-                  <div key={item.itemId} className="report-card">
-                    <img
-                      src={item.imageUrl || "https://via.placeholder.com/150"}
-                      alt={item.itemTitle}
-                      className="report-image"
-                    />
-                    <div className="report-details">
-                      <h4>{item.itemTitle}</h4>
-                      <p className="report-desc">{item.itemDesc}</p>
-                      <p className="report-location">📍 {item.location}</p>
-                      <span className={`status-badge ${item.status.toLowerCase()}`}>
-                        {item.status}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="no-reports">No active reports</div>
-            )
-          ) : claimedReports.length > 0 ? (
-            <div className="reports-grid">
-              {claimedReports.map((claim) => (
-                <div key={claim.claimId} className="report-card">
-                  <div className="report-details">
-                    <h4>Claim #{claim.claimId}</h4>
-                    <p className="report-desc">{claim.verificationAnswer}</p>
-                    <p className="report-date">
-                      📅 {new Date(claim.claimDate).toLocaleDateString()}
-                    </p>
-                    <span className={`status-badge ${claim.status.toLowerCase()}`}>
-                      {claim.status}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="no-reports">No claimed reports</div>
-          )}
-        </div>
+      {/* Tab Content */}
+      <div className="tab-content-container">
+        {mainTab === 'reports' && renderReportsContent()}
+        {mainTab === 'notifications' && renderNotificationsContent()}
+        {mainTab === 'settings' && <SettingsTab />}
       </div>
     </div>
   );

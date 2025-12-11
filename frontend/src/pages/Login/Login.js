@@ -1,21 +1,22 @@
 import React, { useState, useContext, useEffect } from "react";
 import { FaEnvelope, FaLock, FaArrowLeft, FaEye, FaEyeSlash } from "react-icons/fa";
 import { useNavigate, Link } from "react-router-dom";
-import Message from "../../components/message/message"; // optional
+import Message from "../../components/message/message";
 import { UserContext } from "../../context/UserContext";
+import authService from "../../services/authService";
 import "./Login.css";
 
 function Login() {
   const navigate = useNavigate();
-  const { setUser } = useContext(UserContext); // ✅ get setUser from context
+  const { login } = useContext(UserContext);
   const [formData, setFormData] = useState({ username: "", password: "" });
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false); // New state for password visibility
+  const [showPassword, setShowPassword] = useState(false);
 
   // Redirect if already logged in
   useEffect(() => {
-    if (localStorage.getItem("isAuthenticated") === "true") {
+    if (authService.isAuthenticated()) {
       navigate("/home");
     }
   }, [navigate]);
@@ -31,81 +32,67 @@ function Login() {
     setShowPassword(!showPassword);
   };
 
-const handleLogin = async (e) => {
-  e.preventDefault();
-  setLoading(true);
-  setErrorMessage("");
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setErrorMessage("");
 
-  console.log("Sending login:", formData);
-
-  try {
-    const response = await fetch("http://localhost:8080/api/users/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
-    });
-
-    const text = await response.text();
-    console.log("Response status:", response.status);
-    console.log("Raw response:", text);
-
-    let data;
     try {
-      data = JSON.parse(text);
-      console.log("Parsed response data:", data);
-      console.log("User role from backend:", data.role);
-    } catch {
-      setErrorMessage(text || "Invalid server response");
-      return;
+      // Use the original login endpoint
+      const response = await fetch("http://localhost:8080/api/users/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const text = await response.text();
+      console.log("Response status:", response.status);
+      console.log("Raw response:", text);
+
+      let data;
+      try {
+        data = JSON.parse(text);
+        console.log("Parsed response data:", data);
+      } catch {
+        setErrorMessage(text || "Invalid server response");
+        return;
+      }
+
+      if (!response.ok) {
+        setErrorMessage(data.error || "Something went wrong");
+        return;
+      }
+
+      // Strip out nested 'user' from reportedItems to avoid circular references
+      const cleanedData = {
+        ...data,
+        reportedItems: data.reportedItems?.map(item => {
+          const { user, ...rest } = item;
+          return rest;
+        }) || []
+      };
+      
+      // Save to context and localStorage
+      login(cleanedData, data.token || "");
+      localStorage.setItem("isAuthenticated", "true");
+
+      // Check user role for redirection
+      const isAdmin = cleanedData.role?.toUpperCase() === 'ADMIN' || 
+        cleanedData.email?.includes('@wildcatsf.com') || 
+        cleanedData.username?.includes('@wildcatsf.com');
+      
+      if (isAdmin) {
+        navigate("/admin");
+      } else {
+        navigate("/home");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      setErrorMessage("Wrong credentials. Please try again.");
+    } finally {
+      setLoading(false);
     }
-
-    if (!response.ok) {
-      setErrorMessage(data.error || "Something went wrong");
-      return;
-    }
-
-    // Strip out nested 'user' from reportedItems to prevent recursion
-    const cleanedData = {
-      ...data,
-      reportedItems: data.reportedItems?.map(item => {
-        const { user, ...rest } = item; // remove nested user
-        return rest;
-      }) || []
-    };
-    
-    // Save cleaned data
-    setUser(cleanedData);
-    localStorage.setItem("user", JSON.stringify(cleanedData));
-    localStorage.setItem("isAuthenticated", "true");
-
-    // CHECK USER ROLE FOR REDIRECTION
-    console.log("Checking role for redirection:");
-    console.log("Role:", cleanedData.role);
-    console.log("Email:", cleanedData.email);
-    console.log("Username:", cleanedData.username);
-    
-    const isAdmin = 
-      cleanedData.role?.toUpperCase() === 'ADMIN' || 
-      cleanedData.email?.includes('@wildcatsf.com') || 
-      cleanedData.username?.includes('@wildcatsf.com');
-    
-    console.log("Is admin?", isAdmin);
-    
-    if (isAdmin) {
-      console.log("Redirecting to admin dashboard");
-      navigate("/admin");
-    } else {
-      console.log("Redirecting to home");
-      navigate("/home");
-    }
-
-  } catch (error) {
-    console.error("Login error caught:", error);
-    setErrorMessage("Wrong credentials. Please try again.");
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   return (
     <div className="login-page">
@@ -114,11 +101,11 @@ const handleLogin = async (e) => {
       </button>
 
       <Message
-          text={errorMessage}
-          type="error"
-          duration={5000}
-          onClose={() => setErrorMessage("")}
-        />
+        text={errorMessage}
+        type="error"
+        duration={5000}
+        onClose={() => setErrorMessage("")}
+      />
 
       <div className="login-container">
         <h1 className="login-title">LOGIN</h1>

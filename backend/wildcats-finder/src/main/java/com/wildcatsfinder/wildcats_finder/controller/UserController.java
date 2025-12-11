@@ -445,20 +445,6 @@ public class UserController {
                     .body("Error updating user: " + e.getMessage());
         }
     }
-
-    // DELETE: Delete user (admin functionality)
-    // DELETE /api/users/{id}
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
-        try {
-            String result = userService.deleteUser(id);
-            return ResponseEntity.ok(result);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Error deleting user: " + e.getMessage());
-        }
-    }
-
     // CHECK: Check if username exists
     // GET /api/users/check/username/{username}
     @GetMapping("/check/username/{username}")
@@ -481,5 +467,138 @@ public class UserController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
         }
+    }
+
+    // ========== ADMIN USER MANAGEMENT ENDPOINTS ==========
+
+    /**
+     * GET /api/users/admin/all
+     * Get all users for admin management
+     */
+    @GetMapping("/admin/all")
+    public ResponseEntity<?> getAllUsersForAdmin() {
+        try {
+            List<UserEntity> users = userService.getAllUsersForAdmin();
+            List<UserDTO> dtos = users.stream()
+                    .map(this::convertToDTO)
+                    .collect(java.util.stream.Collectors.toList());
+            return ResponseEntity.ok(dtos);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error fetching users: " + e.getMessage());
+        }
+    }
+
+    /**
+     * GET /api/users/admin/stats
+     * Get user statistics
+     */
+    @GetMapping("/admin/stats")
+    public ResponseEntity<?> getUserStats() {
+        try {
+            Map<String, Long> stats = userService.getUserStats();
+            return ResponseEntity.ok(stats);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error fetching stats: " + e.getMessage());
+        }
+    }
+
+    /**
+     * PUT /api/users/{id}/suspend
+     * Suspend a user account (admin only)
+     */
+    @PutMapping("/{id}/suspend")
+    public ResponseEntity<?> suspendUser(@PathVariable Long id, @RequestBody(required = false) Map<String, String> request) {
+        try {
+            String reason = null;
+            if (request != null && request.containsKey("reason")) {
+                reason = request.get("reason");
+            }
+            
+            UserEntity suspendedUser = userService.suspendUser(id, reason);
+            UserDTO dto = convertToDTO(suspendedUser);
+            return ResponseEntity.ok(dto);
+        } catch (IllegalStateException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (java.util.NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error suspending user: " + e.getMessage());
+        }
+    }
+
+    /**
+     * PUT /api/users/{id}/unsuspend
+     * Unsuspend a user account (admin only)
+     */
+    @PutMapping("/{id}/unsuspend")
+    public ResponseEntity<?> unsuspendUser(@PathVariable Long id) {
+        try {
+            UserEntity unsuspendedUser = userService.unsuspendUser(id);
+            UserDTO dto = convertToDTO(unsuspendedUser);
+            return ResponseEntity.ok(dto);
+        } catch (java.util.NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error unsuspending user: " + e.getMessage());
+        }
+    }
+
+    /**
+     * DELETE /api/users/{id}
+     * Delete a user (admin only)
+     */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+        try {
+            String result = userService.deleteUser(id);
+            return ResponseEntity.ok(Map.of("message", result));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error deleting user: " + e.getMessage());
+        }
+    }
+
+    /**
+     * PUT /api/users/{id}/password
+     * Change user password (admin or user themselves)
+     */
+    @PutMapping("/{id}/password")
+    public ResponseEntity<?> changePassword(@PathVariable Long id, @RequestBody Map<String, String> request) {
+        try {
+            String newPassword = request.get("newPassword");
+            if (newPassword == null || newPassword.trim().isEmpty()) {
+                return ResponseEntity.badRequest().body("New password is required");
+            }
+            if (newPassword.length() < 6) {
+                return ResponseEntity.badRequest().body("Password must be at least 6 characters");
+            }
+            
+            UserEntity updatedUser = userService.changePassword(id, newPassword);
+            return ResponseEntity.ok(Map.of("message", "Password changed successfully"));
+        } catch (java.util.NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error changing password: " + e.getMessage());
+        }
+    }
+
+    // Helper method to convert UserEntity to UserDTO
+    private UserDTO convertToDTO(UserEntity user) {
+        return new UserDTO(
+                user.getUserId(),
+                user.getUsername(),
+                user.getFName(),
+                user.getMName(),
+                user.getLName(),
+                user.getEmail(),
+                user.getContactNo(),
+                user.getRole(),
+                new java.util.ArrayList<>()
+        );
     }
 }

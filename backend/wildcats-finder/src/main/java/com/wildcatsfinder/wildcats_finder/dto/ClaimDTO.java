@@ -41,4 +41,10 @@ public class ClaimDTO {
     
     public Boolean getVerified() { return verified; }
     public void setVerified(Boolean verified) { this.verified = verified; }
+
+    // Rejection reason field
+    private String rejectionReason;
+    
+    public String getRejectionReason() { return rejectionReason; }
+    public void setRejectionReason(String rejectionReason) { this.rejectionReason = rejectionReason; }
 }

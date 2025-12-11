@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { NavLink } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext'; // Import UserContext
+import NotificationBell from '../NotificationBell';
 import homeIcon from '../../assets/icons/home.png';
 import reportItemIcon from '../../assets/icons/report-item.png';
 import searchIcon from '../../assets/icons/search.png';
@@ -243,6 +244,10 @@ function Sidebar() {
             <div className="user-details">
               <span className="user-name">{getFullName()}</span>
               <span className="user-email">{getDisplayUsername()}</span>
+            </div>
+            {/* Notification Bell */}
+            <div className="notification-container">
+              <NotificationBell />
             </div>
           </div>
         </>

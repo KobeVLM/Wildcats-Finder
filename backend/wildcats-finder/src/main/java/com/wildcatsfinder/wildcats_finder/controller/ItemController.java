@@ -492,4 +492,128 @@ public class ItemController {
                     .body("Error deleting item: " + e.getMessage());
         }
     }
+
+    // ========== ADMIN APPROVAL ENDPOINTS ==========
+
+    /**
+     * GET /api/items/pending
+     * Get all pending items (admin only)
+     */
+    @GetMapping("/pending")
+    public ResponseEntity<?> getPendingItems() {
+        try {
+            List<ItemEntity> pendingItems = itemService.getPendingItems();
+            List<ItemDTO> dtos = pendingItems.stream()
+                    .map(ItemDTO::new)
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(dtos);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error fetching pending items: " + e.getMessage());
+        }
+    }
+
+    /**
+     * GET /api/items/active
+     * Get all active items (LOST/FOUND) - excludes PENDING for public view
+     */
+    @GetMapping("/active")
+    public ResponseEntity<?> getActiveItems() {
+        try {
+            List<ItemEntity> activeItems = itemService.getActiveItems();
+            List<ItemDTO> dtos = activeItems.stream()
+                    .map(ItemDTO::new)
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(dtos);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error fetching active items: " + e.getMessage());
+        }
+    }
+
+    /**
+     * PUT /api/items/{id}/approve
+     * Approve a pending item (admin only)
+     */
+    @PutMapping("/{id}/approve")
+    public ResponseEntity<?> approveItem(@PathVariable Long id, @RequestBody Map<String, String> request) {
+        try {
+            String targetStatusStr = request.get("targetStatus");
+            if (targetStatusStr == null) {
+                return ResponseEntity.badRequest().body("targetStatus is required (LOST or FOUND)");
+            }
+            
+            ItemStatus targetStatus = ItemStatus.valueOf(targetStatusStr.toUpperCase());
+            if (targetStatus != ItemStatus.LOST && targetStatus != ItemStatus.FOUND) {
+                return ResponseEntity.badRequest().body("targetStatus must be LOST or FOUND");
+            }
+            
+            ItemEntity approvedItem = itemService.approveItem(id, targetStatus);
+            return ResponseEntity.ok(new ItemDTO(approvedItem));
+        } catch (IllegalStateException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error approving item: " + e.getMessage());
+        }
+    }
+
+    /**
+     * PUT /api/items/{id}/reject
+     * Reject a pending item (admin only)
+     */
+    @PutMapping("/{id}/reject")
+    public ResponseEntity<?> rejectItem(@PathVariable Long id, @RequestBody Map<String, String> request) {
+        try {
+            String reason = request.get("reason");
+            if (reason == null || reason.trim().isEmpty()) {
+                reason = "No reason provided";
+            }
+            
+            ItemEntity rejectedItem = itemService.rejectItem(id, reason);
+            return ResponseEntity.ok(new ItemDTO(rejectedItem));
+        } catch (IllegalStateException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error rejecting item: " + e.getMessage());
+        }
+    }
+
+    /**
+     * GET /api/items/stats
+     * Get item statistics for dashboard
+     */
+    @GetMapping("/stats")
+    public ResponseEntity<?> getItemStats() {
+        try {
+            Map<String, Long> stats = itemService.getItemStats();
+            return ResponseEntity.ok(stats);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error fetching stats: " + e.getMessage());
+        }
+    }
+
+    /**
+     * GET /api/items/search/active
+     * Search only active items (excludes PENDING)
+     */
+    @GetMapping("/search/active")
+    public ResponseEntity<?> searchActiveItems(@RequestParam String keyword) {
+        try {
+            List<ItemEntity> results = itemService.searchActiveItems(keyword);
+            List<ItemDTO> dtos = results.stream()
+                    .map(ItemDTO::new)
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(dtos);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error searching items: " + e.getMessage());
+        }
+    }
 }

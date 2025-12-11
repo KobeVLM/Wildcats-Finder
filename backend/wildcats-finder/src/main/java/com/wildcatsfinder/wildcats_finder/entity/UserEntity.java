@@ -1,6 +1,7 @@
 package com.wildcatsfinder.wildcats_finder.entity;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -41,6 +42,27 @@ public class UserEntity {
 
     @Column(name = "role", nullable = false)
     private String role;
+
+    // NEW FIELDS for security and user management
+    @Column(name = "student_id")
+    private String studentId;
+
+    @Column(name = "suspended")
+    private Boolean suspended = false;
+
+    @Column(name = "suspend_reason")
+    private String suspendReason;
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+        if (this.suspended == null) {
+            this.suspended = false;
+        }
+    }
 
     // Relationships
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -155,5 +177,38 @@ public class UserEntity {
 
     public void setClaims(List<ClaimEntity> claims) {
         this.claims = claims;
+    }
+
+    // NEW GETTERS AND SETTERS
+    public String getStudentId() {
+        return studentId;
+    }
+
+    public void setStudentId(String studentId) {
+        this.studentId = studentId;
+    }
+
+    public Boolean getSuspended() {
+        return suspended;
+    }
+
+    public void setSuspended(Boolean suspended) {
+        this.suspended = suspended;
+    }
+
+    public String getSuspendReason() {
+        return suspendReason;
+    }
+
+    public void setSuspendReason(String suspendReason) {
+        this.suspendReason = suspendReason;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }

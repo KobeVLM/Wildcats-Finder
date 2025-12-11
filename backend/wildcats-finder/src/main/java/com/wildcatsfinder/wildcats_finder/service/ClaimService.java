@@ -236,4 +236,113 @@ public class ClaimService {
         claim.setStatus("REJECTED");
         return claimRepository.save(claim);
     }
+
+    // ========== ENHANCED CLAIM METHODS WITH NOTIFICATIONS ==========
+
+    @Autowired
+    private NotificationService notificationService;
+
+    @Autowired
+    private com.wildcatsfinder.wildcats_finder.repository.ItemRepository itemRepository;
+
+    /**
+     * Approve a claim with notifications
+     */
+    public ClaimEntity approveClaim(Long claimId) {
+        ClaimEntity claim = claimRepository.findById(claimId)
+                .orElseThrow(() -> new NoSuchElementException("Claim " + claimId + " not found"));
+
+        claim.setVerified(true);
+        claim.setStatus("APPROVED");
+
+        // Update item status to CLAIMED
+        ItemEntity item = claim.getItem();
+        item.setStatus(ItemEntity.ItemStatus.CLAIMED);
+        itemRepository.save(item);
+
+        ClaimEntity savedClaim = claimRepository.save(claim);
+
+        // Send notification to claimant
+        try {
+            notificationService.notifyClaimApproved(
+                    claim.getUser().getUserId(),
+                    item.getItemTitle(),
+                    claimId
+            );
+        } catch (Exception e) {
+            System.out.println("Failed to send notification: " + e.getMessage());
+        }
+
+        return savedClaim;
+    }
+
+    /**
+     * Reject a claim with reason and notification
+     */
+    public ClaimEntity rejectClaimWithReason(Long claimId, String reason) {
+        ClaimEntity claim = claimRepository.findById(claimId)
+                .orElseThrow(() -> new NoSuchElementException("Claim " + claimId + " not found"));
+
+        claim.setVerified(false);
+        claim.setStatus("REJECTED");
+        claim.setRejectionReason(reason);
+        
+        ClaimEntity savedClaim = claimRepository.save(claim);
+
+        // Send notification to claimant
+        try {
+            notificationService.notifyClaimRejected(
+                    claim.getUser().getUserId(),
+                    claim.getItem().getItemTitle(),
+                    claimId,
+                    reason
+            );
+        } catch (Exception e) {
+            System.out.println("Failed to send notification: " + e.getMessage());
+        }
+
+        return savedClaim;
+    }
+
+    /**
+     * Mark item as returned after successful claim
+     */
+    public ClaimEntity markAsReturned(Long claimId) {
+        ClaimEntity claim = claimRepository.findById(claimId)
+                .orElseThrow(() -> new NoSuchElementException("Claim " + claimId + " not found"));
+
+        if (!claim.getStatus().equals("APPROVED")) {
+            throw new IllegalStateException("Only approved claims can be marked as returned");
+        }
+
+        claim.setStatus("RETURNED");
+
+        // Update item status to RETURNED
+        ItemEntity item = claim.getItem();
+        item.setStatus(ItemEntity.ItemStatus.RETURNED);
+        itemRepository.save(item);
+
+        return claimRepository.save(claim);
+    }
+
+    /**
+     * Notify item owner when a new claim is filed
+     */
+    public void notifyOwnerOfNewClaim(ClaimEntity claim) {
+        try {
+            ItemEntity item = claim.getItem();
+            UserEntity claimant = claim.getUser();
+            
+            String claimantName = claimant.getFName() + " " + claimant.getLName();
+            
+            notificationService.notifyClaimReceived(
+                    item.getUser().getUserId(),
+                    item.getItemTitle(),
+                    claim.getClaimId(),
+                    claimantName
+            );
+        } catch (Exception e) {
+            System.out.println("Failed to send notification: " + e.getMessage());
+        }
+    }
 }

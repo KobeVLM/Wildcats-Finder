@@ -163,4 +163,78 @@ public class UserService {
             return "User " + id + " does not exist.";
         }
     }
+
+    // ========== ADMIN USER MANAGEMENT METHODS ==========
+
+    @Autowired
+    private org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
+
+    /**
+     * Suspend a user account (admin only)
+     */
+    public UserEntity suspendUser(Long userId, String reason) {
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new NoSuchElementException("User " + userId + " not found"));
+
+        if (user.getRole().equalsIgnoreCase("ADMIN")) {
+            throw new IllegalStateException("Cannot suspend admin users");
+        }
+
+        user.setSuspended(true);
+        user.setSuspendReason(reason != null ? reason : "Account suspended by admin");
+        
+        return userRepository.save(user);
+    }
+
+    /**
+     * Unsuspend a user account (admin only)
+     */
+    public UserEntity unsuspendUser(Long userId) {
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new NoSuchElementException("User " + userId + " not found"));
+
+        user.setSuspended(false);
+        user.setSuspendReason(null);
+        
+        return userRepository.save(user);
+    }
+
+    /**
+     * Change user password (by admin or user themselves)
+     */
+    public UserEntity changePassword(Long userId, String newPassword) {
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new NoSuchElementException("User " + userId + " not found"));
+
+        // Hash the new password
+        user.setPassword(passwordEncoder.encode(newPassword));
+        
+        return userRepository.save(user);
+    }
+
+    /**
+     * Get all users for admin management
+     */
+    public List<UserEntity> getAllUsersForAdmin() {
+        return userRepository.findAll();
+    }
+
+    /**
+     * Count users by role
+     */
+    public java.util.Map<String, Long> getUserStats() {
+        java.util.Map<String, Long> stats = new java.util.HashMap<>();
+        List<UserEntity> users = userRepository.findAll();
+        
+        long adminCount = users.stream().filter(u -> "ADMIN".equalsIgnoreCase(u.getRole())).count();
+        long userCount = users.stream().filter(u -> "USER".equalsIgnoreCase(u.getRole())).count();
+        long suspendedCount = users.stream().filter(u -> u.getSuspended() != null && u.getSuspended()).count();
+        
+        stats.put("total", (long) users.size());
+        stats.put("admins", adminCount);
+        stats.put("users", userCount);
+        stats.put("suspended", suspendedCount);
+        
+        return stats;
+    }
 }

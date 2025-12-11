@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import "./Signup.css";
 import { useNavigate, Link } from "react-router-dom";
 import Message from "../../components/message/message"; 
-import { FaEnvelope, FaLock, FaUser, FaPhone, FaArrowLeft } from "react-icons/fa";
+import { FaEnvelope, FaLock, FaUser, FaPhone, FaArrowLeft, FaEye, FaEyeSlash } from "react-icons/fa";
+import authService from "../../services/authService";
 
 function Signup() {
   const navigate = useNavigate();
@@ -18,64 +19,70 @@ function Signup() {
   });
 
   const [loading, setLoading] = useState(false);
-
-  const [message, setMessage] = useState("");   // message text
-  const [msgType, setMsgType] = useState("info"); // success | error | info
+  const [showPassword, setShowPassword] = useState(false);
+  const [message, setMessage] = useState("");
+  const [msgType, setMsgType] = useState("info");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-const handleSignup = async (e) => {
-  e.preventDefault();
-  setLoading(true);
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
-  try {
-    // Determine role based on email domain
-    const isAdmin = formData.username.includes('@wildcatsf.com') || 
-                   formData.email.includes('@wildcatsf.com');
-    const userRole = isAdmin ? 'ADMIN' : 'USER';
-    
-    console.log("Signing up with role:", userRole);
+  const handleSignup = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setMessage("");
 
-    const userData = {
-      ...formData,
-      role: userRole // Send role to backend
-    };
+    try {
+      // Determine role based on email domain
+      const isAdmin = formData.username.includes('@wildcatsf.com') || 
+                     formData.email.includes('@wildcatsf.com');
+      const userRole = isAdmin ? 'ADMIN' : 'USER';
+      
+      console.log("Signing up with role:", userRole);
 
-    const response = await fetch("http://localhost:8080/api/users/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(userData),
-    });
+      const userData = {
+        ...formData,
+        role: userRole
+      };
 
-    const responseText = await response.text();
-    console.log("Signup response:", responseText);
+      // Use the original register endpoint (doesn't require JWT)
+      const response = await fetch("http://localhost:8080/api/users/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userData),
+      });
 
-    if (response.ok) {
-      setMsgType("success");
-      setMessage(
-        isAdmin 
-          ? "Admin account created successfully!" 
-          : "Account created successfully!"
-      );
+      const responseText = await response.text();
+      console.log("Signup response:", responseText);
 
-      setTimeout(() => {
-        navigate("/login");
-      }, 2000);
-    } else {
+      if (response.ok) {
+        setMsgType("success");
+        setMessage(
+          isAdmin 
+            ? "Admin account created successfully!" 
+            : "Account created successfully!"
+        );
+
+        setTimeout(() => {
+          navigate("/login");
+        }, 2000);
+      } else {
+        setMsgType("error");
+        setMessage(responseText || "Signup failed.");
+      }
+    } catch (error) {
+      console.error("Signup error:", error);
       setMsgType("error");
-      setMessage(responseText || "Signup failed.");
+      setMessage(error.message || "Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
     }
-  } catch (error) {
-    console.error("Signup fetch error:", error);
-    setMsgType("error");
-    setMessage("Something went wrong. Please try again.");
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   return (
     <div className="signup-page">
@@ -109,16 +116,25 @@ const handleSignup = async (e) => {
           </div>
 
           <label>Password</label>
-          <div className="input-with-icon">
+          <div className="input-with-icon password-input-container">
             <FaLock className="input-icon" />
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               name="password"
-              placeholder="Enter your password"
+              placeholder="Enter your password (min 6 characters)"
               value={formData.password}
               onChange={handleChange}
+              minLength={6}
               required
             />
+            <button
+              type="button"
+              className="toggle-password-btn"
+              onClick={togglePasswordVisibility}
+              aria-label={showPassword ? "Hide password" : "Show password"}
+            >
+              {showPassword ? <FaEye /> : <FaEyeSlash />}
+            </button>
           </div>
 
           <label>First Name</label>

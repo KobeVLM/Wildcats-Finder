@@ -25,4 +25,16 @@ public interface ItemRepository extends JpaRepository<ItemEntity, Long> {
         List<ItemEntity> findByCategory_CategoryId(Long categoryId);
 
         List<ItemEntity> findByDepartment_DepId(Long departmentId);
+
+        // Find items by status in a list (e.g., [LOST, FOUND] for active items)
+        List<ItemEntity> findByStatusIn(List<ItemStatus> statuses);
+
+        // Search by title AND status (for public search - exclude PENDING)
+        List<ItemEntity> findByItemTitleContainingIgnoreCaseAndStatusIn(String title, List<ItemStatus> statuses);
+
+        // Search by description
+        List<ItemEntity> findByItemDescContainingIgnoreCaseAndStatusIn(String desc, List<ItemStatus> statuses);
+
+        // Count by status
+        long countByStatus(ItemStatus status);
 }
