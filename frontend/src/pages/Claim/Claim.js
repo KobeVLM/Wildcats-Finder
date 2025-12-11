@@ -196,23 +196,37 @@ function Claim() {
               {myClaims.map((claim) => (
                 <div key={claim.claimId} className="claim-card">
                   <div className="claim-card-header">
-                    <h3>{claim.item?.itemTitle || "Unknown Item"}</h3>
-                    <span className={`status-badge ${claim.status.toLowerCase()}`}>
+                    <h3>{claim.itemTitle || "Unknown Item"}</h3>
+                    <span className={`status-badge ${claim.status?.toLowerCase()}`}>
                       {claim.status}
                     </span>
                   </div>
+                  {claim.itemImageUrl && (
+                    <div className="claim-item-image">
+                      <img 
+                        src={`http://localhost:8080${claim.itemImageUrl}`} 
+                        alt={claim.itemTitle}
+                        onError={(e) => e.target.style.display = 'none'}
+                      />
+                    </div>
+                  )}
                   <div className="claim-card-body">
                     <div className="claim-info">
-                      <p><strong>Claim Date:</strong> {formatDate(claim.claimDate)}</p>
+                      <p><strong>📅 Claim Date:</strong> {formatDate(claim.claimDate)}</p>
                       {claim.verificationAnswer && (
-                        <p><strong>Your Verification Answer:</strong> {claim.verificationAnswer}</p>
+                        <p><strong>✍️ Your Answer:</strong> {claim.verificationAnswer}</p>
+                      )}
+                      {claim.rejectionReason && (
+                        <p className="rejection-reason"><strong>❌ Rejection Reason:</strong> {claim.rejectionReason}</p>
                       )}
                     </div>
                     <div className="item-details">
-                      <p><strong>Item Description:</strong> {claim.item?.itemDesc}</p>
-                      <p><strong>Location Found:</strong> {claim.item?.location}</p>
-                      <p><strong>Date Found:</strong> {formatDate(claim.item?.dateReport)}</p>
-                      <p><strong>Reported By:</strong> {claim.item?.user?.firstName} {claim.item?.user?.lastName}</p>
+                      {claim.itemDesc && (
+                        <p><strong>📝 Description:</strong> {claim.itemDesc}</p>
+                      )}
+                      {claim.itemLocation && (
+                        <p><strong>📍 Location:</strong> {claim.itemLocation}</p>
+                      )}
                     </div>
                   </div>
                 </div>

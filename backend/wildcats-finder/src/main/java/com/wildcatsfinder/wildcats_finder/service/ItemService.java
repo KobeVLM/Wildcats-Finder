@@ -237,103 +237,25 @@ public class ItemService {
         return itemRepository.findByDepartment_DepId(departmentId);
     }
 
-    // ========== PENDING WORKFLOW METHODS ==========
 
-    @Autowired
-    private NotificationService notificationService;
-
-    /**
-     * Get all pending items (for admin)
-     */
-    public List<ItemEntity> getPendingItems() {
-        return itemRepository.findByStatus(ItemStatus.PENDING);
-    }
-
-    /**
-     * Get only active items (LOST, FOUND) - excludes PENDING for public view
-     */
-    public List<ItemEntity> getActiveItems() {
-        return itemRepository.findByStatusIn(
-            java.util.Arrays.asList(ItemStatus.LOST, ItemStatus.FOUND)
-        );
-    }
-
-    /**
-     * Approve a pending item (admin only)
-     * Sets status to LOST or FOUND based on original intent
-     */
-    public ItemEntity approveItem(Long id, ItemStatus targetStatus) {
-        ItemEntity item = itemRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Item " + id + " not found"));
-
-        if (item.getStatus() != ItemStatus.PENDING) {
-            throw new IllegalStateException("Item is not pending approval");
-        }
-
-        // Set the target status (LOST or FOUND)
-        item.setStatus(targetStatus);
-        ItemEntity savedItem = itemRepository.save(item);
-
-        // Notify the user their item was approved
-        try {
-            notificationService.notifyItemApproved(
-                    item.getUser().getUserId(),
-                    item.getItemTitle(),
-                    item.getItemId()
-            );
-        } catch (Exception e) {
-            System.out.println("Failed to send notification: " + e.getMessage());
-        }
-
-        return savedItem;
-    }
-
-    /**
-     * Reject a pending item (admin only)
-     */
-    public ItemEntity rejectItem(Long id, String reason) {
-        ItemEntity item = itemRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Item " + id + " not found"));
-
-        if (item.getStatus() != ItemStatus.PENDING) {
-            throw new IllegalStateException("Item is not pending approval");
-        }
-
-        item.setStatus(ItemStatus.REJECTED);
-        item.setRejectionReason(reason);
-        ItemEntity savedItem = itemRepository.save(item);
-
-        // Notify the user their item was rejected
-        try {
-            notificationService.notifyItemRejected(
-                    item.getUser().getUserId(),
-                    item.getItemTitle(),
-                    item.getItemId(),
-                    reason
-            );
-        } catch (Exception e) {
-            System.out.println("Failed to send notification: " + e.getMessage());
-        }
-
-        return savedItem;
-    }
+    // ========== STATISTICS METHODS ==========
 
     /**
      * Get dashboard statistics
      */
     public java.util.Map<String, Long> getItemStats() {
         java.util.Map<String, Long> stats = new java.util.HashMap<>();
-        stats.put("pending", itemRepository.countByStatus(ItemStatus.PENDING));
         stats.put("lost", itemRepository.countByStatus(ItemStatus.LOST));
         stats.put("found", itemRepository.countByStatus(ItemStatus.FOUND));
         stats.put("claimed", itemRepository.countByStatus(ItemStatus.CLAIMED));
         stats.put("returned", itemRepository.countByStatus(ItemStatus.RETURNED));
+        stats.put("active", itemRepository.countByStatus(ItemStatus.LOST) + itemRepository.countByStatus(ItemStatus.FOUND));
         stats.put("total", itemRepository.count());
         return stats;
     }
 
     /**
-     * Search items (only active items - excludes PENDING)
+     * Search items by keyword
      */
     public List<ItemEntity> searchActiveItems(String keyword) {
         java.util.List<ItemStatus> activeStatuses = java.util.Arrays.asList(

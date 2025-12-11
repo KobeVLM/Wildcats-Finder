@@ -1,15 +1,13 @@
 import React, { useContext, useState, useEffect } from "react";
 import { UserContext } from "../../context/UserContext";
-import { useNotifications } from "../../context/NotificationContext";
 import SettingsTab from "../../components/SettingsTab";
-import { FaSignOutAlt, FaEnvelope, FaUserCircle, FaCog, FaClipboardList, FaBell, FaTrash } from "react-icons/fa";
+import { FaSignOutAlt, FaEnvelope, FaUserCircle, FaCog, FaClipboardList } from "react-icons/fa";
 import "./Profile.css";
 
 function Profile() {
   const { user, logout, loading: contextLoading } = useContext(UserContext);
-  const { notifications, markAsRead, markAllAsRead, deleteNotification, unreadCount } = useNotifications();
   
-  // Main tab state (reports, notifications, settings)
+  // Main tab state (reports, settings)
   const [mainTab, setMainTab] = useState("reports");
   
   // Reports sub-tab state
@@ -36,9 +34,9 @@ function Profile() {
         const claimsResponse = await fetch(`http://localhost:8080/api/claims/user/${user.userId}`, { headers });
         const claims = await claimsResponse.json();
 
-        // Active reports are items that are still LOST or FOUND or PENDING
+        // Active reports are items that are still LOST or FOUND
         const active = items.filter(item => 
-          item.status === "LOST" || item.status === "FOUND" || item.status === "PENDING"
+          item.status === "LOST" || item.status === "FOUND"
         );
         setActiveReports(active);
         setClaimedReports(claims);
@@ -116,21 +114,6 @@ function Profile() {
   const getDisplayRole = () => {
     if (!user.role) return "User";
     return user.role.charAt(0).toUpperCase() + user.role.slice(1).toLowerCase();
-  };
-
-  const formatNotificationTime = (dateString) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffMs = now - date;
-    const diffMins = Math.floor(diffMs / 60000);
-    const diffHours = Math.floor(diffMins / 60);
-    const diffDays = Math.floor(diffHours / 24);
-
-    if (diffMins < 1) return 'Just now';
-    if (diffMins < 60) return `${diffMins}m ago`;
-    if (diffHours < 24) return `${diffHours}h ago`;
-    if (diffDays < 7) return `${diffDays}d ago`;
-    return date.toLocaleDateString();
   };
 
   // Render Reports Tab Content
@@ -214,55 +197,6 @@ function Profile() {
     </div>
   );
 
-  // Render Notifications Tab Content
-  const renderNotificationsContent = () => (
-    <div className="notifications-container">
-      <div className="notifications-header">
-        <FaBell className="notifications-icon" />
-        <h3>Notifications</h3>
-        {unreadCount > 0 && (
-          <button className="mark-all-btn" onClick={markAllAsRead}>
-            Mark all as read
-          </button>
-        )}
-      </div>
-
-      <div className="notifications-list">
-        {notifications.length === 0 ? (
-          <div className="no-notifications">
-            <span className="empty-icon">🔔</span>
-            <p>No notifications yet</p>
-          </div>
-        ) : (
-          notifications.map((notification) => (
-            <div
-              key={notification.notificationId}
-              className={`notification-item ${!notification.isRead ? 'unread' : ''}`}
-              onClick={() => !notification.isRead && markAsRead(notification.notificationId)}
-            >
-              <div className="notification-content">
-                <h4>{notification.title}</h4>
-                <p>{notification.message}</p>
-                <span className="notification-time">
-                  {formatNotificationTime(notification.createdAt)}
-                </span>
-              </div>
-              <button
-                className="notification-delete-btn"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  deleteNotification(notification.notificationId);
-                }}
-              >
-                <FaTrash />
-              </button>
-            </div>
-          ))
-        )}
-      </div>
-    </div>
-  );
-
   return (
     <div className="profile-page">
       <div className="profile-container">
@@ -308,10 +242,6 @@ function Profile() {
             <div className="stat-number gold">{claimedReports.length}</div>
             <div className="stat-label">Claimed</div>
           </div>
-          <div className="stat-card">
-            <div className="stat-number blue">{unreadCount}</div>
-            <div className="stat-label">Unread</div>
-          </div>
         </div>
 
         {/* Main Tabs */}
@@ -321,13 +251,6 @@ function Profile() {
             onClick={() => setMainTab('reports')}
           >
             <FaClipboardList /> My Reports
-          </button>
-          <button
-            className={`main-tab ${mainTab === 'notifications' ? 'active' : ''}`}
-            onClick={() => setMainTab('notifications')}
-          >
-            <FaBell /> Notifications
-            {unreadCount > 0 && <span className="tab-badge-small">{unreadCount}</span>}
           </button>
           <button
             className={`main-tab ${mainTab === 'settings' ? 'active' : ''}`}
@@ -341,7 +264,6 @@ function Profile() {
       {/* Tab Content */}
       <div className="tab-content-container">
         {mainTab === 'reports' && renderReportsContent()}
-        {mainTab === 'notifications' && renderNotificationsContent()}
         {mainTab === 'settings' && <SettingsTab />}
       </div>
     </div>

@@ -22,6 +22,7 @@ import Signup from "./pages/Signup/Signup";
 import Contact from "./pages/Contact/Contact";
 import About from "./pages/About/About";
 import AdminDashboard from "./pages/AdminDashboard/AdminDashboard";
+import ItemDetail from "./pages/ItemDetail/ItemDetail";
 
 // Create a wrapper component to access location
 function AppContent() {
@@ -104,6 +105,14 @@ function AppContent() {
             element={
               <ProtectedRoute>
                 <Profile />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/item/:id" 
+            element={
+              <ProtectedRoute>
+                <ItemDetail />
               </ProtectedRoute>
             } 
           />

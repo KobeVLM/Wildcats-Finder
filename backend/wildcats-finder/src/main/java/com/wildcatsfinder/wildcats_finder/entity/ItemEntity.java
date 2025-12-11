@@ -70,19 +70,13 @@ public class ItemEntity {
         return department != null ? department.getDepName() : null;
     }
 
-    // Status enum with PENDING and REJECTED for admin approval workflow
+    // Status enum for item tracking
     public enum ItemStatus {
-        PENDING,    // Awaiting admin approval
-        LOST,       // Active - item is lost
-        FOUND,      // Active - item was found
+        LOST,       // Item is lost
+        FOUND,      // Item was found
         CLAIMED,    // Someone has claimed the item
-        RETURNED,   // Item has been returned to owner
-        REJECTED    // Admin rejected the item report
+        RETURNED    // Item has been returned to owner
     }
-
-    // Reason for rejection (if admin rejects)
-    @Column(name = "rejection_reason")
-    private String rejectionReason;
 
     // Constructors
     public ItemEntity() {
@@ -189,13 +183,5 @@ public class ItemEntity {
 
     public void setClaims(List<ClaimEntity> claims) {
         this.claims = claims;
-    }
-
-    public String getRejectionReason() {
-        return rejectionReason;
-    }
-
-    public void setRejectionReason(String rejectionReason) {
-        this.rejectionReason = rejectionReason;
     }
 }

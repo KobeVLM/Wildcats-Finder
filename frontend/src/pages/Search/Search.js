@@ -59,11 +59,7 @@ function Search() {
 
     try {
       setSearching(true);
-      const results = await itemService.searchItems(searchQuery);
-      setFilteredItems(results);
-    } catch (error) {
-      console.error("Error searching:", error);
-      // Fallback to client-side search
+      // Client-side search since itemService is not available
       const query = searchQuery.toLowerCase();
       const results = items.filter(item => 
         item.itemTitle?.toLowerCase().includes(query) ||
@@ -71,6 +67,8 @@ function Search() {
         item.location?.toLowerCase().includes(query)
       );
       setFilteredItems(results);
+    } catch (error) {
+      console.error("Error searching:", error);
     } finally {
       setSearching(false);
     }
@@ -144,6 +142,17 @@ function Search() {
     setCategoryFilter("ALL");
     setDateFilter("ALL");
     setSortBy("newest");
+  };
+
+  // Handle claim item - navigate to item details page to file a claim
+  const handleClaimItem = (item) => {
+    if (!user) {
+      alert("Please log in to claim an item.");
+      navigate("/login");
+      return;
+    }
+    // Navigate to item details page where user can file a claim
+    navigate(`/item/${item.itemId}?claim=true`);
   };
 
   // Format date

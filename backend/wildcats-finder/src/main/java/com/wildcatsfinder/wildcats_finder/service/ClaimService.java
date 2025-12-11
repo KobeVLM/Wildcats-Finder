@@ -237,16 +237,13 @@ public class ClaimService {
         return claimRepository.save(claim);
     }
 
-    // ========== ENHANCED CLAIM METHODS WITH NOTIFICATIONS ==========
-
-    @Autowired
-    private NotificationService notificationService;
+    // ========== ENHANCED CLAIM METHODS ==========
 
     @Autowired
     private com.wildcatsfinder.wildcats_finder.repository.ItemRepository itemRepository;
 
     /**
-     * Approve a claim with notifications
+     * Approve a claim
      */
     public ClaimEntity approveClaim(Long claimId) {
         ClaimEntity claim = claimRepository.findById(claimId)
@@ -260,24 +257,11 @@ public class ClaimService {
         item.setStatus(ItemEntity.ItemStatus.CLAIMED);
         itemRepository.save(item);
 
-        ClaimEntity savedClaim = claimRepository.save(claim);
-
-        // Send notification to claimant
-        try {
-            notificationService.notifyClaimApproved(
-                    claim.getUser().getUserId(),
-                    item.getItemTitle(),
-                    claimId
-            );
-        } catch (Exception e) {
-            System.out.println("Failed to send notification: " + e.getMessage());
-        }
-
-        return savedClaim;
+        return claimRepository.save(claim);
     }
 
     /**
-     * Reject a claim with reason and notification
+     * Reject a claim with reason
      */
     public ClaimEntity rejectClaimWithReason(Long claimId, String reason) {
         ClaimEntity claim = claimRepository.findById(claimId)
@@ -287,21 +271,7 @@ public class ClaimService {
         claim.setStatus("REJECTED");
         claim.setRejectionReason(reason);
         
-        ClaimEntity savedClaim = claimRepository.save(claim);
-
-        // Send notification to claimant
-        try {
-            notificationService.notifyClaimRejected(
-                    claim.getUser().getUserId(),
-                    claim.getItem().getItemTitle(),
-                    claimId,
-                    reason
-            );
-        } catch (Exception e) {
-            System.out.println("Failed to send notification: " + e.getMessage());
-        }
-
-        return savedClaim;
+        return claimRepository.save(claim);
     }
 
     /**
@@ -323,26 +293,5 @@ public class ClaimService {
         itemRepository.save(item);
 
         return claimRepository.save(claim);
-    }
-
-    /**
-     * Notify item owner when a new claim is filed
-     */
-    public void notifyOwnerOfNewClaim(ClaimEntity claim) {
-        try {
-            ItemEntity item = claim.getItem();
-            UserEntity claimant = claim.getUser();
-            
-            String claimantName = claimant.getFName() + " " + claimant.getLName();
-            
-            notificationService.notifyClaimReceived(
-                    item.getUser().getUserId(),
-                    item.getItemTitle(),
-                    claim.getClaimId(),
-                    claimantName
-            );
-        } catch (Exception e) {
-            System.out.println("Failed to send notification: " + e.getMessage());
-        }
     }
 }

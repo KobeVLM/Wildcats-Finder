@@ -186,7 +186,7 @@ public class UserController {
             // Create new user entity
             UserEntity user = new UserEntity();
             user.setUsername(request.getUsername());
-            user.setPassword(request.getPassword()); // TODO: convert to hashed password
+            user.setPassword(request.getPassword());
             user.setFName(request.getFName());
             user.setMName(request.getMName());
             user.setLName(request.getLName());
@@ -263,7 +263,7 @@ public class UserController {
             // Create new admin user entity
             UserEntity user = new UserEntity();
             user.setUsername(request.getUsername());
-            user.setPassword(request.getPassword()); // TODO: convert to hashed password
+            user.setPassword(request.getPassword());
             user.setFName(request.getFName());
             user.setMName(request.getMName());
             user.setLName(request.getLName());
@@ -420,7 +420,7 @@ public class UserController {
             if (request.getUsername() != null)
                 existingUser.setUsername(request.getUsername());
             if (request.getPassword() != null && !request.getPassword().trim().isEmpty()) {
-                existingUser.setPassword(request.getPassword()); // TODO: convert to hashed password
+                existingUser.setPassword(request.getPassword());
             }
             if (request.getFName() != null)
                 existingUser.setFName(request.getFName());

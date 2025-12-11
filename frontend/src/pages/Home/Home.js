@@ -58,8 +58,8 @@ function Home() {
   useEffect(() => {
     const testApiEndpoint = async () => {
       try {
-        console.log("Testing API endpoint: http://localhost:8080/api/items");
-        const response = await fetch("http://localhost:8080/api/items");
+        console.log("Testing API endpoint: http://localhost:8080/api/items/simple");
+        const response = await fetch("http://localhost:8080/api/items/simple");
         console.log("Response status:", response.status);
         console.log("Response headers:", response.headers);
         
@@ -91,7 +91,8 @@ function Home() {
         console.log("Fetching ALL items from API...");
         setLoading(true);
         
-        const res = await fetch("http://localhost:8080/api/items");
+        // Use /api/items/simple to ensure userId is properly loaded
+        const res = await fetch("http://localhost:8080/api/items/simple");
         console.log("API Response status:", res.status);
         
         if (!res.ok) {
@@ -133,21 +134,18 @@ function Home() {
             setActiveCount(statsData.active || 0);
             setLostCount(statsData.lost || 0);
             setFoundCount(statsData.found || 0);
-            setReunitedCount(statsData.reunited || 0);
-            return;
+            setReunitedCount(statsData.claimed || 0);
           }
         } else {
-          console.warn("Stats endpoint failed, will calculate from items");
+          console.warn("Stats endpoint failed");
         }
-        
-        // If stats endpoint fails, fetch items and calculate
-        await fetchAllItems();
       } catch (e) {
         console.warn("Stats fetch error:", e);
-        fetchAllItems();
       }
     }
 
+    // Always fetch both items and stats
+    fetchAllItems();
     fetchStats();
   }, []);
 
@@ -158,15 +156,15 @@ function Home() {
       
       const lostItems = items.filter(item => item.status === "LOST").length;
       const foundItems = items.filter(item => item.status === "FOUND").length;
-      const reunitedItems = items.filter(item => item.status === "REUNITED").length;
+      const claimedItems = items.filter(item => item.status === "CLAIMED" || item.status === "RETURNED").length;
       const activeItems = lostItems + foundItems;
 
-      console.log("Lost:", lostItems, "Found:", foundItems, "Reunited:", reunitedItems, "Active:", activeItems);
+      console.log("Lost:", lostItems, "Found:", foundItems, "Claimed/Returned:", claimedItems, "Active:", activeItems);
 
       setActiveCount(activeItems);
       setLostCount(lostItems);
       setFoundCount(foundItems);
-      setReunitedCount(reunitedItems);
+      setReunitedCount(claimedItems);
     } else {
       console.log("No items to calculate stats from");
     }
@@ -267,7 +265,7 @@ function Home() {
     // Apply status filter
     if (filter === "lost" && item.status !== "LOST") return false;
     if (filter === "found" && item.status !== "FOUND") return false;
-    if (filter === "reunited" && item.status !== "REUNITED") return false;
+    if (filter === "reunited" && item.status !== "CLAIMED" && item.status !== "RETURNED") return false;
     
     // Apply search filter
     if (searchQuery) {
@@ -521,7 +519,7 @@ const handleMineButtonClick = async (item) => {
                       <p>
                         <strong>Reported by:</strong>
                         <span>
-                          {isCurrentUserItem ? "You" : `User #${item.userId}`}
+                          {isCurrentUserItem ? "You" : (item.reporterName || `User #${item.userId}`)}
                         </span>
                       </p>
                     </div>
@@ -530,7 +528,7 @@ const handleMineButtonClick = async (item) => {
                       <div className="item-image-container">
                         {item.imageUrl ? (
                           <img
-                            src={`http://localhost:8080/uploads/${item.imageUrl}`}
+                            src={`http://localhost:8080${item.imageUrl}`}
                             alt={item.itemTitle}
                             className="item-image"
                             onError={(e) => {

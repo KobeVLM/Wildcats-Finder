@@ -256,6 +256,16 @@ public class ClaimController {
         dto.setVerified(claim.getVerified());
         dto.setRejectionReason(claim.getRejectionReason());
         
+        // Add item details for display
+        ItemEntity item = claim.getItem();
+        if (item != null) {
+            dto.setItemTitle(item.getItemTitle());
+            dto.setItemDesc(item.getItemDesc());
+            dto.setItemLocation(item.getLocation());
+            dto.setItemImageUrl(item.getImageUrl());
+            dto.setItemStatus(item.getStatus() != null ? item.getStatus().toString() : null);
+        }
+        
         return dto;
     }
 
