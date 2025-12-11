@@ -1,5 +1,7 @@
+// UserContext.js
 import React, { createContext, useState, useEffect } from "react";
 
+// ✅ Only declare UserContext once at the top level
 export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {

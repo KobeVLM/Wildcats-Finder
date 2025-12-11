@@ -209,15 +209,15 @@
 
 /* ===== Filter Buttons ===== */
 .filter-container {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 15px;
-  margin-bottom: 30px;
-  background: linear-gradient(135deg, #760001, #990002, #AF2729);
-  padding: 15px 25px;
-  border-radius: 15px;
-  width: 40%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 35px;
+    background: linear-gradient(135deg, #760001, #990002, #AF2729);
+    padding: 15px 25px;
+    border-radius: 15px;
+    width: fit-content;
 }
 
 .filter-btn {

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import "./ReportItem.css";
 import { UserContext } from "../../context/UserContext";
-import Message from "../../components/message/message"; // Add this import
+import Message from "../../components/message/message";
 import notifSound from '../../assets/music/notif.mp3';
 
 function ReportItem() {

@@ -4,59 +4,62 @@ import { FaSignOutAlt, FaEnvelope, FaUserCircle, FaCog, FaClipboardList } from "
 import "./Profile.css";
 
 function Profile() {
-  const { user, setUser } = useContext(UserContext);
+  const { user, logout, loading: contextLoading } = useContext(UserContext); // Use logout from context
   const [activeTab, setActiveTab] = useState("active");
   const [activeReports, setActiveReports] = useState([]);
   const [claimedReports, setClaimedReports] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loadingReports, setLoadingReports] = useState(true);
 
   // Fetch user's reports
   useEffect(() => {
-    const fetchReports = async () => {
-      if (!user || !user.userId) return;
+    if (!user || !user.userId) return;
 
+    const fetchReports = async () => {
       try {
-        setLoading(true);
+        setLoadingReports(true);
         // Fetch items reported by this user
         const itemsResponse = await fetch(`http://localhost:8080/api/items/user/${user.userId}`);
         const items = await itemsResponse.json();
 
-        // Fetch claims made by this user (items they are trying to claim)
+        // Fetch claims made by this user
         const claimsResponse = await fetch(`http://localhost:8080/api/claims/user/${user.userId}`);
         const claims = await claimsResponse.json();
 
         // Active reports are items that are still LOST or FOUND
         const active = items.filter(item => item.status === "LOST" || item.status === "FOUND");
         setActiveReports(active);
-
-        // Claimed reports are claims the user has made (items they're claiming ownership of)
         setClaimedReports(claims);
       } catch (error) {
         console.error("Error fetching reports:", error);
       } finally {
-        setLoading(false);
+        setLoadingReports(false);
       }
     };
 
     fetchReports();
-  }, [user]); const handleLogout = () => {
-    const confirmLogout = window.confirm("End session?");
-    if (!confirmLogout) return;
+  }, [user]);
 
-    // Clear context & localStorage
-    setUser(null);
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
+const handleLogout = () => {
+  const confirmLogout = window.confirm("End session?");
+  if (!confirmLogout) return;
 
-    // Optional: redirect to login
-    window.location.href = "/login";
-  };
+  logout();
+  localStorage.removeItem("isAuthenticated"); // Add this
+  window.location.href = "/login";
+};
 
-  if (!user) {
+  // If context is still loading, show loading
+  if (contextLoading) {
     return <div className="profile-loading">Loading user profile...</div>;
   }
 
-  // Use lowercase property names (fname, mname, lname)
+  // If no user after loading, redirect to login
+  if (!user) {
+    window.location.href = "/login";
+    return null;
+  }
+
+  // Rest of your component...
   const getFullName = () => {
     const firstName = user.fname || "";
     const middleName = user.mname || "";
@@ -75,15 +78,12 @@ function Profile() {
     return fullName.trim() || user.username || "User";
   };
 
-  // Get user initials for the circle
   const getUserInitials = () => {
     let initials = "";
 
-    // Use lowercase property names
     if (user.fname) initials += user.fname.charAt(0).toUpperCase();
     if (user.lname) initials += user.lname.charAt(0).toUpperCase();
 
-    // Fallback to username initials
     if (!initials && user.username) {
       const emailPart = user.username.split('@')[0];
       if (emailPart.includes('.')) {
@@ -97,12 +97,10 @@ function Profile() {
     return initials || "U";
   };
 
-  // Get email/username for display
   const getDisplayEmail = () => {
     return user.email || user.username || "No email";
   };
 
-  // Get user role (capitalize first letter)
   const getDisplayRole = () => {
     if (!user.role) return "User";
     return user.role.charAt(0).toUpperCase() + user.role.slice(1).toLowerCase();
@@ -183,7 +181,7 @@ function Profile() {
 
         {/* Tab Content */}
         <div className="reports-content">
-          {loading ? (
+          {loadingReports ? (
             <div className="no-reports">Loading...</div>
           ) : activeTab === "active" ? (
             activeReports.length > 0 ? (

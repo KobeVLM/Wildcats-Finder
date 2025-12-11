@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext, useRef } from "react";
 import { Link } from "react-router-dom";
 import searchIcon from "../../assets/icons/search.png";
 import MaterialImg from "../../assets/images/Material.jpg";
-import wildcatIcon from "../../assets/images/wildcat.png"; // Add this import
+import wildcatIcon from "../../assets/images/wildcat.png";
 import StatCard from "../../components/statscard/StatCard";
 import { UserContext } from "../../context/UserContext";
 import "./Home.css";
@@ -605,3 +605,4 @@ function Home() {
 }
 
 export default Home;
+
