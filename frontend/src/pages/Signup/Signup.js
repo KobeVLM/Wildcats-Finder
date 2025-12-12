@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./Signup.css";
-import { useNavigate, Link } from "react-router-dom";
-import Message from "../../components/message/message"; 
+import { useNavigate } from "react-router-dom";
+import Message from "../../components/message/message";
 import { FaEnvelope, FaLock, FaUser, FaPhone, FaArrowLeft } from "react-icons/fa";
 
 function Signup() {
@@ -27,55 +27,55 @@ function Signup() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-const handleSignup = async (e) => {
-  e.preventDefault();
-  setLoading(true);
+  const handleSignup = async (e) => {
+    e.preventDefault();
+    setLoading(true);
 
-  try {
-    // Determine role based on email domain
-    const isAdmin = formData.username.includes('@wildcatsf.com') || 
-                   formData.email.includes('@wildcatsf.com');
-    const userRole = isAdmin ? 'ADMIN' : 'USER';
-    
-    console.log("Signing up with role:", userRole);
+    try {
+      // Determine role based on email domain
+      const isAdmin = formData.username.includes('@wildcatsf.com') ||
+        formData.email.includes('@wildcatsf.com');
+      const userRole = isAdmin ? 'ADMIN' : 'USER';
 
-    const userData = {
-      ...formData,
-      role: userRole // Send role to backend
-    };
+      console.log("Signing up with role:", userRole);
 
-    const response = await fetch("http://localhost:8080/api/users/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(userData),
-    });
+      const userData = {
+        ...formData,
+        role: userRole // Send role to backend
+      };
 
-    const responseText = await response.text();
-    console.log("Signup response:", responseText);
+      const response = await fetch("http://localhost:8080/api/users/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userData),
+      });
 
-    if (response.ok) {
-      setMsgType("success");
-      setMessage(
-        isAdmin 
-          ? "Admin account created successfully!" 
-          : "Account created successfully!"
-      );
+      const responseText = await response.text();
+      console.log("Signup response:", responseText);
 
-      setTimeout(() => {
-        navigate("/login");
-      }, 2000);
-    } else {
+      if (response.ok) {
+        setMsgType("success");
+        setMessage(
+          isAdmin
+            ? "Admin account created successfully!"
+            : "Account created successfully!"
+        );
+
+        setTimeout(() => {
+          navigate("/login");
+        }, 2000);
+      } else {
+        setMsgType("error");
+        setMessage(responseText || "Signup failed.");
+      }
+    } catch (error) {
+      console.error("Signup fetch error:", error);
       setMsgType("error");
-      setMessage(responseText || "Signup failed.");
+      setMessage("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
     }
-  } catch (error) {
-    console.error("Signup fetch error:", error);
-    setMsgType("error");
-    setMessage("Something went wrong. Please try again.");
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   return (
     <div className="signup-page">
@@ -198,9 +198,6 @@ const handleSignup = async (e) => {
             Log In
           </button>
 
-          <p className="admin-signup-link" style={{ textAlign: 'center', marginTop: '15px', fontSize: '0.9em', color: '#666' }}>
-            Administrator? <Link to="/admin/signup" style={{ color: '#b91c1c', fontWeight: '600', textDecoration: 'none' }}>Create Admin Account</Link>
-          </p>
         </form>
       </div>
     </div>
