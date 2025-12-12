@@ -195,32 +195,32 @@ public class ClaimService {
     }
 
     // FILE CLAIM: File a new claim with automatic timestamp
-   public ClaimEntity fileNewClaim(ClaimEntity claim) {
-    System.out.println("=== DEBUG: fileNewClaim called ===");
-    System.out.println("Received claim data:");
-    System.out.println("Item ID: " + (claim.getItem() != null ? claim.getItem().getItemId() : "null"));
-    System.out.println("User ID: " + (claim.getUser() != null ? claim.getUser().getUserId() : "null"));
-    System.out.println("Verification Answer: " + claim.getVerificationAnswer());
-    System.out.println("Status: " + claim.getStatus());
-    System.out.println("Verified: " + claim.getVerified());
-    
-    // Set default values
-    claim.setClaimDate(LocalDateTime.now());
-    claim.setVerified(false); // Set as pending by default
-    claim.setStatus("PENDING"); // Set default status
-    
-    // If verificationAnswer is null, set a default
-    if (claim.getVerificationAnswer() == null) {
-        System.out.println("WARNING: verificationAnswer is null! Setting default.");
-        claim.setVerificationAnswer("No verification provided");
+    public ClaimEntity fileNewClaim(ClaimEntity claim) {
+        System.out.println("=== DEBUG: fileNewClaim called ===");
+        System.out.println("Received claim data:");
+        System.out.println("Item ID: " + (claim.getItem() != null ? claim.getItem().getItemId() : "null"));
+        System.out.println("User ID: " + (claim.getUser() != null ? claim.getUser().getUserId() : "null"));
+        System.out.println("Verification Answer: " + claim.getVerificationAnswer());
+        System.out.println("Status: " + claim.getStatus());
+        System.out.println("Verified: " + claim.getVerified());
+        
+        // Set default values
+        claim.setClaimDate(LocalDateTime.now());
+        claim.setVerified(false); // Set as pending by default
+        claim.setStatus("PENDING"); // Set default status
+        
+        // If verificationAnswer is null, set a default
+        if (claim.getVerificationAnswer() == null) {
+            System.out.println("WARNING: verificationAnswer is null! Setting default.");
+            claim.setVerificationAnswer("No verification provided");
+        }
+        
+        ClaimEntity savedClaim = claimRepository.save(claim);
+        System.out.println("Claim saved with ID: " + savedClaim.getClaimId());
+        System.out.println("Saved verificationAnswer: " + savedClaim.getVerificationAnswer());
+        
+        return savedClaim;
     }
-    
-    ClaimEntity savedClaim = claimRepository.save(claim);
-    System.out.println("Claim saved with ID: " + savedClaim.getClaimId());
-    System.out.println("Saved verificationAnswer: " + savedClaim.getVerificationAnswer());
-    
-    return savedClaim;
-}
 
     // REJECT CLAIM: Reject a pending claim
     public ClaimEntity rejectClaim(Long claimId) {
@@ -234,6 +234,21 @@ public class ClaimService {
 
         claim.setVerified(false);
         claim.setStatus("REJECTED");
+        return claimRepository.save(claim);
+    }
+
+    // APPROVE CLAIM: Approve a pending claim
+    public ClaimEntity approveClaim(Long claimId) {
+        ClaimEntity claim;
+        Optional<ClaimEntity> optionalClaim = claimRepository.findById(claimId);
+        if (optionalClaim.isPresent()) {
+            claim = optionalClaim.get();
+        } else {
+            throw new NoSuchElementException("Claim " + claimId + " not found");
+        }
+
+        claim.setVerified(true);
+        claim.setStatus("APPROVED");
         return claimRepository.save(claim);
     }
 }
